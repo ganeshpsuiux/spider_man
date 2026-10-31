@@ -15,11 +15,12 @@ const QUOTE = "WITH GREAT POWER COMES GREAT RESPONSIBILITY.";
 const PHRASE_COUNT = 14;
 
 /* ─────────────────────────────────────────────────────── */
-/* Chapter2Section — Zoom-Out Scroll Effect                */
+/* Chapter2Section — Zoom-Out Scroll Effect & Stacking Card*/
 /*                                                         */
 /* Wraps children (LandoHeroSection) and scales them down  */
 /* on scroll, revealing 2 middle text lines moving only    */
-/* during active scroll via GSAP ScrollTrigger.            */
+/* during active scroll via GSAP ScrollTrigger. Section 2  */
+/* stays pinned while Section 3 rolls over like a card.    */
 /* ─────────────────────────────────────────────────────── */
 export const Chapter2Section: React.FC<{
   children: React.ReactNode;
@@ -31,17 +32,18 @@ export const Chapter2Section: React.FC<{
   const textLayerRef = useRef<HTMLDivElement>(null);
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
-  const whiteVeilRef = useRef<HTMLDivElement>(null);
+  const depthOverlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
+    const sticky = stickyRef.current;
     const heroContainer = heroContainerRef.current;
     const bg = bgRef.current;
     const textLayer = textLayerRef.current;
     const row1 = row1Ref.current;
     const row2 = row2Ref.current;
-    const whiteVeil = whiteVeilRef.current;
-    if (!section || !heroContainer || !bg || !textLayer || !row1 || !row2 || !whiteVeil) return;
+    const depthOverlay = depthOverlayRef.current;
+    if (!section || !sticky || !heroContainer || !bg || !textLayer || !row1 || !row2) return;
 
     const ctx = gsap.context(() => {
       /* ── Scroll-Driven Animation with Custom Bezier Transitions ── */
@@ -49,15 +51,12 @@ export const Chapter2Section: React.FC<{
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "bottom bottom",
+          end: "bottom top",
           scrub: 1,
-          pin: stickyRef.current,
-          pinSpacing: true,
+          pin: sticky,
+          pinSpacing: false,
         },
       });
-
-      // Custom smooth cubic bezier curve
-      const customBezier = "cubic-bezier(0.77, 0, 0.175, 1)";
 
       // ─────────────────────────────────────────────────────────────
       // 1. HERO ZOOM-OUT WITH RESPONSIVE WIDTH REDUCTION (0.0 → 0.45):
@@ -66,6 +65,39 @@ export const Chapter2Section: React.FC<{
       const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
       const targetScale = isMobile ? 0.54 : 0.38;
       const targetWidth = isMobile ? "90vw" : "72vw";
+      const microScale = isMobile ? 0.48 : 0.34;
+
+      // ─────────────────────────────────────────────────────────────
+      // PERIPHERAL UI FADE-OUT (0.00 → 0.18):
+      // Header, side cards, and audio controls dissolve early and swiftly
+      // so ONLY the clean central portrait remains inside the scaled card!
+      // ─────────────────────────────────────────────────────────────
+      tl.to(
+        ".hero-header-fade",
+        {
+          opacity: 0,
+          y: -25,
+          autoAlpha: 0,
+          pointerEvents: "none",
+          ease: "power1.out",
+          duration: 0.16,
+        },
+        0
+      );
+
+      tl.to(
+        ".hero-side-fade",
+        {
+          opacity: 0,
+          y: 25,
+          scale: 0.96,
+          autoAlpha: 0,
+          pointerEvents: "none",
+          ease: "power1.out",
+          duration: 0.18,
+        },
+        0
+      );
 
       tl.fromTo(
         heroContainer,
@@ -73,11 +105,13 @@ export const Chapter2Section: React.FC<{
           scale: 1,
           width: "100vw",
           borderRadius: "0px",
+          filter: "brightness(1)",
         },
         {
           scale: targetScale,
           width: targetWidth,
           borderRadius: "24px",
+          filter: "brightness(1)",
           ease: "power2.out",
           duration: 0.45,
         },
@@ -101,25 +135,25 @@ export const Chapter2Section: React.FC<{
       );
 
       // ─────────────────────────────────────────────────────────────
-      // 2. SMOOTH GSAP SCROLLING QUOTE ROWS (0.0 → 0.65):
+      // 2. SMOOTH GSAP SCROLLING QUOTE ROWS (0.0 → 0.60):
       // Dynamic kinetic translation across the hero card
       // ─────────────────────────────────────────────────────────────
       tl.fromTo(
         row1,
         { xPercent: -4 },
-        { xPercent: -34, ease: "none", duration: 0.68 },
+        { xPercent: -34, ease: "none", duration: 0.60 },
         0
       );
 
       tl.fromTo(
         row2,
         { xPercent: -34 },
-        { xPercent: -4, ease: "none", duration: 0.68 },
+        { xPercent: -4, ease: "none", duration: 0.60 },
         0
       );
 
       // ─────────────────────────────────────────────────────────────
-      // 3. PHASE A: FADE OUT TEXT 1ST (0.46 → 0.62)
+      // 3. FADE OUT TEXT 1ST (0.45 → 0.60)
       // Background quote text rows dissolve completely while hero is crisp
       // ─────────────────────────────────────────────────────────────
       tl.to(
@@ -127,37 +161,42 @@ export const Chapter2Section: React.FC<{
         {
           opacity: 0,
           ease: "power2.inOut",
-          duration: 0.16,
+          duration: 0.15,
         },
-        0.46
+        0.45
       );
 
       // ─────────────────────────────────────────────────────────────
-      // 4. PHASE B: FADE OUT FRONT IMAGE & TRANSITION TO WHITE (0.64 → 0.98)
-      // Only AFTER text is completely gone, the front image dissolves into white!
+      // 4. SUBTLE PARALLAX & DEPTH CUES AS SECTION 3 COVERS (0.64 → 1.00)
+      // As Section 3 (#white-canvas-wrapper) physically slides over Section 2:
+      // - Micro-scale down from targetScale (0.38) down to 0.34
+      // - Subtle brightness dip (filter: brightness(0.65))
+      // - Soft depth vignette simulates shadow cast by the overlapping canvas
+      // - Hero card & dark ferrofluid remain crisp and visible (NEVER fade to 0)
       // ─────────────────────────────────────────────────────────────
-      tl.fromTo(
-        whiteVeil,
-        { opacity: 0 },
+      tl.to(
+        heroContainer,
         {
-          opacity: 1,
-          ease: customBezier,
-          duration: 0.34,
+          scale: microScale,
+          filter: "brightness(0.65)",
+          ease: "power1.out",
+          duration: 0.36,
         },
         0.64
       );
 
-      // Front hero image dissolves gracefully into the luminous white
-      tl.to(
-        heroContainer,
-        {
-          opacity: 0,
-          scale: targetScale * 0.88,
-          ease: customBezier,
-          duration: 0.30,
-        },
-        0.66
-      );
+      if (depthOverlay) {
+        tl.fromTo(
+          depthOverlay,
+          { opacity: 0 },
+          {
+            opacity: 0.45,
+            ease: "power1.out",
+            duration: 0.36,
+          },
+          0.64
+        );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -221,13 +260,13 @@ export const Chapter2Section: React.FC<{
     <section
       ref={sectionRef}
       id="chapter-2-scroll"
-      className="relative w-full"
+      className="relative w-full z-10"
       style={{ height: "280vh" }}
     >
       {/* Sticky Viewport — stays pinned for scroll choreography */}
       <div
         ref={stickyRef}
-        className="relative w-full overflow-hidden"
+        className="relative w-full overflow-hidden z-10"
         style={{ height: "100vh" }}
       >
         {/* ────────────────────────────────────────────── */}
@@ -300,7 +339,11 @@ export const Chapter2Section: React.FC<{
           <div
             ref={heroContainerRef}
             className="relative h-full overflow-hidden will-change-transform pointer-events-auto shadow-2xl flex items-center justify-center"
-            style={{ width: "100vw", transformOrigin: "center center" }}
+            style={{
+              width: "100vw",
+              transformOrigin: "center center",
+              transform: "translate3d(0,0,0)",
+            }}
           >
             {/* Aspect-Preserving Content Stage: Never squashes or stretches the hero section */}
             <div className="relative w-screen min-w-[100vw] h-full flex items-center justify-center shrink-0">
@@ -310,13 +353,17 @@ export const Chapter2Section: React.FC<{
         </div>
 
         {/* ────────────────────────────────────────────── */}
-        {/* LAYER 4: Smooth Black-to-White Veil           */}
-        {/* Luminous dissolve into pure white for Section 3*/}
+        {/* LAYER 4: Depth Vignette Overlay               */}
+        {/* Soft shadow cast by overlapping Section 3     */}
         {/* ────────────────────────────────────────────── */}
         <div
-          ref={whiteVeilRef}
-          className="absolute inset-0 w-full h-full z-30 pointer-events-none will-change-[opacity]"
-          style={{ background: "#ffffff", opacity: 0 }}
+          ref={depthOverlayRef}
+          className="absolute inset-0 w-full h-full z-25 pointer-events-none will-change-[opacity]"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.55) 100%)",
+            opacity: 0,
+          }}
         />
       </div>
     </section>

@@ -313,8 +313,9 @@ export const LandoHeroSection: React.FC = () => {
       {/* - Top Center: "GANESH PS" centered relative to entire viewport            */}
       {/* - Top Right: Compact menu icon with two angled horizontal bars             */}
       {/* Outer Spacing: 3-4vw horizontally, 32-48px from top on desktop           */}
+      {/* Progressive Scroll Fade-Out via .hero-header-fade .hero-scroll-fade       */}
       {/* ========================================================================= */}
-      <header className="absolute top-0 left-0 w-full z-40 pointer-events-none px-[3.5vw] pt-8 sm:pt-10 lg:pt-11 flex items-center justify-between">
+      <header className="hero-header-fade hero-scroll-fade will-change-transform absolute top-0 left-0 w-full z-40 pointer-events-none px-[3.5vw] pt-8 sm:pt-10 lg:pt-11 flex items-center justify-between">
         {/* TOP LEFT: Small personal logo / GP monogram */}
         <div className="pointer-events-auto flex items-center gap-3">
           <button
@@ -392,7 +393,7 @@ export const LandoHeroSection: React.FC = () => {
       {/* ========================================================================= */}
       {/* 3. CENTRAL PORTRAIT AS DOMINANT VISUAL (BOTTOM-ANCHORED, CENTERED)       */}
       {/* Head begins around 14-18% from the top; torso extends to the bottom       */}
-      {/* Clear lateral space preserved for the lower content blocks               */}
+      {/* Stays 100% visible — NO fade out, becoming the card's hero focal point!   */}
       {/* ========================================================================= */}
       <div className="absolute inset-0 w-full h-full flex items-end justify-center pointer-events-auto z-10 perspective-1000 overflow-hidden">
         {/* Scale tuned on desktop to 0.84 so the head begins at ~16% from the top */}
@@ -453,11 +454,9 @@ export const LandoHeroSection: React.FC = () => {
       {/* 4. LOWER CONTENT BLOCKS (DESKTOP: LEFT IMAGE + TEXT, RIGHT SIGNATURE + TEXT) */}
       {/* - Lower-left: Aligned with header's left margin (3.5vw)                    */}
       {/* - Lower-right: Aligned with header's right margin (3.5vw)                  */}
-      {/* - Horizontal alignment: First line of both paragraphs perfectly aligns    */}
-      {/* - Both paragraphs: 200-235px wide, 4-5 short lines, 16px Inter regular    */}
-      {/* - Spacing below paragraphs: approx 12-15vh on desktop                      */}
+      {/* Progressive Scroll Fade-Out via .hero-side-fade .hero-scroll-fade         */}
       {/* ========================================================================= */}
-      <div className="absolute inset-x-0 bottom-[13vh] px-[3.5vw] flex items-end justify-between pointer-events-none z-30 max-md:hidden">
+      <div className="hero-side-fade hero-scroll-fade will-change-transform absolute inset-x-0 bottom-[13vh] px-[3.5vw] flex items-end justify-between pointer-events-none z-30 max-md:hidden">
         {/* ─────────────────────────────────────────────────────────────────── */}
         {/* LOWER-LEFT CONTENT BLOCK                                            */}
         {/* ─────────────────────────────────────────────────────────────────── */}
@@ -514,8 +513,9 @@ export const LandoHeroSection: React.FC = () => {
       {/* ========================================================================= */}
       {/* 5. MOBILE RESPONSIVE CONTENT TRAY (CLEAN STACKING ON SMALL SCREENS)       */}
       {/* Displays the supporting cards cleanly without overlapping the portrait    */}
+      {/* Progressive Scroll Fade-Out via .hero-side-fade .hero-scroll-fade         */}
       {/* ========================================================================= */}
-      <div className="md:hidden absolute bottom-20 inset-x-0 px-6 flex items-end justify-between pointer-events-none z-30">
+      <div className="hero-side-fade hero-scroll-fade will-change-transform md:hidden absolute bottom-20 inset-x-0 px-6 flex items-end justify-between pointer-events-none z-30">
         <div className="pointer-events-auto flex flex-col items-start max-w-[140px]">
           <div className="w-[85px] aspect-[2/3] rounded-md border border-red-500/40 shadow-lg overflow-hidden relative">
             <Image
@@ -544,8 +544,9 @@ export const LandoHeroSection: React.FC = () => {
       {/* ========================================================================= */}
       {/* 6. BOTTOM-RIGHT CORNER: COMPACT AUDIO CONTROL & THEME MUSIC PLAYER         */}
       {/* Moved to bottom-right corner so it does not compete with menu or content   */}
+      {/* Progressive Scroll Fade-Out via .hero-side-fade .hero-scroll-fade         */}
       {/* ========================================================================= */}
-      <div className="absolute bottom-4 right-4 sm:bottom-5 sm:right-[3.5vw] z-40 pointer-events-auto">
+      <div className="hero-side-fade hero-scroll-fade will-change-transform absolute bottom-4 right-4 sm:bottom-5 sm:right-[3.5vw] z-40 pointer-events-auto">
         <HeroMusicWave />
       </div>
 

@@ -127,8 +127,8 @@ const orbitron = Orbitron({
 
 const anekTamil = Anek_Tamil({
   variable: "--font-anek-tamil",
-  subsets: ["latin", "tamil"],
-  weight: ["400", "600", "700", "800"],
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {

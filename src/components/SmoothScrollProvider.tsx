@@ -75,6 +75,8 @@ export const SmoothScrollProvider: React.FC<SmoothScrollProviderProps> = ({ chil
       if (stops.length < 2) return;
 
       const creativeStop = stops[1]?.top ?? 1500;
+      const aboutStop = stops[2]?.top;
+      const designStop = stops[3]?.top;
 
       // ─────────────────────────────────────────────────────────────
       // A. HERO SCRUB PROTECTION:
@@ -82,6 +84,15 @@ export const SmoothScrollProvider: React.FC<SmoothScrollProviderProps> = ({ chil
       // the Spider-Man animation with 100% fluid freedom without jerking!
       // ─────────────────────────────────────────────────────────────
       if (currentScroll > 140 && currentScroll < creativeStop - 280) {
+        return;
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // A2. ABOUT ME PINNED SCRUB PROTECTION:
+      // While user is scrubbing the pinned line-by-line text reveal,
+      // let them scrub with 100% fluid freedom without snapping away!
+      // ─────────────────────────────────────────────────────────────
+      if (aboutStop && designStop && currentScroll > aboutStop + 80 && currentScroll < designStop - 180) {
         return;
       }
 

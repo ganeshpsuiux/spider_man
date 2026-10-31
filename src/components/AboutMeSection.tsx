@@ -3,9 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger);
 
 export const AboutMeSection: React.FC = () => {
   const [hoveredPolaroid, setHoveredPolaroid] = useState<string | null>(null);
@@ -14,7 +13,6 @@ export const AboutMeSection: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const leftPolaroidRef = useRef<HTMLDivElement>(null);
   const centerTextRef = useRef<HTMLDivElement>(null);
-  const textParagraphRef = useRef<HTMLParagraphElement>(null);
   const rightPolaroidRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,27 +20,27 @@ export const AboutMeSection: React.FC = () => {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Create master entrance timeline triggered on scroll enter
-      const tl = gsap.timeline({
+      // 1. Entrance timeline when section scrolls near viewport
+      const entranceTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: "top 75%",
+          start: "top 85%",
           toggleActions: "play none none reverse",
         },
       });
 
-      // 1. Top Header & Note Fade-in
+      // Top Header & Note Fade-in
       if (headerRef.current) {
-        tl.fromTo(
+        entranceTl.fromTo(
           headerRef.current,
           { opacity: 0, y: -20 },
           { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
         );
       }
 
-      // 2. Left Polaroid Smooth Slide & Swing
+      // Left Polaroid Smooth Slide & Swing
       if (leftPolaroidRef.current) {
-        tl.fromTo(
+        entranceTl.fromTo(
           leftPolaroidRef.current,
           { opacity: 0, x: -60, rotate: -12, scale: 0.9 },
           { opacity: 1, x: 0, rotate: -4, scale: 1, duration: 0.8, ease: "back.out(1.2)" },
@@ -50,9 +48,9 @@ export const AboutMeSection: React.FC = () => {
         );
       }
 
-      // 3. Center Narrative Container Fade & Rise
+      // Center Narrative Container Fade & Rise
       if (centerTextRef.current) {
-        tl.fromTo(
+        entranceTl.fromTo(
           centerTextRef.current,
           { opacity: 0, y: 25 },
           { opacity: 1, y: 0, duration: 0.75, ease: "power2.out" },
@@ -60,15 +58,48 @@ export const AboutMeSection: React.FC = () => {
         );
       }
 
-      // 3b. Line-by-Line Muted Text-Fill with 50% Hard-Stop Linear Gradient
+      // Stuff Box Physical Slide & Rotate Entrance
+      if (rightPolaroidRef.current) {
+        entranceTl.fromTo(
+          rightPolaroidRef.current,
+          {
+            opacity: 0,
+            x: 280,
+            y: 30,
+            rotate: 45,
+            scale: 0.9,
+          },
+          {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            rotate: 0,
+            scale: 1,
+            duration: 1.1,
+            ease: "power3.out",
+          },
+          "-=0.55"
+        );
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // 2. PINNED CENTER-SCREEN STICKY SCROLL TIMELINE
+      // Locks dead-center in viewport (+=250%) while lines reveal progressively:
+      // [Obsidian Black] -> [Charcoal] -> [Electric Red] -> [Neon Blue] -> [Ghost Gray]
+      // ─────────────────────────────────────────────────────────────
       if (centerTextRef.current) {
-        // Apply 50% hard-stop gradient to black text items
+        // Mathematically calibrated 320% ramp:
+        // Visible window at 100% position is [68.75%, 100%] => 100% PURE GHOST GRAY (zero blue bleed!)
+        // Visible window at 0% position is [0%, 31.25%] => 100% PURE OBSIDIAN BLACK
+        const spideySuitRamp =
+          "linear-gradient(to right, #09090b 0%, #09090b 34%, #18181b 38%, #dc2626 46%, #ef4444 52%, #3b82f6 57%, #2563eb 60%, #d4d4d8 64%, #e4e4e7 100%)";
+
         const blackItems = centerTextRef.current.querySelectorAll(
           ".fill-line-1, .fill-line-2, .fill-line-3, .fill-line-4, .fill-line-5, .fill-line-6, .fill-line-7, .fill-line-8-black"
         );
         gsap.set(blackItems, {
-          backgroundImage: "linear-gradient(to right, #000000 50%, #c0c4cc 50%)",
-          backgroundSize: "200% 100%",
+          backgroundImage: spideySuitRamp,
+          backgroundSize: "320% 100%",
           backgroundPositionX: "100%",
           WebkitBackgroundClip: "text",
           backgroundClip: "text",
@@ -77,12 +108,13 @@ export const AboutMeSection: React.FC = () => {
           display: "inline-block",
         });
 
-        // Apply 50% hard-stop gradient to blue text item ("AI and vibe coding.")
+        // Dual-Chromatic Spidey Ramp for "AI and vibe coding." resolving to electric royal blue
         const blueItem = centerTextRef.current.querySelector(".fill-line-8-blue");
         if (blueItem) {
           gsap.set(blueItem, {
-            backgroundImage: "linear-gradient(to right, #2563EB 50%, #93c5fd 50%)",
-            backgroundSize: "200% 100%",
+            backgroundImage:
+              "linear-gradient(to right, #1d4ed8 0%, #2563eb 34%, #1d4ed8 38%, #dc2626 46%, #ef4444 52%, #3b82f6 57%, #60a5fa 60%, #d4d4d8 64%, #e4e4e7 100%)",
+            backgroundSize: "320% 100%",
             backgroundPositionX: "100%",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
@@ -92,64 +124,54 @@ export const AboutMeSection: React.FC = () => {
           });
         }
 
-        // Sequential line-by-line ScrollTrigger timeline (anchored stably to section)
-        const lineTl = gsap.timeline({
+        // Initialize highlighters and sparks to strictly hidden at rest
+        gsap.set([".highlighter-line-1", ".highlighter-line-2"], {
+          scaleX: 0,
+          transformOrigin: "left center",
+        });
+        gsap.set([".spark-yellow", ".spark-blue"], {
+          opacity: 0,
+          scale: 0,
+          transformOrigin: "center center",
+        });
+
+        // Pinned Timeline: locks section dead-center in viewport for 2.5x viewport height
+        const pinTl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
-            start: "top 55%",
-            end: "center 35%",
-            scrub: 0.6,
+            start: "top top",
+            end: "+=250%",
+            pin: true,
+            pinSpacing: true,
+            scrub: 0.8,
           },
         });
 
-        // Line 1
-        lineTl.to(".fill-line-1", { backgroundPositionX: "0%", ease: "none", duration: 0.9 });
-        // Line 2
-        lineTl.to(".fill-line-2", { backgroundPositionX: "0%", ease: "none", duration: 0.9 });
-        // Line 3 + Highlighter 1 + Yellow spark
-        lineTl.to(".fill-line-3", { backgroundPositionX: "0%", ease: "none", duration: 1 });
-        lineTl.to(".highlighter-line-1", { scaleX: 1, ease: "power1.out", duration: 0.5 }, "<0.4");
-        lineTl.to(".spark-yellow", { opacity: 1, scale: 1, ease: "back.out(2)", duration: 0.4 }, "<0.4");
-        // Line 4 + Highlighter 2
-        lineTl.to(".fill-line-4", { backgroundPositionX: "0%", ease: "none", duration: 0.8 });
-        lineTl.to(".highlighter-line-2", { scaleX: 1, ease: "power1.out", duration: 0.5 }, "<0.3");
-        // Line 5
-        lineTl.to(".fill-line-5", { backgroundPositionX: "0%", ease: "none", duration: 0.9 });
-        // Line 6
-        lineTl.to(".fill-line-6", { backgroundPositionX: "0%", ease: "none", duration: 0.9 });
-        // Line 7
-        lineTl.to(".fill-line-7", { backgroundPositionX: "0%", ease: "none", duration: 0.9 });
-        // Line 8 (powered by + AI and vibe coding.) + Blue spark
-        lineTl.to(".fill-line-8-black", { backgroundPositionX: "0%", ease: "none", duration: 0.4 });
-        lineTl.to(".fill-line-8-blue", { backgroundPositionX: "0%", ease: "none", duration: 0.8 }, "<0.2");
-        lineTl.to(".spark-blue", { opacity: 1, scale: 1, ease: "back.out(2)", duration: 0.4 }, "<0.4");
+        // ── MILESTONE 1: Block 1 (Intro) ──
+        pinTl.to(".fill-line-1", { backgroundPositionX: "0%", ease: "none", duration: 1.0 });
+        pinTl.to(".fill-line-2", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.15");
+
+        // ── MILESTONE 2: Block 2 (Career Milestones & Highlighters) ──
+        pinTl.to(".fill-line-3", { backgroundPositionX: "0%", ease: "none", duration: 1.1 });
+        pinTl.to(".highlighter-line-1", { scaleX: 1, ease: "power1.out", duration: 0.7 }, "<0.4");
+        pinTl.to(".spark-yellow", { opacity: 1, scale: 1, ease: "back.out(2)", duration: 0.4 }, "<0.4");
+
+        pinTl.to(".fill-line-4", { backgroundPositionX: "0%", ease: "none", duration: 0.95 });
+        pinTl.to(".highlighter-line-2", { scaleX: 1, ease: "power1.out", duration: 0.6 }, "<0.35");
+
+        // ── MILESTONE 3: Block 3 (Philosophy) ──
+        pinTl.to(".fill-line-5", { backgroundPositionX: "0%", ease: "none", duration: 1.0 });
+        pinTl.to(".fill-line-6", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.15");
+
+        // ── MILESTONE 4: Block 4 (Closer & Vibe Coding) ──
+        pinTl.to(".fill-line-7", { backgroundPositionX: "0%", ease: "none", duration: 1.0 });
+        pinTl.to(".fill-line-8-black", { backgroundPositionX: "0%", ease: "none", duration: 0.45 });
+        pinTl.to(".fill-line-8-blue", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "<0.15");
+        pinTl.to(".spark-blue", { opacity: 1, scale: 1, ease: "back.out(2)", duration: 0.4 }, "<0.3");
+
+        // Brief hold so user can appreciate the fully revealed narrative before release
+        pinTl.to({}, { duration: 0.4 });
       }
-
-      // 4. Stuff Box Physical Slide & 90-Degree Rotate Entrance
-      if (rightPolaroidRef.current) {
-        tl.fromTo(
-          rightPolaroidRef.current,
-          {
-            opacity: 0,
-            x: 360,
-            y: 40,
-            rotate: 90,
-            scale: 0.9,
-          },
-          {
-            opacity: 1,
-            x: 0,
-            y: 0,
-            rotate: 0,
-            scale: 1,
-            duration: 1.25,
-            ease: "power3.out",
-          },
-          "-=0.55"
-        );
-      }
-
-
     }, sectionRef);
 
     return () => ctx.revert();
@@ -159,16 +181,57 @@ export const AboutMeSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="about-me-section"
-      className="relative w-full min-h-screen bg-transparent text-black flex flex-col justify-center items-center px-4 sm:px-8 pt-20 sm:pt-28 pb-36 sm:pb-48 overflow-visible select-none"
+      className="relative w-full h-screen min-h-screen bg-transparent text-black flex items-center justify-center px-4 sm:px-8 lg:px-12 overflow-hidden select-none"
       style={{ backgroundColor: "transparent" }}
     >
+      {/* Signature Spidey Suit Chromatic Ramp:
+          At 100% position, window is [68.75%, 100%] -> 100% UNREVEALED GHOST GRAY (zero blue bleed!)
+          During scroll, sweeps Electric Blue -> Radiant Red -> Obsidian Black
+          At 0% position, window is [0%, 31.25%] -> 100% OBSIDIAN BLACK */}
+      <style>{`
+        .fill-line-item {
+          background-image: linear-gradient(
+            to right,
+            #09090b 0%,
+            #09090b 34%,
+            #18181b 38%,
+            #dc2626 46%,
+            #ef4444 52%,
+            #3b82f6 57%,
+            #2563eb 60%,
+            #d4d4d8 64%,
+            #e4e4e7 100%
+          );
+          background-size: 320% 100%;
+          background-position-x: 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: transparent;
+          display: inline-block;
+        }
+        .fill-line-8-blue {
+          background-image: linear-gradient(
+            to right,
+            #1d4ed8 0%,
+            #2563eb 34%,
+            #1d4ed8 38%,
+            #dc2626 46%,
+            #ef4444 52%,
+            #3b82f6 57%,
+            #60a5fa 60%,
+            #d4d4d8 64%,
+            #e4e4e7 100%
+          ) !important;
+        }
+      `}</style>
 
-      {/* Main Content Container */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
+      {/* Main Content Container: Pinned Dead-Center in Viewport */}
+      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center justify-center">
         {/* Top Header / Corner Note Area */}
         <div
           ref={headerRef}
-          className="w-full flex items-start justify-between mb-8 sm:mb-12 relative opacity-0"
+          className="w-full flex items-start justify-between mb-4 sm:mb-6 lg:mb-8 relative opacity-0"
         >
           {/* Top-Left Handwritten "about me!" */}
           <div className="flex items-center gap-1.5 -rotate-3 hover:rotate-0 transition-transform duration-300 cursor-default">
@@ -220,7 +283,7 @@ export const AboutMeSection: React.FC = () => {
         </div>
 
         {/* Center Stage: Left Polaroid | Center Handwritten Story | Right Polaroid */}
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center my-4 sm:my-8">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center justify-center my-2 sm:my-4">
           
           {/* ──────── 1. Left Polaroid Photo ("me") ──────── */}
           <div className="lg:col-span-3 flex justify-center order-2 lg:order-1">
@@ -228,13 +291,13 @@ export const AboutMeSection: React.FC = () => {
               ref={leftPolaroidRef}
               onMouseEnter={() => setHoveredPolaroid("me")}
               onMouseLeave={() => setHoveredPolaroid(null)}
-              className={`relative bg-white p-3.5 pb-4 rounded-[4px] shadow-[0_16px_36px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)] border border-black/[0.06] opacity-0 transition-all duration-500 ease-out cursor-pointer ${
+              className={`relative bg-white p-3 sm:p-3.5 pb-3.5 sm:pb-4 rounded-[4px] shadow-[0_16px_36px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)] border border-black/[0.06] opacity-0 transition-all duration-500 ease-out cursor-pointer ${
                 hoveredPolaroid === "me"
                   ? "!rotate-0 scale-105 shadow-[0_24px_48px_rgba(0,0,0,0.16)] -translate-y-2 z-20"
                   : "scale-100 z-10"
               }`}
               style={{
-                width: "210px",
+                width: "195px",
                 transformOrigin: "center center",
               }}
             >
@@ -290,17 +353,20 @@ export const AboutMeSection: React.FC = () => {
               fontFamily: "var(--font-sora), sans-serif",
             }}
           >
-            <div className="flex flex-col items-center gap-4 sm:gap-5 max-w-xl mx-auto w-full">
+            <div className="flex flex-col items-center gap-3.5 sm:gap-4 max-w-xl mx-auto w-full">
               {/* Block 1: Intro */}
-              <div className="text-base sm:text-lg md:text-[1.22rem] font-normal leading-[1.65] text-center w-full">
-                <span className="block fill-line-item fill-line-1">An M.Com graduate who took a detour</span>
-                <span className="block fill-line-item fill-line-2">into design — and never looked back.</span>
+              <div className="text-base sm:text-lg md:text-[1.2rem] font-normal leading-[1.65] text-center w-full">
+                <span className="block fill-line-item fill-line-1 py-0.5">An M.Com graduate who took a detour</span>
+                <span className="block fill-line-item fill-line-2 py-0.5">into design — and never looked back.</span>
               </div>
 
               {/* Block 2: Career Path with Yellow Highlighters & Spark */}
-              <div className="relative inline-flex flex-col items-center my-1">
+              <div className="relative inline-flex flex-col items-center my-0.5 sm:my-1">
                 {/* Yellow Hand-Drawn Doodle Rays (Top-Right) */}
-                <div className="spark-yellow absolute -top-3.5 -right-6 sm:-right-8 pointer-events-none opacity-0 scale-50 transition-all">
+                <div
+                  className="spark-yellow absolute -top-3.5 -right-6 sm:-right-8 pointer-events-none opacity-0"
+                  style={{ opacity: 0, transform: "scale(0)", transformOrigin: "center center" }}
+                >
                   <svg
                     className="w-5 h-5 text-[#F59E0B]"
                     viewBox="0 0 20 20"
@@ -315,35 +381,44 @@ export const AboutMeSection: React.FC = () => {
                   </svg>
                 </div>
 
-                <div className="text-base sm:text-[1.2rem] md:text-[1.32rem] font-bold tracking-tight text-center leading-[1.5]">
+                <div className="text-base sm:text-[1.18rem] md:text-[1.3rem] font-bold tracking-tight text-center leading-[1.5]">
                   {/* Line 3 with Highlighter */}
                   <div className="relative inline-block px-1">
-                    <span className="relative z-10 fill-line-item fill-line-3">Graphic Designer → UI/UX Designer →</span>
-                    <span className="highlighter-line-1 absolute -bottom-0.5 left-0 right-0 h-[6px] sm:h-[7px] bg-[#FDE047]/90 rounded-full z-0 origin-left scale-x-0 transition-transform" />
+                    <span className="relative z-10 fill-line-item fill-line-3 py-0.5">Graphic Designer → UI/UX Designer →</span>
+                    <span
+                      className="highlighter-line-1 absolute -bottom-0.5 left-0 right-0 h-[6px] sm:h-[7px] bg-[#FDE047]/90 rounded-full z-0 origin-left"
+                      style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
+                    />
                   </div>
 
                   {/* Line 4 with Highlighter */}
                   <div className="relative inline-block px-1 mt-1">
-                    <span className="relative z-10 fill-line-item fill-line-4">Team Lead at Webnox.</span>
-                    <span className="highlighter-line-2 absolute -bottom-0.5 left-0 right-0 h-[6px] sm:h-[7px] bg-[#FDE047]/90 rounded-full z-0 origin-left scale-x-0 transition-transform" />
+                    <span className="relative z-10 fill-line-item fill-line-4 py-0.5">Team Lead at Webnox.</span>
+                    <span
+                      className="highlighter-line-2 absolute -bottom-0.5 left-0 right-0 h-[6px] sm:h-[7px] bg-[#FDE047]/90 rounded-full z-0 origin-left"
+                      style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
+                    />
                   </div>
                 </div>
               </div>
 
               {/* Block 3: Philosophy */}
-              <div className="text-base sm:text-lg md:text-[1.22rem] font-normal leading-[1.65] text-center w-full">
-                <span className="block fill-line-item fill-line-5">Every step taught me something new,</span>
-                <span className="block fill-line-item fill-line-6">and every project shaped the designer I am today.</span>
+              <div className="text-base sm:text-lg md:text-[1.2rem] font-normal leading-[1.65] text-center w-full">
+                <span className="block fill-line-item fill-line-5 py-0.5">Every step taught me something new,</span>
+                <span className="block fill-line-item fill-line-6 py-0.5">and every project shaped the designer I am today.</span>
               </div>
 
               {/* Block 4: Closer with Blue Accent & Spark */}
-              <div className="text-base sm:text-lg md:text-[1.22rem] font-normal leading-[1.65] text-center w-full">
-                <span className="block fill-line-item fill-line-7">This portfolio? Built from that journey —</span>
+              <div className="text-base sm:text-lg md:text-[1.2rem] font-normal leading-[1.65] text-center w-full">
+                <span className="block fill-line-item fill-line-7 py-0.5">This portfolio? Built from that journey —</span>
                 <span className="relative inline-flex items-center justify-center gap-1.5 flex-wrap">
-                  <span className="fill-line-item fill-line-8-black">powered by</span>
-                  <span className="fill-line-item fill-line-8-blue font-bold text-[#2563EB]">AI and vibe coding.</span>
+                  <span className="fill-line-item fill-line-8-black py-0.5">powered by</span>
+                  <span className="fill-line-item fill-line-8-blue font-bold py-0.5">AI and vibe coding.</span>
                   {/* Blue Hand-Drawn Doodle Rays (Bottom-Right) */}
-                  <span className="spark-blue absolute -bottom-2 -right-6 sm:-right-7 pointer-events-none opacity-0 scale-50 transition-all inline-block">
+                  <span
+                    className="spark-blue absolute -bottom-2 -right-6 sm:-right-7 pointer-events-none opacity-0 inline-block"
+                    style={{ opacity: 0, transform: "scale(0)", transformOrigin: "center center" }}
+                  >
                     <svg
                       className="w-4 h-4 text-[#2563EB]"
                       viewBox="0 0 20 20"
@@ -368,7 +443,7 @@ export const AboutMeSection: React.FC = () => {
               ref={rightPolaroidRef}
               className="relative opacity-0 will-change-transform"
               style={{
-                width: "290px",
+                width: "260px",
                 maxWidth: "100%",
                 transformOrigin: "center center",
               }}
@@ -386,8 +461,6 @@ export const AboutMeSection: React.FC = () => {
           </div>
 
         </div>
-
-
       </div>
     </section>
   );

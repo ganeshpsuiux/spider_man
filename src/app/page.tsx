@@ -20,8 +20,11 @@ export default function Home() {
           <LandoHeroSection />
         </Chapter2Section>
 
-        {/* Unified White Canvas Area for Section 3 + Section 4 */}
-        <div id="white-canvas-wrapper" className="relative w-full bg-white overflow-hidden select-none">
+        {/* Unified White Canvas Area for Section 3 + Section 4 (Curtain Slide-Over Stacking Card) */}
+        <div
+          id="white-canvas-wrapper"
+          className="relative z-30 w-full bg-white overflow-hidden select-none rounded-t-[24px] sm:rounded-t-[32px] md:rounded-t-[40px] border-t border-black/10 shadow-[0_-25px_60px_rgba(0,0,0,0.55),0_-8px_24px_rgba(0,0,0,0.35)]"
+        >
           {/* Continuous Dotted Grid Pattern across Section 3 & Section 4 */}
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +45,7 @@ export default function Home() {
           {/* Section 3: Editorial Vision ("We make Creative Things.") */}
           <CreativeThingsSection />
 
-          {/* Section 4: About Me Interactive Scrapbook Stage */}
+          {/* Section 4: About Me Interactive Scrapbook Stage (Pinned Center-Screen Sticky Scroll) */}
           <AboutMeSection />
         </div>
 
