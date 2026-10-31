@@ -22,6 +22,8 @@
     --font-silkscreen: var(--font-silkscreen), monospace;
     --font-orbitron: var(--font-orbitron), sans-serif;
     --font-anek-tamil: var(--font-anek-tamil), sans-serif;
+    --font-barlow: var(--font-barlow-condensed), var(--font-bebas), sans-serif;
+    --font-inter: var(--font-inter), var(--font-geist-sans), sans-serif;
   }
 
   html,
@@ -73,6 +75,14 @@
 
 .font-marvel {
   font-family: var(--font-marvel);
+}
+
+.font-barlow {
+  font-family: var(--font-barlow);
+}
+
+.font-inter {
+  font-family: var(--font-inter);
 }
 
 /* 3D Perspective container */

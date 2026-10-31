@@ -64,18 +64,18 @@ export const HeroMusicWave: React.FC = () => {
     <button
       type="button"
       onClick={togglePlay}
-      className="group relative flex items-center justify-center h-12 px-4 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md border border-white/15 hover:border-white/35 shadow-[0_8px_24px_rgba(0,0,0,0.5),0_0_12px_rgba(255,255,255,0.06)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer select-none"
+      className="group relative flex items-center justify-center h-10 sm:h-11 px-3 sm:px-4 rounded-full bg-black/50 hover:bg-black/75 backdrop-blur-md border border-white/15 hover:border-red-500/50 shadow-[0_4px_20px_rgba(0,0,0,0.6),0_0_12px_rgba(239,68,68,0.15)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer select-none"
       title={isPlaying ? "Pause Spider-Man theme" : "Play Spider-Man theme"}
       aria-label={isPlaying ? "Pause theme music" : "Play theme music"}
     >
       {/* 14 Symmetrical White Music Wave Equalizer Lines */}
-      <div className="flex items-center justify-center gap-[3px] sm:gap-[3.5px] h-[38px]">
+      <div className="flex items-center justify-center gap-[2.5px] sm:gap-[3px] h-[30px] sm:h-[34px]">
         {WAVE_BARS.map((bar, idx) => (
           <span
             key={idx}
-            className="w-[3px] sm:w-[3.5px] bg-white rounded-full transition-all duration-200 group-hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+            className="w-[2.5px] sm:w-[3px] bg-white rounded-full transition-all duration-200 group-hover:bg-red-400 group-hover:drop-shadow-[0_0_6px_rgba(239,68,68,0.8)]"
             style={{
-              height: `${bar.height}px`,
+              height: `${Math.round(bar.height * 0.85)}px`,
               transformOrigin: "center",
               animation: isPlaying
                 ? `${bar.anim} ${bar.dur}s ease-in-out ${bar.delay}s infinite alternate`
@@ -86,8 +86,8 @@ export const HeroMusicWave: React.FC = () => {
         ))}
       </div>
 
-      {/* Subtle indicator badge on hover */}
-      <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[10px] font-mono tracking-wider uppercase text-white/75 pointer-events-none whitespace-nowrap">
+      {/* Subtle indicator badge on hover placed ABOVE the button to avoid edge clipping */}
+      <span className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[10px] font-mono tracking-wider uppercase text-white/80 pointer-events-none whitespace-nowrap bg-black/80 px-2 py-0.5 rounded border border-white/10">
         {isPlaying ? "PAUSE THEME" : "PLAY THEME"}
       </span>
     </button>

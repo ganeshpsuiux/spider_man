@@ -17,8 +17,22 @@ import {
   Silkscreen,
   Orbitron,
   Anek_Tamil,
+  Barlow_Condensed,
+  Inter,
 } from "next/font/google";
 import "./globals.css";
+
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-barlow-condensed",
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -113,8 +127,8 @@ const orbitron = Orbitron({
 
 const anekTamil = Anek_Tamil({
   variable: "--font-anek-tamil",
-  subsets: ["latin", "tamil"],
-  weight: ["400", "600", "700", "800"],
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -137,7 +151,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${syne.variable} ${playfair.variable} ${sora.variable} ${marvelFont.variable} ${bebasNeue.variable} ${permanentMarker.variable} ${cabinSketch.variable} ${caveat.variable} ${pacifico.variable} ${cinzel.variable} ${righteous.variable} ${silkscreen.variable} ${orbitron.variable} ${anekTamil.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${syne.variable} ${playfair.variable} ${sora.variable} ${marvelFont.variable} ${bebasNeue.variable} ${permanentMarker.variable} ${cabinSketch.variable} ${caveat.variable} ${pacifico.variable} ${cinzel.variable} ${righteous.variable} ${silkscreen.variable} ${orbitron.variable} ${anekTamil.variable} ${barlowCondensed.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-black text-white overflow-x-hidden selection:bg-red-600 selection:text-white">
         {children}
