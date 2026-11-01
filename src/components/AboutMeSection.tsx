@@ -25,7 +25,8 @@ export const AboutMeSection: React.FC = () => {
       const entranceTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: "top 85%",
+          start: "top 90%",
+          end: "top 30%",
           toggleActions: "play none none reverse",
         },
       });
@@ -33,24 +34,27 @@ export const AboutMeSection: React.FC = () => {
       if (polaroidContainerRef.current) {
         entranceTl.fromTo(
           polaroidContainerRef.current,
-          { opacity: 0, x: -40, rotate: -7, scale: 0.95 },
-          { opacity: 1, x: 0, rotate: -2.5, scale: 1, duration: 0.85, ease: "back.out(1.2)" }
+          { opacity: 0, x: -30, scale: 0.96 },
+          { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "power2.out" }
         );
       }
 
       if (textContainerRef.current) {
         entranceTl.fromTo(
           textContainerRef.current,
-          { opacity: 0, y: 25 },
-          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
-          "-=0.5"
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+          "-=0.4"
         );
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 2. KINETIC SCROLL TIMELINE (start: "top center", end: "bottom center")
-      // - Frame-by-frame video scrub
-      // - Staggered dual-chromatic Spidey text illumination into solid obsidian (#111111)
+      // 2. PINNED SCROLL TIMELINE (start: "top top", end: "+=260%")
+      // STRICT BOUNDARY GUARDS:
+      // - Absolutely NO video playback or text scrubbing occurs until section is at top: 0
+      // - Pin locks section dead-center in the screen
+      // - PinSpacing: true pushes the next section down by 260vh so it cannot collide prematurely
+      // - Holds for progress 0.95 -> 1.00 before releasing to the next section
       // ─────────────────────────────────────────────────────────────
       if (textContainerRef.current) {
         const lineElements = textContainerRef.current.querySelectorAll(".fill-editorial-line");
@@ -71,15 +75,18 @@ export const AboutMeSection: React.FC = () => {
           display: "inline-block",
         });
 
-        const scrollTl = gsap.timeline({
+        const pinTl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
-            start: "top center",
-            end: "bottom center",
-            scrub: 0.8,
+            start: "top top",      // STRICT: Only start once section reaches top of viewport
+            end: "+=260%",         // Generous scroll travel (2.6x viewport height)
+            pin: true,             // Physically lock section dead-center in the screen
+            pinSpacing: true,      // Push the next section down so it cannot collide prematurely
+            anticipatePin: 1,      // Prevents micro-jank on fast scrolling
+            scrub: 0.8,            // Smooth inertial scrub
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-              // Frame-by-frame video scrub
+              // Frame-by-frame video scrub only during active pin
               if (video && Number.isFinite(video.duration) && video.duration > 0) {
                 const targetTime = self.progress * video.duration;
                 if (Math.abs(video.currentTime - targetTime) > 0.04) {
@@ -87,34 +94,34 @@ export const AboutMeSection: React.FC = () => {
                 }
               }
 
-              // Monospace HUD timecode update (0:00 / 0:14)
+              // Update timecode HUD: 0:00 / 0:14
               if (timecodeRef.current && video && Number.isFinite(video.duration) && video.duration > 0) {
                 const curSec = Math.min(Math.floor(self.progress * video.duration), Math.floor(video.duration));
                 const totalSec = Math.floor(video.duration) || 14;
-                const formatted = `0:${curSec < 10 ? "0" : ""}${curSec} / 0:${totalSec < 10 ? "0" : ""}${totalSec}`;
-                if (timecodeRef.current.textContent !== formatted) {
-                  timecodeRef.current.textContent = formatted;
-                }
+                timecodeRef.current.textContent = `0:${curSec < 10 ? "0" : ""}${curSec} / 0:${totalSec < 10 ? "0" : ""}${totalSec}`;
               }
             },
           },
         });
 
-        // ── Paragraph 1: 5 lines (Scroll progress 0.00 -> 0.45) ──
-        scrollTl.to(".fill-p1-1", { backgroundPositionX: "0%", ease: "none", duration: 0.8 });
-        scrollTl.to(".fill-p1-2", { backgroundPositionX: "0%", ease: "none", duration: 0.8 }, "-=0.35");
-        scrollTl.to(".fill-p1-3", { backgroundPositionX: "0%", ease: "none", duration: 0.8 }, "-=0.35");
-        scrollTl.to(".fill-p1-4", { backgroundPositionX: "0%", ease: "none", duration: 0.8 }, "-=0.35");
-        scrollTl.to(".fill-p1-5", { backgroundPositionX: "0%", ease: "none", duration: 0.8 }, "-=0.35");
+        // ── Paragraph 1: 5 lines (Progress 0.00 -> 0.42) ──
+        pinTl.to(".fill-p1-1", { backgroundPositionX: "0%", ease: "none", duration: 1.20 });
+        pinTl.to(".fill-p1-2", { backgroundPositionX: "0%", ease: "none", duration: 1.20 }, "-=0.45");
+        pinTl.to(".fill-p1-3", { backgroundPositionX: "0%", ease: "none", duration: 1.20 }, "-=0.45");
+        pinTl.to(".fill-p1-4", { backgroundPositionX: "0%", ease: "none", duration: 1.20 }, "-=0.45");
+        pinTl.to(".fill-p1-5", { backgroundPositionX: "0%", ease: "none", duration: 1.20 }, "-=0.45");
 
-        // ── Paragraph 2: 4 lines (Scroll progress 0.45 -> 0.82) ──
-        scrollTl.to(".fill-p2-1", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.2");
-        scrollTl.to(".fill-p2-2", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.35");
-        scrollTl.to(".fill-p2-3", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.35");
-        scrollTl.to(".fill-p2-4", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.35");
+        // ── Paragraph 2: 4 lines (Progress 0.42 -> 0.80) ──
+        pinTl.to(".fill-p2-1", { backgroundPositionX: "0%", ease: "none", duration: 1.20 });
+        pinTl.to(".fill-p2-2", { backgroundPositionX: "0%", ease: "none", duration: 1.20 }, "-=0.35");
+        pinTl.to(".fill-p2-3", { backgroundPositionX: "0%", ease: "none", duration: 1.20 }, "-=0.35");
+        pinTl.to(".fill-p2-4", { backgroundPositionX: "0%", ease: "none", duration: 1.20 }, "-=0.30");
 
-        // ── Closing Statement: 1 line (Scroll progress 0.80 -> 1.00) ──
-        scrollTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 0.95 }, "-=0.2");
+        // ── Closing Statement: 1 line (Progress 0.80 -> 0.95) ──
+        pinTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 1.50 });
+
+        // ── Hold Buffer: Locked composition (Progress 0.95 -> 1.00) ──
+        pinTl.to({}, { duration: 0.50 });
       }
     }, sectionRef);
 
@@ -125,7 +132,7 @@ export const AboutMeSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="about-me-section"
-      className="relative w-full min-h-screen flex items-center justify-center bg-transparent py-16 px-6 lg:px-12 select-none"
+      className="relative w-full h-screen min-h-screen flex items-center justify-center bg-transparent px-6 lg:px-12 select-none overflow-hidden"
     >
       {/* Dynamic Spidey Text Shader Styles */}
       <style>{`
@@ -206,12 +213,12 @@ export const AboutMeSection: React.FC = () => {
               {/* Subtle Film Vignette Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15 pointer-events-none" />
 
-              {/* Floating Translucent Glass HUD Badge (0:14 / 0:14) */}
+              {/* Floating Translucent Glass HUD Badge (0:00 / 0:14) */}
               <div
                 ref={timecodeRef}
                 className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-widest uppercase bg-black/60 backdrop-blur-sm border border-white/15 text-white/85 pointer-events-none z-10"
               >
-                0:14 / 0:14
+                0:00 / 0:14
               </div>
             </div>
 
