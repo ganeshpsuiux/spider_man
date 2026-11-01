@@ -12,6 +12,7 @@ interface ShowcaseCardProps {
   category: string;
   accent: string;
   year?: string;
+  className?: string;
 }
 
 const ShowcaseCard: React.FC<ShowcaseCardProps> = ({
@@ -20,8 +21,11 @@ const ShowcaseCard: React.FC<ShowcaseCardProps> = ({
   category,
   accent,
   year = "2026",
+  className = "",
 }) => (
-  <div className="w-full max-w-[280px] sm:max-w-[310px] bg-white/95 rounded-2xl p-2.5 sm:p-3 shadow-[0_24px_48px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06)] border border-black/[0.08] backdrop-blur-md select-none transition-transform duration-300">
+  <div
+    className={`w-full bg-white/95 rounded-2xl p-2.5 sm:p-3 shadow-[0_20px_45px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06)] border border-black/[0.08] backdrop-blur-md select-none transition-transform duration-300 ${className}`}
+  >
     {/* Card Image Viewport */}
     <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-zinc-100 relative mb-2.5 shadow-inner">
       <img
@@ -44,7 +48,7 @@ const ShowcaseCard: React.FC<ShowcaseCardProps> = ({
 
     {/* Metadata */}
     <div className="px-1 flex items-center justify-between">
-      <h4 className="font-sora text-[12.5px] sm:text-[13.5px] font-semibold text-zinc-900 tracking-tight truncate pr-2">
+      <h4 className="font-sora text-[12px] sm:text-[13px] font-semibold text-zinc-900 tracking-tight truncate pr-2">
         {title}
       </h4>
       <span className="text-[10px] font-mono text-zinc-400 shrink-0">
@@ -68,11 +72,14 @@ export const AboutMeSection: React.FC = () => {
   const punchlineContainerRef = useRef<HTMLDivElement>(null);
   const punchlineRef = useRef<HTMLHeadingElement>(null);
 
-  // River of floating showcase cards refs
-  const cardsRiverRef = useRef<HTMLDivElement>(null);
-  const col1Ref = useRef<HTMLDivElement>(null);
-  const col2Ref = useRef<HTMLDivElement>(null);
-  const col3Ref = useRef<HTMLDivElement>(null);
+  // Multi-Plane Parallax Depth Layer Refs
+  const bgCardsRiverRef = useRef<HTMLDivElement>(null);
+  const bgCol1Ref = useRef<HTMLDivElement>(null);
+  const bgCol2Ref = useRef<HTMLDivElement>(null);
+
+  const fgCardsRiverRef = useRef<HTMLDivElement>(null);
+  const fgCardLeftRef = useRef<HTMLDivElement>(null);
+  const fgCardRightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -109,16 +116,19 @@ export const AboutMeSection: React.FC = () => {
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 2. THE SIGNATURE CDG CHOREOGRAPHY (+=380% PINNED TIMELINE)
-      // Phase 1 (0.00 -> 0.40): 2-Column Editorial scrub & Spidey text gradient
-      // Phase 2 (0.40 -> 0.55): Center-Lock Glide & Hero statement bloom
-      // Phase 3 (0.55 -> 0.88): 3-Column Floating Cards Parallax Cascade
-      // Phase 4 (0.88 -> 1.00): Seamless handoff & release to next section
+      // 2. THE MULTI-PLANE PARALLAX INTERACTION (+=380% PINNED TIMELINE)
+      // Phase 1 (0.00 -> 0.35): Origin Story Stage (Video scrub + text reveal)
+      // Phase 2 (0.35 -> 0.50): Downward Center Glide (Locks in dead center & blooms)
+      // Phase 3 (0.50 -> 0.85): 3-Tier Multi-Plane Floating Cards Stream
+      //   - Layer 1 (z-10): Underneath background cards float behind text (0.85x speed)
+      //   - Layer 2 (z-20): Centered focal text statement locked in place
+      //   - Layer 3 (z-30): Foreground camera-close cards overlap text (1.25x speed, deep drop shadows)
+      // Phase 4 (0.85 -> 1.00): Smooth handoff & release into DesignShowcaseSection
       // ─────────────────────────────────────────────────────────────
       if (textContainerRef.current) {
         const lineElements = textContainerRef.current.querySelectorAll(".fill-editorial-line");
 
-        // Signature Spidey Chromatic Text Ramp:
+        // Signature Spidey Chromatic Text Shader
         gsap.set(lineElements, {
           backgroundImage:
             "linear-gradient(to right, #111111 0%, #18181b 34%, #27272a 38%, #dc2626 46%, #ef4444 52%, #3b82f6 57%, #2563eb 60%, #d4d4d8 64%, #e4e4e7 100%)",
@@ -131,25 +141,28 @@ export const AboutMeSection: React.FC = () => {
           display: "inline-block",
         });
 
-        // Set initial positions for the 3 floating parallax columns
-        if (col1Ref.current) gsap.set(col1Ref.current, { y: "120vh" });
-        if (col2Ref.current) gsap.set(col2Ref.current, { y: "135vh" });
-        if (col3Ref.current) gsap.set(col3Ref.current, { y: "125vh" });
+        // Set initial positions for Underneath Layer (z-10)
+        if (bgCol1Ref.current) gsap.set(bgCol1Ref.current, { y: "115vh" });
+        if (bgCol2Ref.current) gsap.set(bgCol2Ref.current, { y: "125vh" });
 
-        const pinTl = gsap.timeline({
+        // Set initial positions for Foreground Overlap Layer (z-30)
+        if (fgCardLeftRef.current) gsap.set(fgCardLeftRef.current, { y: "130vh" });
+        if (fgCardRightRef.current) gsap.set(fgCardRightRef.current, { y: "140vh" });
+
+        const masterTl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
-            start: "top top",      // STRICT: Absolutely NO playback or movement until section top reaches viewport top
-            end: "+=380%",         // Generous scroll travel for all 4 phases
+            start: "top top",      // Strictly start only when section reaches top
+            end: "+=380%",         // 3.8x viewport travel for comfortable reading & card viewing
             pin: pinWrapper,       // Physically pin inner wrapper (prevents DOM reparenting jank)
             pinSpacing: true,
             anticipatePin: 1,
             scrub: 0.8,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-              // Video scrub strictly active during Phase 1 (0.00 -> 0.40)
+              // Video scrub strictly active during Phase 1 (0.00 -> 0.35)
               if (video && Number.isFinite(video.duration) && video.duration > 0) {
-                const phase1Progress = Math.min(1, Math.max(0, self.progress / 0.40));
+                const phase1Progress = Math.min(1, Math.max(0, self.progress / 0.35));
                 const targetTime = phase1Progress * video.duration;
                 if (Math.abs(video.currentTime - targetTime) > 0.04) {
                   video.currentTime = targetTime;
@@ -158,7 +171,7 @@ export const AboutMeSection: React.FC = () => {
 
               // Monospace HUD timecode update (0:00 -> 0:14)
               if (timecodeRef.current && video && Number.isFinite(video.duration) && video.duration > 0) {
-                const phase1Progress = Math.min(1, Math.max(0, self.progress / 0.40));
+                const phase1Progress = Math.min(1, Math.max(0, self.progress / 0.35));
                 const curSec = Math.floor(phase1Progress * video.duration);
                 const totalSec = Math.floor(video.duration) || 14;
                 timecodeRef.current.textContent = `0:${curSec < 10 ? "0" : ""}${curSec} / 0:${totalSec < 10 ? "0" : ""}${totalSec}`;
@@ -168,36 +181,36 @@ export const AboutMeSection: React.FC = () => {
         });
 
         // ═════════════════════════════════════════════════════════════
-        // PHASE 1: 2-COLUMN EDITORIAL STAGE (Progress 0.00 -> 0.40)
+        // PHASE 1: ORIGIN STORY STAGE (Progress 0.00 -> 0.35)
         // ═════════════════════════════════════════════════════════════
-        // Paragraph 1: 5 lines (Progress 0.00 -> 0.20)
-        pinTl.to(".fill-p1-1", { backgroundPositionX: "0%", ease: "none", duration: 0.80 });
-        pinTl.to(".fill-p1-2", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
-        pinTl.to(".fill-p1-3", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
-        pinTl.to(".fill-p1-4", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
-        pinTl.to(".fill-p1-5", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
+        // Paragraph 1: 5 lines (Progress 0.00 -> 0.18)
+        masterTl.to(".fill-p1-1", { backgroundPositionX: "0%", ease: "none", duration: 0.80 });
+        masterTl.to(".fill-p1-2", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
+        masterTl.to(".fill-p1-3", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
+        masterTl.to(".fill-p1-4", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
+        masterTl.to(".fill-p1-5", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
 
-        // Paragraph 2: 4 lines (Progress 0.20 -> 0.35)
-        pinTl.to(".fill-p2-1", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.20");
-        pinTl.to(".fill-p2-2", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
-        pinTl.to(".fill-p2-3", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
-        pinTl.to(".fill-p2-4", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.30");
+        // Paragraph 2: 4 lines (Progress 0.18 -> 0.30)
+        masterTl.to(".fill-p2-1", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.20");
+        masterTl.to(".fill-p2-2", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
+        masterTl.to(".fill-p2-3", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.35");
+        masterTl.to(".fill-p2-4", { backgroundPositionX: "0%", ease: "none", duration: 0.80 }, "-=0.30");
 
-        // Closing Statement: 1 line (Progress 0.33 -> 0.40)
-        pinTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.20");
+        // Closing Statement: 1 line (Progress 0.28 -> 0.35)
+        masterTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.20");
 
         // ═════════════════════════════════════════════════════════════
-        // PHASE 2: CENTER-LOCK GLIDE & HERO BLOOM (Progress 0.40 -> 0.55)
+        // PHASE 2: DOWNWARD CENTER GLIDE (Progress 0.35 -> 0.50)
         // ═════════════════════════════════════════════════════════════
-        pinTl.addLabel("glide", ">0.15");
+        masterTl.addLabel("glide", ">0.15");
 
-        // 1. Polaroid card glides upward and dissolves
+        // 1. Polaroid card translates upward and dissolves
         if (polaroidContainerRef.current) {
-          pinTl.to(
+          masterTl.to(
             polaroidContainerRef.current,
             {
               opacity: 0,
-              y: -120,
+              y: -100,
               scale: 0.94,
               ease: "power2.inOut",
               duration: 1.5,
@@ -206,9 +219,9 @@ export const AboutMeSection: React.FC = () => {
           );
         }
 
-        // 2. Paragraphs 1 & 2 glide upward and dissolve
+        // 2. Paragraphs 1 & 2 translate upward and dissolve
         if (paragraphsRef.current) {
-          pinTl.to(
+          masterTl.to(
             paragraphsRef.current,
             {
               opacity: 0,
@@ -220,9 +233,9 @@ export const AboutMeSection: React.FC = () => {
           );
         }
 
-        // 3. Closing statement glides to DEAD CENTER of viewport & blooms into frosted glass hero
+        // 3. Closing statement comes down into DEAD CENTER of viewport & blooms into hero badge
         if (punchlineContainerRef.current) {
-          pinTl.to(
+          masterTl.to(
             punchlineContainerRef.current,
             {
               x: () => {
@@ -240,7 +253,7 @@ export const AboutMeSection: React.FC = () => {
                 return s.top + s.height / 2 - (p.top - curY + p.height / 2);
               },
               scale: () => (window.innerWidth >= 1024 ? 1.85 : 1.35),
-              backgroundColor: "rgba(255, 255, 255, 0.92)",
+              backgroundColor: "rgba(255, 255, 255, 0.94)",
               borderColor: "rgba(0, 0, 0, 0.08)",
               boxShadow: "0 24px 50px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04)",
               backdropFilter: "blur(16px)",
@@ -257,69 +270,77 @@ export const AboutMeSection: React.FC = () => {
         }
 
         // ═════════════════════════════════════════════════════════════
-        // PHASE 3: FLOATING CARDS PARALLAX CASCADE (Progress 0.55 -> 0.88)
+        // PHASE 3: MULTI-PLANE "ABOVE & BELOW" STREAM (Progress 0.50 -> 0.85)
         // ═════════════════════════════════════════════════════════════
-        pinTl.addLabel("cascade", ">0.05");
+        masterTl.addLabel("stream", ">0.05");
 
-        // Make floating cards river visible
-        if (cardsRiverRef.current) {
-          pinTl.to(
-            cardsRiverRef.current,
-            { opacity: 1, duration: 0.4, ease: "power1.in" },
-            "cascade"
+        // Reveal both Underneath (z-10) and Foreground (z-30) card layers
+        if (bgCardsRiverRef.current) {
+          masterTl.to(bgCardsRiverRef.current, { opacity: 1, duration: 0.4, ease: "power1.in" }, "stream");
+        }
+        if (fgCardsRiverRef.current) {
+          masterTl.to(fgCardsRiverRef.current, { opacity: 1, duration: 0.4, ease: "power1.in" }, "stream");
+        }
+
+        // Underneath Layer (z-10): Parallax Speed 0.85x (floats behind text plane)
+        if (bgCol1Ref.current) {
+          masterTl.to(
+            bgCol1Ref.current,
+            {
+              y: "-125vh",
+              duration: 3.5,
+              ease: "none",
+            },
+            "stream"
+          );
+        }
+        if (bgCol2Ref.current) {
+          masterTl.to(
+            bgCol2Ref.current,
+            {
+              y: "-120vh",
+              duration: 3.5,
+              ease: "none",
+            },
+            "stream"
           );
         }
 
-        // Column 1 (Left): Speed 1.2x with slight tilt (-2deg)
-        if (col1Ref.current) {
-          pinTl.to(
-            col1Ref.current,
+        // Foreground Overlap Layer (z-30): Parallax Speed 1.25x (camera-close, overlaps text with deep shadow)
+        if (fgCardLeftRef.current) {
+          masterTl.to(
+            fgCardLeftRef.current,
             {
               y: "-145vh",
-              duration: 3.3,
+              duration: 3.5,
               ease: "none",
             },
-            "cascade"
+            "stream"
           );
         }
-
-        // Column 2 (Center-offset / background): Speed 0.85x with subtle tilt (0.5deg)
-        if (col2Ref.current) {
-          pinTl.to(
-            col2Ref.current,
+        if (fgCardRightRef.current) {
+          masterTl.to(
+            fgCardRightRef.current,
             {
-              y: "-115vh",
-              duration: 3.3,
+              y: "-140vh",
+              duration: 3.5,
               ease: "none",
             },
-            "cascade"
-          );
-        }
-
-        // Column 3 (Right): Speed 1.1x with slight tilt (2.5deg)
-        if (col3Ref.current) {
-          pinTl.to(
-            col3Ref.current,
-            {
-              y: "-135vh",
-              duration: 3.3,
-              ease: "none",
-            },
-            "cascade"
+            "stream"
           );
         }
 
         // ═════════════════════════════════════════════════════════════
-        // PHASE 4: SEAMLESS HANDOFF & OUTRO (Progress 0.88 -> 1.00)
+        // PHASE 4: SMOOTH HANDOFF INTO NEXT SECTION (Progress 0.85 -> 1.00)
         // ═════════════════════════════════════════════════════════════
-        pinTl.addLabel("outro", ">-0.2");
+        masterTl.addLabel("outro", ">-0.2");
 
-        // Centered hero badge gently floats up and dissolves
+        // Centered hero statement floats up gently and dissolves
         if (punchlineContainerRef.current) {
-          pinTl.to(
+          masterTl.to(
             punchlineContainerRef.current,
             {
-              y: "-=80px",
+              y: "-=60px",
               opacity: 0,
               scale: () => (window.innerWidth >= 1024 ? 1.95 : 1.45),
               duration: 1.0,
@@ -329,21 +350,16 @@ export const AboutMeSection: React.FC = () => {
           );
         }
 
-        // Cards river completes exit
-        if (cardsRiverRef.current) {
-          pinTl.to(
-            cardsRiverRef.current,
-            {
-              opacity: 0,
-              duration: 0.8,
-              ease: "power2.inOut",
-            },
-            "outro"
-          );
+        // Both card streams dissolve as they complete exit
+        if (bgCardsRiverRef.current) {
+          masterTl.to(bgCardsRiverRef.current, { opacity: 0, duration: 0.8, ease: "power2.inOut" }, "outro");
+        }
+        if (fgCardsRiverRef.current) {
+          masterTl.to(fgCardsRiverRef.current, { opacity: 0, duration: 0.8, ease: "power2.inOut" }, "outro");
         }
 
-        // Hold beat for 0.2s before pin releases smoothly into next section
-        pinTl.to({}, { duration: 0.3 });
+        // Fluid release hold buffer into next section
+        masterTl.to({}, { duration: 0.3 });
       }
     }, sectionRef);
 
@@ -392,102 +408,82 @@ export const AboutMeSection: React.FC = () => {
           }
         `}</style>
 
-        {/* ──────── 3. PHASE 3: FLOATING CARDS RIVER CASCADE (Z-10) ──────── */}
+        {/* ──────── 1. UNDERNEATH LAYER: BACKGROUND CARDS (Z-10) ──────── */}
         <div
-          ref={cardsRiverRef}
+          ref={bgCardsRiverRef}
           className="absolute inset-0 pointer-events-none overflow-hidden z-10 flex items-center justify-center opacity-0"
           style={{ width: "100%", height: "100%" }}
         >
-          <div className="w-full max-w-6xl mx-auto px-4 grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 h-full items-center justify-center">
+          <div className="w-full max-w-5xl mx-auto px-4 grid grid-cols-2 gap-8 sm:gap-14 lg:gap-20 h-full items-center justify-center">
             
-            {/* Column 1 (Left - Speed 1.2x, Tilt -2deg) */}
+            {/* Background Column 1 (Left - Speed 0.85x, Tilt -1.5deg) */}
             <div
-              ref={col1Ref}
-              className="flex flex-col gap-6 sm:gap-8 will-change-transform items-center"
-              style={{ transform: "rotate(-2deg)" }}
+              ref={bgCol1Ref}
+              className="flex flex-col gap-8 sm:gap-12 will-change-transform items-center"
+              style={{ transform: "rotate(-1.5deg)" }}
             >
               <ShowcaseCard
                 image="/assets/concepts/about_me_spiderverse_ui_1793291690442.jpg"
                 title="Spiderverse Design System"
                 category="UI System"
                 accent="#dc2626"
+                className="max-w-[270px] sm:max-w-[290px]"
               />
               <ShowcaseCard
                 image="/assets/card_creative_3d.jpg"
                 title="Kinetic Spatial Dimensions"
                 category="3D Motion"
                 accent="#2563eb"
+                className="max-w-[270px] sm:max-w-[290px]"
               />
               <ShowcaseCard
                 image="/assets/concepts/about_me_portfolio_mockup_1793291329956.jpg"
                 title="Editorial Platform UX"
                 category="Web App"
                 accent="#09090b"
+                className="max-w-[270px] sm:max-w-[290px]"
               />
             </div>
 
-            {/* Column 2 (Center-offset / background - Speed 0.85x, Tilt 0.5deg) */}
+            {/* Background Column 2 (Right - Speed 0.85x, Tilt 1.5deg) */}
             <div
-              ref={col2Ref}
-              className="hidden lg:flex flex-col gap-6 sm:gap-8 will-change-transform items-center"
-              style={{ transform: "rotate(0.5deg)" }}
+              ref={bgCol2Ref}
+              className="flex flex-col gap-8 sm:gap-12 will-change-transform items-center"
+              style={{ transform: "rotate(1.5deg)" }}
             >
               <ShowcaseCard
                 image="/assets/concepts/ganesh_about_me_bento_mockup_1793291386448.jpg"
                 title="Modular Bento Architecture"
                 category="Product UX"
                 accent="#f59e0b"
+                className="max-w-[270px] sm:max-w-[290px]"
               />
-              <ShowcaseCard
-                image="/assets/iridescent_glass_footer.jpg"
-                title="Iridescent Glass Shaders"
-                category="Kinetics"
-                accent="#8b5cf6"
-              />
-              <ShowcaseCard
-                image="/assets/card_creative_jam.jpg"
-                title="Creative Jam Experience"
-                category="Interactive"
-                accent="#ec4899"
-              />
-            </div>
-
-            {/* Column 3 (Right - Speed 1.1x, Tilt 2.5deg) */}
-            <div
-              ref={col3Ref}
-              className="flex flex-col gap-6 sm:gap-8 will-change-transform items-center"
-              style={{ transform: "rotate(2.5deg)" }}
-            >
               <ShowcaseCard
                 image="/assets/concepts/ganesh_ps_about_me_sketchbook_spread_1793291341733.jpg"
                 title="Visual Ledger & Identity"
                 category="Brand Craft"
                 accent="#10b981"
+                className="max-w-[270px] sm:max-w-[290px]"
               />
               <ShowcaseCard
                 image="/assets/card_creative_podcast.jpg"
                 title="Cinematic Soundscapes"
                 category="Audio Hub"
                 accent="#6366f1"
-              />
-              <ShowcaseCard
-                image="/assets/concepts/about_me_scrapbook_poster_mockup_1793291710800.jpg"
-                title="Poster & Editorial Form"
-                category="Art Direction"
-                accent="#ef4444"
+                className="max-w-[270px] sm:max-w-[290px]"
               />
             </div>
 
           </div>
         </div>
 
-        {/* ──────── MAIN STAGE: 2-COLUMN EDITORIAL GRID & ANCHOR (Z-20 & Z-30) ──────── */}
+        {/* ──────── 2. TEXT PLANE: 2-COLUMN STAGE & CENTERED HERO STATEMENT (Z-20) ──────── */}
         <div
           ref={stageGridRef}
           className="relative z-20 w-full max-w-[1020px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center"
         >
           
-          {/* ──────── 1. LEFT COLUMN: 1:1 SQUARE LIVING POLAROID (Phase 1) ──────── */}
+          {/* ──────── Left Column: 1:1 Square Living Polaroid (Phase 1) ──────── */}
           <div className="lg:col-span-5 flex justify-center items-center">
             <div
               ref={polaroidContainerRef}
@@ -559,7 +555,7 @@ export const AboutMeSection: React.FC = () => {
             </div>
           </div>
 
-          {/* ──────── 2. RIGHT COLUMN: SORA EDITORIAL TYPOGRAPHY ──────── */}
+          {/* ──────── Right Column: Sora Editorial Typography ──────── */}
           <div
             ref={textContainerRef}
             className="lg:col-span-7 flex flex-col justify-between text-left h-full max-w-[580px] select-text font-sora"
@@ -567,9 +563,9 @@ export const AboutMeSection: React.FC = () => {
               fontFamily: "var(--font-sora), sans-serif",
             }}
           >
-            {/* Paragraphs 1 & 2 Container (Glides upward in Phase 2) */}
+            {/* Paragraphs 1 & 2 Container (Translates upward in Phase 2) */}
             <div ref={paragraphsRef} className="will-change-transform">
-              {/* Paragraph 1: Origin & Spark (5 lines strictly matching Image 2) */}
+              {/* Paragraph 1: Origin & Spark (5 lines) */}
               <p className="mb-7 sm:mb-8 text-[19px] sm:text-[21px] lg:text-[22.5px] font-[450] leading-[1.58] text-[#111111] tracking-[-0.015em]">
                 <span className="block fill-editorial-line fill-p1-1">
                   I didn’t start in a design school or follow a perfectly drawn
@@ -588,7 +584,7 @@ export const AboutMeSection: React.FC = () => {
                 </span>
               </p>
 
-              {/* Paragraph 2: Detour & Beyond the Screen (4 lines strictly matching Image 2) */}
+              {/* Paragraph 2: Detour & Beyond the Screen (4 lines) */}
               <p className="mb-6 sm:mb-7 text-[19px] sm:text-[21px] lg:text-[22.5px] font-[450] leading-[1.58] text-[#111111] tracking-[-0.015em]">
                 <span className="block fill-editorial-line fill-p2-1">
                   That unexpected detour became my origin story. Today, I
@@ -605,11 +601,11 @@ export const AboutMeSection: React.FC = () => {
               </p>
             </div>
 
-            {/* ──────── CLOSING STATEMENT & CENTER-LOCK ANCHOR (Z-30) ──────── */}
+            {/* ──────── CLOSING STATEMENT & CENTER-LOCK ANCHOR (Z-20) ──────── */}
             <div className="mt-6 sm:mt-7">
               <div
                 ref={punchlineContainerRef}
-                className="inline-block will-change-transform z-30"
+                className="inline-block will-change-transform z-20"
                 style={{
                   backgroundColor: "transparent",
                   borderColor: "transparent",
@@ -631,6 +627,75 @@ export const AboutMeSection: React.FC = () => {
           </div>
 
         </div>
+
+        {/* ──────── 3. FOREGROUND OVERLAP LAYER: CAMERA-CLOSE CARDS (Z-30) ──────── */}
+        <div
+          ref={fgCardsRiverRef}
+          className="absolute inset-0 pointer-events-none overflow-hidden z-30 flex items-center justify-between px-4 sm:px-8 lg:px-16 opacity-0"
+          style={{ width: "100%", height: "100%" }}
+        >
+          {/* Foreground Card 1 (Left / Lower Flank Overlap with Real Depth Shadow) */}
+          <div
+            ref={fgCardLeftRef}
+            className="will-change-transform shrink-0"
+            style={{ transform: "rotate(-3deg)" }}
+          >
+            <div className="w-[280px] sm:w-[320px] lg:w-[350px] bg-white rounded-2xl p-3 sm:p-3.5 shadow-[0_32px_64px_rgba(0,0,0,0.22),0_8px_20px_rgba(0,0,0,0.10)] border border-black/[0.12] backdrop-blur-lg">
+              <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-zinc-100 relative mb-3 shadow-inner">
+                <img
+                  src="/assets/iridescent_glass_footer.jpg"
+                  alt="Iridescent Glass Interfaces"
+                  className="w-full h-full object-cover object-center filter contrast-[1.05]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
+                <span className="absolute top-2.5 left-2.5 text-[9.5px] sm:text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full font-medium bg-[#8b5cf6] text-white shadow-sm border border-white/20">
+                  Featured Innovation
+                </span>
+              </div>
+              <div className="px-1 flex items-center justify-between">
+                <h4 className="font-sora text-[13px] sm:text-[14px] font-semibold text-zinc-900 tracking-tight truncate pr-2">
+                  Iridescent Glass Interfaces
+                </h4>
+                <span className="text-[10.5px] font-mono text-zinc-400 shrink-0">
+                  2026
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Foreground Card 2 (Right / Upper Flank Overlap with Real Depth Shadow) */}
+          <div
+            ref={fgCardRightRef}
+            className="will-change-transform shrink-0 hidden sm:block"
+            style={{ transform: "rotate(3.5deg)" }}
+          >
+            <div className="w-[270px] sm:w-[310px] lg:w-[340px] bg-white rounded-2xl p-3 sm:p-3.5 shadow-[0_32px_64px_rgba(0,0,0,0.20),0_8px_20px_rgba(0,0,0,0.08)] border border-black/[0.12] backdrop-blur-lg">
+              <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-zinc-100 relative mb-3 shadow-inner">
+                <img
+                  src="/assets/card_creative_jam.jpg"
+                  alt="Interactive Creative Jam"
+                  className="w-full h-full object-cover object-center filter contrast-[1.04]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
+                <span className="absolute top-2.5 left-2.5 text-[9.5px] sm:text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full font-medium bg-[#ec4899] text-white shadow-sm border border-white/20">
+                  Experiential UX
+                </span>
+              </div>
+              <div className="px-1 flex items-center justify-between">
+                <h4 className="font-sora text-[13px] sm:text-[14px] font-semibold text-zinc-900 tracking-tight truncate pr-2">
+                  Interactive Creative Jam
+                </h4>
+                <span className="text-[10.5px] font-mono text-zinc-400 shrink-0">
+                  2026
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </section>
   );
