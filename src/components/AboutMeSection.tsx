@@ -24,7 +24,7 @@ const ShowcaseCard: React.FC<ShowcaseCardProps> = ({
   className = "",
 }) => (
   <div
-    className={`w-full bg-white/95 rounded-2xl p-2.5 sm:p-3 shadow-[0_20px_45px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06)] border border-black/[0.08] backdrop-blur-md select-none transition-transform duration-300 ${className}`}
+    className={`w-full bg-white/95 rounded-2xl p-2.5 sm:p-3 shadow-[0_20px_45px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.08] backdrop-blur-md select-none transition-transform duration-300 ${className}`}
   >
     {/* Card Image Viewport */}
     <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-zinc-100 relative mb-2.5 shadow-inner">
@@ -69,7 +69,6 @@ export const AboutMeSection: React.FC = () => {
   const timecodeRef = useRef<HTMLDivElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
   const paragraphsRef = useRef<HTMLDivElement>(null);
-  const punchlineContainerRef = useRef<HTMLDivElement>(null);
   const punchlineRef = useRef<HTMLHeadingElement>(null);
 
   // Multi-Plane Parallax Depth Layer Refs
@@ -116,14 +115,14 @@ export const AboutMeSection: React.FC = () => {
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 2. THE MULTI-PLANE PARALLAX INTERACTION (+=380% PINNED TIMELINE)
-      // Phase 1 (0.00 -> 0.35): Origin Story Stage (Video scrub + text reveal)
-      // Phase 2 (0.35 -> 0.50): Downward Center Glide (Locks in dead center & blooms)
-      // Phase 3 (0.50 -> 0.85): 3-Tier Multi-Plane Floating Cards Stream
+      // 2. CDG STUDIO MULTI-PLANE SCROLL CHOREOGRAPHY (+=380% PINNED TIMELINE)
+      // Phase 1 (0.00 -> 0.35): Origin Story (Video scrub + Spidey text reveal)
+      // Phase 2 (0.35 -> 0.55): Downward Travel along Grid Track (Locked in column alignment, RAW typography)
+      // Phase 3 (0.55 -> 0.85): 3-Tier Multi-Plane Floating Cards Stream
       //   - Layer 1 (z-10): Underneath background cards float behind text (0.85x speed)
-      //   - Layer 2 (z-20): Centered focal text statement locked in place
-      //   - Layer 3 (z-30): Foreground camera-close cards overlap text (1.25x speed, deep drop shadows)
-      // Phase 4 (0.85 -> 1.00): Smooth handoff & release into DesignShowcaseSection
+      //   - Layer 2 (z-20): Centered focal text statement locked in grid position
+      //   - Layer 3 (z-30): Foreground camera-close cards overlap text edges (1.25x speed, realistic drop shadows)
+      // Phase 4 (0.85 -> 1.00): Clean outro & fluid release into next section
       // ─────────────────────────────────────────────────────────────
       if (textContainerRef.current) {
         const lineElements = textContainerRef.current.querySelectorAll(".fill-editorial-line");
@@ -200,7 +199,9 @@ export const AboutMeSection: React.FC = () => {
         masterTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.20");
 
         // ═════════════════════════════════════════════════════════════
-        // PHASE 2: DOWNWARD CENTER GLIDE (Progress 0.35 -> 0.50)
+        // PHASE 2: DOWNWARD TRAVEL ALONG GRID TRACK (Progress 0.35 -> 0.55)
+        // STRICT: Stays locked in editorial column placement (Image 4 Benchmark)
+        // STRICT: 100% RAW typography sitting directly on canvas (NO pills/capsules)
         // ═════════════════════════════════════════════════════════════
         masterTl.addLabel("glide", ">0.15");
 
@@ -210,10 +211,10 @@ export const AboutMeSection: React.FC = () => {
             polaroidContainerRef.current,
             {
               opacity: 0,
-              y: -100,
+              y: -120,
               scale: 0.94,
               ease: "power2.inOut",
-              duration: 1.5,
+              duration: 1.6,
             },
             "glide"
           );
@@ -225,44 +226,33 @@ export const AboutMeSection: React.FC = () => {
             paragraphsRef.current,
             {
               opacity: 0,
-              y: -100,
+              y: -120,
               ease: "power2.inOut",
-              duration: 1.5,
+              duration: 1.6,
             },
             "glide"
           );
         }
 
-        // 3. Closing statement comes down into DEAD CENTER of viewport & blooms into hero badge
-        if (punchlineContainerRef.current) {
+        // 3. Closing statement comes down smoothly ALONG ITS COLUMN GRID ALIGNMENT
+        // into vertical center, scaling to bold display headline (x remains 0!)
+        if (punchlineRef.current) {
           masterTl.to(
-            punchlineContainerRef.current,
+            punchlineRef.current,
             {
-              x: () => {
-                const s = pinWrapperRef.current?.getBoundingClientRect();
-                const p = punchlineContainerRef.current?.getBoundingClientRect();
-                if (!s || !p) return 0;
-                const curX = (gsap.getProperty(punchlineContainerRef.current, "x") as number) || 0;
-                return s.left + s.width / 2 - (p.left - curX + p.width / 2);
-              },
               y: () => {
-                const s = pinWrapperRef.current?.getBoundingClientRect();
-                const p = punchlineContainerRef.current?.getBoundingClientRect();
-                if (!s || !p) return 0;
-                const curY = (gsap.getProperty(punchlineContainerRef.current, "y") as number) || 0;
+                const pinWrapperEl = pinWrapperRef.current;
+                const punchlineEl = punchlineRef.current;
+                if (!pinWrapperEl || !punchlineEl) return 0;
+                const s = pinWrapperEl.getBoundingClientRect();
+                const p = punchlineEl.getBoundingClientRect();
+                const curY = (gsap.getProperty(punchlineEl, "y") as number) || 0;
+                // Move vertically to center of viewport while staying in column alignment
                 return s.top + s.height / 2 - (p.top - curY + p.height / 2);
               },
-              scale: () => (window.innerWidth >= 1024 ? 1.85 : 1.35),
-              backgroundColor: "rgba(255, 255, 255, 0.94)",
-              borderColor: "rgba(0, 0, 0, 0.08)",
-              boxShadow: "0 24px 50px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04)",
-              backdropFilter: "blur(16px)",
-              paddingLeft: "36px",
-              paddingRight: "36px",
-              paddingTop: "14px",
-              paddingBottom: "14px",
-              borderRadius: "9999px",
-              duration: 1.5,
+              scale: () => (window.innerWidth >= 1024 ? 1.55 : 1.25),
+              transformOrigin: "left center",
+              duration: 1.8,
               ease: "power2.inOut",
             },
             "glide"
@@ -270,25 +260,25 @@ export const AboutMeSection: React.FC = () => {
         }
 
         // ═════════════════════════════════════════════════════════════
-        // PHASE 3: MULTI-PLANE "ABOVE & BELOW" STREAM (Progress 0.50 -> 0.85)
+        // PHASE 3: MULTI-PLANE "ABOVE & BELOW" STREAM (Progress 0.55 -> 0.85)
         // ═════════════════════════════════════════════════════════════
         masterTl.addLabel("stream", ">0.05");
 
         // Reveal both Underneath (z-10) and Foreground (z-30) card layers
         if (bgCardsRiverRef.current) {
-          masterTl.to(bgCardsRiverRef.current, { opacity: 1, duration: 0.4, ease: "power1.in" }, "stream");
+          masterTl.to(bgCardsRiverRef.current, { opacity: 1, duration: 0.35, ease: "power1.in" }, "stream");
         }
         if (fgCardsRiverRef.current) {
-          masterTl.to(fgCardsRiverRef.current, { opacity: 1, duration: 0.4, ease: "power1.in" }, "stream");
+          masterTl.to(fgCardsRiverRef.current, { opacity: 1, duration: 0.35, ease: "power1.in" }, "stream");
         }
 
-        // Underneath Layer (z-10): Parallax Speed 0.85x (floats behind text plane)
+        // Underneath Layer (z-10): Parallax Speed 0.85x (floats behind raw text plane)
         if (bgCol1Ref.current) {
           masterTl.to(
             bgCol1Ref.current,
             {
-              y: "-125vh",
-              duration: 3.5,
+              y: "-120vh",
+              duration: 3.0,
               ease: "none",
             },
             "stream"
@@ -298,8 +288,8 @@ export const AboutMeSection: React.FC = () => {
           masterTl.to(
             bgCol2Ref.current,
             {
-              y: "-120vh",
-              duration: 3.5,
+              y: "-115vh",
+              duration: 3.0,
               ease: "none",
             },
             "stream"
@@ -311,8 +301,8 @@ export const AboutMeSection: React.FC = () => {
           masterTl.to(
             fgCardLeftRef.current,
             {
-              y: "-145vh",
-              duration: 3.5,
+              y: "-140vh",
+              duration: 3.0,
               ease: "none",
             },
             "stream"
@@ -322,8 +312,8 @@ export const AboutMeSection: React.FC = () => {
           masterTl.to(
             fgCardRightRef.current,
             {
-              y: "-140vh",
-              duration: 3.5,
+              y: "-135vh",
+              duration: 3.0,
               ease: "none",
             },
             "stream"
@@ -331,18 +321,17 @@ export const AboutMeSection: React.FC = () => {
         }
 
         // ═════════════════════════════════════════════════════════════
-        // PHASE 4: SMOOTH HANDOFF INTO NEXT SECTION (Progress 0.85 -> 1.00)
+        // PHASE 4: CLEAN OUTRO & HANDOFF (Progress 0.85 -> 1.00)
         // ═════════════════════════════════════════════════════════════
         masterTl.addLabel("outro", ">-0.2");
 
-        // Centered hero statement floats up gently and dissolves
-        if (punchlineContainerRef.current) {
+        // Closing statement translates gently up and dissolves
+        if (punchlineRef.current) {
           masterTl.to(
-            punchlineContainerRef.current,
+            punchlineRef.current,
             {
               y: "-=60px",
               opacity: 0,
-              scale: () => (window.innerWidth >= 1024 ? 1.95 : 1.45),
               duration: 1.0,
               ease: "power2.inOut",
             },
@@ -375,7 +364,7 @@ export const AboutMeSection: React.FC = () => {
       {/* Pinned Stage Viewport Wrapper */}
       <div
         ref={pinWrapperRef}
-        className="relative w-full h-screen min-h-screen flex items-center justify-center bg-transparent px-6 lg:px-12 overflow-hidden"
+        className="relative w-full h-screen min-h-screen flex items-center justify-center bg-transparent overflow-hidden"
       >
         {/* Dynamic Spidey Text Shader Styles */}
         <style>{`
@@ -414,12 +403,12 @@ export const AboutMeSection: React.FC = () => {
           className="absolute inset-0 pointer-events-none overflow-hidden z-10 flex items-center justify-center opacity-0"
           style={{ width: "100%", height: "100%" }}
         >
-          <div className="w-full max-w-5xl mx-auto px-4 grid grid-cols-2 gap-8 sm:gap-14 lg:gap-20 h-full items-center justify-center">
+          <div className="w-full max-w-[1200px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 h-full items-center">
             
-            {/* Background Column 1 (Left - Speed 0.85x, Tilt -1.5deg) */}
+            {/* Background Column 1 (Cols 1-5: Left Track, Speed 0.85x, Tilt -1.5deg) */}
             <div
               ref={bgCol1Ref}
-              className="flex flex-col gap-8 sm:gap-12 will-change-transform items-center"
+              className="lg:col-span-5 flex flex-col gap-8 sm:gap-12 will-change-transform items-center lg:items-start"
               style={{ transform: "rotate(-1.5deg)" }}
             >
               <ShowcaseCard
@@ -427,28 +416,28 @@ export const AboutMeSection: React.FC = () => {
                 title="Spiderverse Design System"
                 category="UI System"
                 accent="#dc2626"
-                className="max-w-[270px] sm:max-w-[290px]"
+                className="max-w-[280px] sm:max-w-[310px]"
               />
               <ShowcaseCard
                 image="/assets/card_creative_3d.jpg"
                 title="Kinetic Spatial Dimensions"
                 category="3D Motion"
                 accent="#2563eb"
-                className="max-w-[270px] sm:max-w-[290px]"
+                className="max-w-[280px] sm:max-w-[310px]"
               />
               <ShowcaseCard
                 image="/assets/concepts/about_me_portfolio_mockup_1793291329956.jpg"
                 title="Editorial Platform UX"
                 category="Web App"
                 accent="#09090b"
-                className="max-w-[270px] sm:max-w-[290px]"
+                className="max-w-[280px] sm:max-w-[310px]"
               />
             </div>
 
-            {/* Background Column 2 (Right - Speed 0.85x, Tilt 1.5deg) */}
+            {/* Background Column 2 (Cols 6-12: Right Track Behind Text, Speed 0.85x, Tilt 1.5deg) */}
             <div
               ref={bgCol2Ref}
-              className="flex flex-col gap-8 sm:gap-12 will-change-transform items-center"
+              className="lg:col-span-7 flex flex-col gap-8 sm:gap-12 will-change-transform items-center lg:items-end pr-4 lg:pr-12"
               style={{ transform: "rotate(1.5deg)" }}
             >
               <ShowcaseCard
@@ -456,167 +445,160 @@ export const AboutMeSection: React.FC = () => {
                 title="Modular Bento Architecture"
                 category="Product UX"
                 accent="#f59e0b"
-                className="max-w-[270px] sm:max-w-[290px]"
+                className="max-w-[280px] sm:max-w-[310px]"
               />
               <ShowcaseCard
                 image="/assets/concepts/ganesh_ps_about_me_sketchbook_spread_1793291341733.jpg"
                 title="Visual Ledger & Identity"
                 category="Brand Craft"
                 accent="#10b981"
-                className="max-w-[270px] sm:max-w-[290px]"
+                className="max-w-[280px] sm:max-w-[310px]"
               />
               <ShowcaseCard
                 image="/assets/card_creative_podcast.jpg"
                 title="Cinematic Soundscapes"
                 category="Audio Hub"
                 accent="#6366f1"
-                className="max-w-[270px] sm:max-w-[290px]"
+                className="max-w-[280px] sm:max-w-[310px]"
               />
             </div>
 
           </div>
         </div>
 
-        {/* ──────── 2. TEXT PLANE: 2-COLUMN STAGE & CENTERED HERO STATEMENT (Z-20) ──────── */}
-        <div
-          ref={stageGridRef}
-          className="relative z-20 w-full max-w-[1020px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center"
-        >
-          
-          {/* ──────── Left Column: 1:1 Square Living Polaroid (Phase 1) ──────── */}
-          <div className="lg:col-span-5 flex justify-center items-center">
-            <div
-              ref={polaroidContainerRef}
-              onMouseEnter={() => setHoveredPolaroid(true)}
-              onMouseLeave={() => setHoveredPolaroid(false)}
-              className={`relative bg-white p-3.5 pb-10 rounded-[3px] shadow-[0_20px_45px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)] border border-black/[0.06] transition-all duration-500 ease-out cursor-pointer w-[310px] sm:w-[330px] lg:w-[350px] will-change-transform ${
-                hoveredPolaroid
-                  ? "!rotate-0 scale-[1.02] shadow-[0_28px_56px_rgba(0,0,0,0.16)] -translate-y-1.5"
-                  : "rotate-[-2.5deg] scale-100"
-              }`}
-              style={{
-                transformOrigin: "center center",
-              }}
-            >
-              {/* Top-Left Blue/Periwinkle Washi Tape */}
-              <div
-                className="absolute -top-3 -left-3 w-12 h-6 bg-[#9db4ff]/85 backdrop-blur-[0.5px] -rotate-[36deg] shadow-sm pointer-events-none rounded-[1px] border border-white/20 z-20"
-                style={{
-                  clipPath: "polygon(0% 12%, 100% 0%, 94% 88%, 6% 100%, 0% 78%)",
-                }}
-              />
-
-              {/* Top-Right Yellow/Amber Washi Tape */}
-              <div
-                className="absolute -top-2.5 -right-2.5 w-11 h-5.5 bg-[#ffe380]/90 backdrop-blur-[0.5px] rotate-[26deg] shadow-sm pointer-events-none rounded-[1px] border border-white/20 z-20"
-                style={{
-                  clipPath: "polygon(4% 0%, 96% 10%, 100% 90%, 0% 100%)",
-                }}
-              />
-
-              {/* Video Viewport: Strictly 1:1 Square Aspect Ratio */}
-              <div className="w-full aspect-square rounded-[2px] overflow-hidden bg-black relative border border-black/10 shadow-inner group">
-                <video
-                  ref={videoRef}
-                  src="/assets/about_origin.mp4"
-                  playsInline
-                  muted
-                  preload="auto"
-                  className="w-full h-full object-cover object-center filter contrast-[1.04] brightness-[1.02]"
-                />
-
-                {/* Subtle Film Vignette Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15 pointer-events-none" />
-
-                {/* Floating Translucent Glass HUD Badge (0:00 / 0:14) */}
-                <div
-                  ref={timecodeRef}
-                  className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-widest uppercase bg-black/60 backdrop-blur-sm border border-white/15 text-white/85 pointer-events-none z-10"
-                >
-                  0:00 / 0:14
-                </div>
-              </div>
-
-              {/* Polaroid Bottom Chin: Handwritten "me :)" + SCROLL TO REEL */}
-              <div className="w-full pt-3 px-1 flex items-center justify-between">
-                <span
-                  className="text-2xl text-[#1a1a1a] tracking-wide select-none"
-                  style={{
-                    fontFamily: "var(--font-caveat), cursive",
-                    fontWeight: 700,
-                  }}
-                >
-                  me :)
-                </span>
-                <span className="text-[9px] font-mono tracking-wider text-zinc-400 uppercase select-none">
-                  SCROLL TO REEL
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* ──────── Right Column: Sora Editorial Typography ──────── */}
+        {/* ──────── 2. TEXT PLANE: UNIFIED 12-COLUMN GRID (Z-20, Image 4 Benchmark) ──────── */}
+        <div className="relative z-20 w-full max-w-[1200px] mx-auto px-6 lg:px-12 flex items-center justify-center">
           <div
-            ref={textContainerRef}
-            className="lg:col-span-7 flex flex-col justify-between text-left h-full max-w-[580px] select-text font-sora"
-            style={{
-              fontFamily: "var(--font-sora), sans-serif",
-            }}
+            ref={stageGridRef}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start w-full"
           >
-            {/* Paragraphs 1 & 2 Container (Translates upward in Phase 2) */}
-            <div ref={paragraphsRef} className="will-change-transform">
-              {/* Paragraph 1: Origin & Spark (5 lines) */}
-              <p className="mb-7 sm:mb-8 text-[19px] sm:text-[21px] lg:text-[22.5px] font-[450] leading-[1.58] text-[#111111] tracking-[-0.015em]">
-                <span className="block fill-editorial-line fill-p1-1">
-                  I didn’t start in a design school or follow a perfectly drawn
-                </span>
-                <span className="block fill-editorial-line fill-p1-2">
-                  path. My story began with commerce, books, and an
-                </span>
-                <span className="block fill-editorial-line fill-p1-3">
-                  M.Com degree—until curiosity pulled me into the web of
-                </span>
-                <span className="block fill-editorial-line fill-p1-4">
-                  design. What started as a spark soon became an
-                </span>
-                <span className="block fill-editorial-line fill-p1-5">
-                  obsession.
-                </span>
-              </p>
-
-              {/* Paragraph 2: Detour & Beyond the Screen (4 lines) */}
-              <p className="mb-6 sm:mb-7 text-[19px] sm:text-[21px] lg:text-[22.5px] font-[450] leading-[1.58] text-[#111111] tracking-[-0.015em]">
-                <span className="block fill-editorial-line fill-p2-1">
-                  That unexpected detour became my origin story. Today, I
-                </span>
-                <span className="block fill-editorial-line fill-p2-2">
-                  swing between ideas, identities, interfaces, and
-                </span>
-                <span className="block fill-editorial-line fill-p2-3">
-                  technology—using motion, AI, and imagination to build
-                </span>
-                <span className="block fill-editorial-line fill-p2-4">
-                  experiences that go beyond the screen.
-                </span>
-              </p>
-            </div>
-
-            {/* ──────── CLOSING STATEMENT & CENTER-LOCK ANCHOR (Z-20) ──────── */}
-            <div className="mt-6 sm:mt-7">
+            
+            {/* ──────── Left Column: 1:1 Square Living Polaroid (Cols 1-5) ──────── */}
+            <div className="lg:col-span-5 flex justify-center lg:justify-start items-center">
               <div
-                ref={punchlineContainerRef}
-                className="inline-block will-change-transform z-20"
+                ref={polaroidContainerRef}
+                onMouseEnter={() => setHoveredPolaroid(true)}
+                onMouseLeave={() => setHoveredPolaroid(false)}
+                className={`relative bg-white p-3.5 pb-10 rounded-[3px] shadow-[0_20px_45px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)] border border-black/[0.06] transition-all duration-500 ease-out cursor-pointer w-[310px] sm:w-[330px] lg:w-[350px] will-change-transform ${
+                  hoveredPolaroid
+                    ? "!rotate-0 scale-[1.02] shadow-[0_28px_56px_rgba(0,0,0,0.16)] -translate-y-1.5"
+                    : "rotate-[-2.5deg] scale-100"
+                }`}
                 style={{
-                  backgroundColor: "transparent",
-                  borderColor: "transparent",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
                   transformOrigin: "center center",
                 }}
               >
+                {/* Top-Left Blue/Periwinkle Washi Tape */}
+                <div
+                  className="absolute -top-3 -left-3 w-12 h-6 bg-[#9db4ff]/85 backdrop-blur-[0.5px] -rotate-[36deg] shadow-sm pointer-events-none rounded-[1px] border border-white/20 z-20"
+                  style={{
+                    clipPath: "polygon(0% 12%, 100% 0%, 94% 88%, 6% 100%, 0% 78%)",
+                  }}
+                />
+
+                {/* Top-Right Yellow/Amber Washi Tape */}
+                <div
+                  className="absolute -top-2.5 -right-2.5 w-11 h-5.5 bg-[#ffe380]/90 backdrop-blur-[0.5px] rotate-[26deg] shadow-sm pointer-events-none rounded-[1px] border border-white/20 z-20"
+                  style={{
+                    clipPath: "polygon(4% 0%, 96% 10%, 100% 90%, 0% 100%)",
+                  }}
+                />
+
+                {/* Video Viewport: Strictly 1:1 Square Aspect Ratio */}
+                <div className="w-full aspect-square rounded-[2px] overflow-hidden bg-black relative border border-black/10 shadow-inner group">
+                  <video
+                    ref={videoRef}
+                    src="/assets/about_origin.mp4"
+                    playsInline
+                    muted
+                    preload="auto"
+                    className="w-full h-full object-cover object-center filter contrast-[1.04] brightness-[1.02]"
+                  />
+
+                  {/* Subtle Film Vignette Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15 pointer-events-none" />
+
+                  {/* Floating Translucent Glass HUD Badge (0:00 / 0:14) */}
+                  <div
+                    ref={timecodeRef}
+                    className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-widest uppercase bg-black/60 backdrop-blur-sm border border-white/15 text-white/85 pointer-events-none z-10"
+                  >
+                    0:00 / 0:14
+                  </div>
+                </div>
+
+                {/* Polaroid Bottom Chin: Handwritten "me :)" + SCROLL TO REEL */}
+                <div className="w-full pt-3 px-1 flex items-center justify-between">
+                  <span
+                    className="text-2xl text-[#1a1a1a] tracking-wide select-none"
+                    style={{
+                      fontFamily: "var(--font-caveat), cursive",
+                      fontWeight: 700,
+                    }}
+                  >
+                    me :)
+                  </span>
+                  <span className="text-[9px] font-mono tracking-wider text-zinc-400 uppercase select-none">
+                    SCROLL TO REEL
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* ──────── Right Column: Sora Editorial Typography (Cols 6-12) ──────── */}
+            <div
+              ref={textContainerRef}
+              className="lg:col-span-7 flex flex-col justify-start text-left h-full max-w-[620px] select-text font-sora"
+              style={{
+                fontFamily: "var(--font-sora), sans-serif",
+              }}
+            >
+              {/* Paragraphs 1 & 2 Container (Translates upward in Phase 2) */}
+              <div ref={paragraphsRef} className="will-change-transform">
+                {/* Paragraph 1: Origin & Spark (5 lines strictly matching Image 4) */}
+                <p className="mb-7 sm:mb-8 text-[19px] sm:text-[21px] lg:text-[22.5px] font-[450] leading-[1.58] text-[#111111] tracking-[-0.015em]">
+                  <span className="block fill-editorial-line fill-p1-1">
+                    I didn’t start in a design school or follow a perfectly drawn
+                  </span>
+                  <span className="block fill-editorial-line fill-p1-2">
+                    path. My story began with commerce, books, and an
+                  </span>
+                  <span className="block fill-editorial-line fill-p1-3">
+                    M.Com degree—until curiosity pulled me into the web of
+                  </span>
+                  <span className="block fill-editorial-line fill-p1-4">
+                    design. What started as a spark soon became an
+                  </span>
+                  <span className="block fill-editorial-line fill-p1-5">
+                    obsession.
+                  </span>
+                </p>
+
+                {/* Paragraph 2: Detour & Beyond the Screen (4 lines strictly matching Image 4) */}
+                <p className="mb-6 sm:mb-7 text-[19px] sm:text-[21px] lg:text-[22.5px] font-[450] leading-[1.58] text-[#111111] tracking-[-0.015em]">
+                  <span className="block fill-editorial-line fill-p2-1">
+                    That unexpected detour became my origin story. Today, I
+                  </span>
+                  <span className="block fill-editorial-line fill-p2-2">
+                    swing between ideas, identities, interfaces, and
+                  </span>
+                  <span className="block fill-editorial-line fill-p2-3">
+                    technology—using motion, AI, and imagination to build
+                  </span>
+                  <span className="block fill-editorial-line fill-p2-4">
+                    experiences that go beyond the screen.
+                  </span>
+                </p>
+              </div>
+
+              {/* ──────── CLOSING STATEMENT & DOWNWARD TRAVEL ANCHOR (Z-20, RAW TYPOGRAPHY) ──────── */}
+              <div className="mt-6 sm:mt-7">
                 <h3
                   ref={punchlineRef}
-                  className="font-bold text-[22px] sm:text-[24px] lg:text-[26px] text-black tracking-tight leading-snug whitespace-nowrap"
+                  className="font-bold text-[22px] sm:text-[24px] lg:text-[26px] text-black tracking-tight leading-snug whitespace-nowrap will-change-transform select-none"
+                  style={{
+                    transformOrigin: "left center",
+                  }}
                 >
                   <span className="block fill-editorial-line fill-punchline">
                     By Bringing Pixels to life.
@@ -624,23 +606,23 @@ export const AboutMeSection: React.FC = () => {
                 </h3>
               </div>
             </div>
-          </div>
 
+          </div>
         </div>
 
         {/* ──────── 3. FOREGROUND OVERLAP LAYER: CAMERA-CLOSE CARDS (Z-30) ──────── */}
         <div
           ref={fgCardsRiverRef}
-          className="absolute inset-0 pointer-events-none overflow-hidden z-30 flex items-center justify-between px-4 sm:px-8 lg:px-16 opacity-0"
+          className="absolute inset-0 pointer-events-none overflow-hidden z-30 flex items-center justify-between px-4 sm:px-8 lg:px-14 opacity-0"
           style={{ width: "100%", height: "100%" }}
         >
-          {/* Foreground Card 1 (Left / Lower Flank Overlap with Real Depth Shadow) */}
+          {/* Foreground Card 1 (Cols 4-7 Overlap Drift with Real Drop Shadow) */}
           <div
             ref={fgCardLeftRef}
-            className="will-change-transform shrink-0"
+            className="will-change-transform shrink-0 ml-2 sm:ml-8 lg:ml-28"
             style={{ transform: "rotate(-3deg)" }}
           >
-            <div className="w-[280px] sm:w-[320px] lg:w-[350px] bg-white rounded-2xl p-3 sm:p-3.5 shadow-[0_32px_64px_rgba(0,0,0,0.22),0_8px_20px_rgba(0,0,0,0.10)] border border-black/[0.12] backdrop-blur-lg">
+            <div className="w-[280px] sm:w-[320px] lg:w-[350px] bg-white rounded-2xl p-3 sm:p-3.5 shadow-[0_25px_50px_rgba(0,0,0,0.18),0_6px_16px_rgba(0,0,0,0.06)] border border-black/[0.10] backdrop-blur-lg">
               <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-zinc-100 relative mb-3 shadow-inner">
                 <img
                   src="/assets/iridescent_glass_footer.jpg"
@@ -664,13 +646,13 @@ export const AboutMeSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Foreground Card 2 (Right / Upper Flank Overlap with Real Depth Shadow) */}
+          {/* Foreground Card 2 (Cols 9-12 Right Flank Overlap Drift with Real Drop Shadow) */}
           <div
             ref={fgCardRightRef}
-            className="will-change-transform shrink-0 hidden sm:block"
+            className="will-change-transform shrink-0 hidden sm:block mr-2 sm:mr-8 lg:mr-20"
             style={{ transform: "rotate(3.5deg)" }}
           >
-            <div className="w-[270px] sm:w-[310px] lg:w-[340px] bg-white rounded-2xl p-3 sm:p-3.5 shadow-[0_32px_64px_rgba(0,0,0,0.20),0_8px_20px_rgba(0,0,0,0.08)] border border-black/[0.12] backdrop-blur-lg">
+            <div className="w-[270px] sm:w-[310px] lg:w-[340px] bg-white rounded-2xl p-3 sm:p-3.5 shadow-[0_25px_50px_rgba(0,0,0,0.18),0_6px_16px_rgba(0,0,0,0.06)] border border-black/[0.10] backdrop-blur-lg">
               <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-zinc-100 relative mb-3 shadow-inner">
                 <img
                   src="/assets/card_creative_jam.jpg"
