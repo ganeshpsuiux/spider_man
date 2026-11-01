@@ -234,12 +234,22 @@ export const AboutMeSection: React.FC = () => {
           );
         }
 
-        // 3. Closing statement comes down smoothly ALONG ITS COLUMN GRID ALIGNMENT
-        // into vertical center, scaling to bold display headline (x remains 0!)
+        // 3. Closing statement glides to DEAD CENTER OF VIEWPORT FROM ALL SIDES
+        // Perfectly centered horizontally and vertically, scaling to bold display headline
         if (punchlineRef.current) {
           masterTl.to(
             punchlineRef.current,
             {
+              x: () => {
+                const pinWrapperEl = pinWrapperRef.current;
+                const punchlineEl = punchlineRef.current;
+                if (!pinWrapperEl || !punchlineEl) return 0;
+                const s = pinWrapperEl.getBoundingClientRect();
+                const p = punchlineEl.getBoundingClientRect();
+                const curX = (gsap.getProperty(punchlineEl, "x") as number) || 0;
+                // Center horizontally from all sides
+                return s.left + s.width / 2 - (p.left - curX + p.width / 2);
+              },
               y: () => {
                 const pinWrapperEl = pinWrapperRef.current;
                 const punchlineEl = punchlineRef.current;
@@ -247,11 +257,11 @@ export const AboutMeSection: React.FC = () => {
                 const s = pinWrapperEl.getBoundingClientRect();
                 const p = punchlineEl.getBoundingClientRect();
                 const curY = (gsap.getProperty(punchlineEl, "y") as number) || 0;
-                // Move vertically to center of viewport while staying in column alignment
+                // Center vertically from all sides
                 return s.top + s.height / 2 - (p.top - curY + p.height / 2);
               },
-              scale: () => (window.innerWidth >= 1024 ? 1.55 : 1.25),
-              transformOrigin: "left center",
+              scale: () => (window.innerWidth >= 1024 ? 1.65 : 1.30),
+              transformOrigin: "center center",
               duration: 1.8,
               ease: "power2.inOut",
             },
@@ -591,13 +601,13 @@ export const AboutMeSection: React.FC = () => {
                 </p>
               </div>
 
-              {/* ──────── CLOSING STATEMENT & DOWNWARD TRAVEL ANCHOR (Z-20, RAW TYPOGRAPHY) ──────── */}
+              {/* ──────── CLOSING STATEMENT & CENTER-LOCK ANCHOR (Z-20, RAW TYPOGRAPHY) ──────── */}
               <div className="mt-6 sm:mt-7">
                 <h3
                   ref={punchlineRef}
-                  className="font-bold text-[22px] sm:text-[24px] lg:text-[26px] text-black tracking-tight leading-snug whitespace-nowrap will-change-transform select-none"
+                  className="inline-block font-bold text-[22px] sm:text-[24px] lg:text-[26px] text-black tracking-tight leading-snug whitespace-nowrap will-change-transform select-none"
                   style={{
-                    transformOrigin: "left center",
+                    transformOrigin: "center center",
                   }}
                 >
                   <span className="block fill-editorial-line fill-punchline">
