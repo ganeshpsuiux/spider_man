@@ -45,6 +45,7 @@ export const AboutMeSection: React.FC = () => {
   const textContainerRef = useRef<HTMLDivElement>(null);
   const paragraphsRef = useRef<HTMLDivElement>(null);
   const punchlineRef = useRef<HTMLHeadingElement>(null);
+  const punchlineChromaticRef = useRef<HTMLSpanElement>(null);
 
   // 7 Showcase Image Refs positioned to match Image 3 benchmark
   const cardsRiverRef = useRef<HTMLDivElement>(null);
@@ -130,6 +131,7 @@ export const AboutMeSection: React.FC = () => {
         // Set initial offscreen positions below viewport
         if (bgCards.length > 0) gsap.set(bgCards, { y: "90vh" });
         if (fgCards.length > 0) gsap.set(fgCards, { y: "105vh" });
+        if (punchlineChromaticRef.current) gsap.set(punchlineChromaticRef.current, { opacity: 0, backgroundPositionX: "0px" });
 
         const masterTl = gsap.timeline({
           scrollTrigger: {
@@ -255,12 +257,33 @@ export const AboutMeSection: React.FC = () => {
         // ═════════════════════════════════════════════════════════════
         // PHASE 3: 7-IMAGE MULTI-PLANE STREAM (Progress 0.52 -> 0.85)
         // Strict Image 3 Placements framing the dead-centered headline
+        // + Continuous Chromatic Wave scrubbing across text in Image 2
         // ═════════════════════════════════════════════════════════════
         masterTl.addLabel("stream", ">0.05");
 
         // Fade in showcase cards river
         if (cardsRiverRef.current) {
           masterTl.to(cardsRiverRef.current, { opacity: 1, duration: 0.35, ease: "power1.in" }, "stream");
+        }
+
+        // Chromatic Color Wave: sweeps across the text continuously while scrolling in Image 2
+        if (punchlineChromaticRef.current) {
+          masterTl.to(
+            punchlineChromaticRef.current,
+            { opacity: 1, duration: 0.4, ease: "power1.in" },
+            "stream"
+          );
+
+          masterTl.fromTo(
+            punchlineChromaticRef.current,
+            { backgroundPositionX: "0px" },
+            {
+              backgroundPositionX: "-3100px", // 5 full passes (620px period) while scrolling through Phase 3
+              duration: 3.0,
+              ease: "none",
+            },
+            "stream"
+          );
         }
 
         // Background Cards (z-10): Parallax speed 0.9x (float from +90vh to -90vh)
@@ -302,6 +325,19 @@ export const AboutMeSection: React.FC = () => {
               y: "-=50px",
               opacity: 0,
               duration: 1.0,
+              ease: "power2.inOut",
+            },
+            "outro"
+          );
+        }
+
+        // Fade out chromatic overlay
+        if (punchlineChromaticRef.current) {
+          masterTl.to(
+            punchlineChromaticRef.current,
+            {
+              opacity: 0,
+              duration: 0.8,
               ease: "power2.inOut",
             },
             "outro"
@@ -360,6 +396,31 @@ export const AboutMeSection: React.FC = () => {
             .fill-editorial-line {
               white-space: nowrap;
             }
+          }
+
+          .chromatic-scroll-pass {
+            background-image: repeating-linear-gradient(
+              90deg,
+              transparent 0px,
+              transparent 100px,
+              #b91c1c 150px,
+              #ef4444 190px,
+              #e11d48 230px,
+              #9333ea 270px,
+              #2563eb 310px,
+              #38bdf8 345px,
+              #e2e8f0 375px,
+              #94a3b8 405px,
+              transparent 450px,
+              transparent 620px
+            );
+            background-size: 620px 100%;
+            background-position-x: 0px;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            display: block;
           }
         `}</style>
 
@@ -590,13 +651,23 @@ export const AboutMeSection: React.FC = () => {
               <div className="mt-6 sm:mt-7">
                 <h3
                   ref={punchlineRef}
-                  className="inline-block font-medium text-[22px] sm:text-[24px] lg:text-[26px] text-[#111111] tracking-[-0.02em] leading-snug whitespace-nowrap will-change-transform select-none"
+                  className="relative inline-block font-medium text-[22px] sm:text-[24px] lg:text-[26px] text-[#111111] tracking-[-0.02em] leading-snug whitespace-nowrap will-change-transform select-none"
                   style={{
                     fontFamily: "var(--font-sora), sans-serif",
                     transformOrigin: "center center",
                   }}
                 >
+                  {/* Base text: reveals in Phase 1 and holds solid black in Phase 2 & 3 */}
                   <span className="block fill-editorial-line fill-punchline font-medium">
+                    By Bringing Pixels to life.
+                  </span>
+
+                  {/* Chromatic Wave Overlay: continuously sweeps across text while scrolling in Image 2 */}
+                  <span
+                    ref={punchlineChromaticRef}
+                    aria-hidden="true"
+                    className="absolute inset-0 block font-medium chromatic-scroll-pass pointer-events-none select-none opacity-0"
+                  >
                     By Bringing Pixels to life.
                   </span>
                 </h3>
