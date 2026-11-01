@@ -114,7 +114,7 @@ export const AboutMeSection: React.FC = () => {
         pinTl.to(".fill-p2-4", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
         pinTl.to(".fill-p2-5", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
 
-        // ── Paragraph 3: Punchline (Scroll progress 0.85 -> 1.00) ──
+        // ── Last 1 line: Punchline (Scroll progress 0.85 -> 1.00) ──
         pinTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 1.1 });
 
         // Brief hold so user appreciates the complete composition
@@ -154,6 +154,12 @@ export const AboutMeSection: React.FC = () => {
           -webkit-text-fill-color: transparent;
           color: transparent;
           display: inline-block;
+        }
+
+        @media (min-width: 1024px) {
+          .fill-editorial-line {
+            white-space: nowrap;
+          }
         }
       `}</style>
 
@@ -234,16 +240,16 @@ export const AboutMeSection: React.FC = () => {
           </div>
         </div>
 
-        {/* ──────── 2. RIGHT COLUMN: EXACT IMAGE 2 EDITORIAL TEXT ALIGNMENT ──────── */}
+        {/* ──────── 2. RIGHT COLUMN: 2 PARAGRAPHS + LAST 1 LINE ──────── */}
         <div
           ref={textContainerRef}
-          className="w-full max-w-[580px] flex flex-col justify-center text-left will-change-transform select-text"
+          className="w-full max-w-[620px] flex flex-col justify-center text-left will-change-transform select-text"
           style={{
             fontFamily: "var(--font-inter), var(--font-sora), sans-serif",
           }}
         >
-          {/* Paragraph 1 (Exact 5-line rhythm from reference image) */}
-          <p className="text-[17.5px] sm:text-[18px] lg:text-[19px] font-normal leading-[1.62] text-zinc-800 tracking-[-0.015em]">
+          {/* Paragraph 1 (5 Lines) */}
+          <p className="text-[17.5px] sm:text-[18px] lg:text-[18.5px] font-normal leading-[1.62] text-zinc-800 tracking-[-0.015em]">
             <span className="block fill-editorial-line fill-p1-1">
               My journey wasn’t shaped by traditional design schools, but by
             </span>
@@ -261,28 +267,28 @@ export const AboutMeSection: React.FC = () => {
             </span>
           </p>
 
-          {/* Paragraph 2 (Exact 5-line rhythm from reference image) */}
-          <p className="mt-6 sm:mt-7 text-[17.5px] sm:text-[18px] lg:text-[19px] font-normal leading-[1.62] text-zinc-800 tracking-[-0.015em]">
+          {/* Paragraph 2 (5 Lines — "and leading product teams" continuous without breaking) */}
+          <p className="mt-6 sm:mt-7 text-[17.5px] sm:text-[18px] lg:text-[18.5px] font-normal leading-[1.62] text-zinc-800 tracking-[-0.015em]">
             <span className="block fill-editorial-line fill-p2-1">
               That difference is felt in every interface I touch. From crafting raw
             </span>
             <span className="block fill-editorial-line fill-p2-2">
-              visual identities to architecting scalable UI/UX systems and leading
+              visual identities to architecting scalable UI/UX systems
             </span>
             <span className="block fill-editorial-line fill-p2-3">
-              product teams as Team Lead at Webnox, each chapter sharpened
+              and leading product teams as Team Lead at Webnox, each chapter
             </span>
             <span className="block fill-editorial-line fill-p2-4">
-              my instincts. Today, I build at the frontier of design and technology
+              sharpened my instincts. Today, I build at the frontier of design
             </span>
             <span className="block fill-editorial-line fill-p2-5">
-              —fusing cinematic kinetics with AI and vibe coding.
+              and technology—fusing cinematic kinetics with AI and vibe coding.
             </span>
           </p>
 
-          {/* Punchline (Exact display weight & rhythm from reference image) */}
+          {/* Last 1 Line (Punchline) */}
           <div className="mt-6 sm:mt-7">
-            <p className="text-[17.5px] sm:text-[18px] lg:text-[19px] font-normal leading-[1.62] text-zinc-900 tracking-[-0.015em]">
+            <p className="text-[17.5px] sm:text-[18px] lg:text-[18.5px] font-normal leading-[1.62] text-zinc-900 tracking-[-0.015em]">
               <span className="block fill-editorial-line fill-punchline">
                 I build digital experiences that can’t be ignored.
               </span>
