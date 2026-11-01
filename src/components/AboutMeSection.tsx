@@ -34,7 +34,7 @@ export const AboutMeSection: React.FC = () => {
         entranceTl.fromTo(
           polaroidContainerRef.current,
           { opacity: 0, x: -50, rotate: -8, scale: 0.94 },
-          { opacity: 1, x: 0, rotate: -2.5, scale: 1, duration: 0.9, ease: "back.out(1.2)" }
+          { opacity: 1, x: 0, rotate: -2.8, scale: 1, duration: 0.9, ease: "back.out(1.2)" }
         );
       }
 
@@ -86,10 +86,10 @@ export const AboutMeSection: React.FC = () => {
                   video.currentTime = targetTime;
                 }
 
-                // Dynamic HUD timecode badge update (e.g. 0:07 / 0:14)
+                // Dynamic HUD timecode badge update (e.g. 0:14 / 0:15)
                 if (timecodeRef.current) {
                   const curSec = Math.floor(targetTime);
-                  const totalSec = Math.floor(video.duration) || 14;
+                  const totalSec = Math.floor(video.duration) || 15;
                   const formatted = `0:${curSec < 10 ? "0" : ""}${curSec} / 0:${totalSec < 10 ? "0" : ""}${totalSec}`;
                   if (timecodeRef.current.textContent !== formatted) {
                     timecodeRef.current.textContent = formatted;
@@ -100,19 +100,21 @@ export const AboutMeSection: React.FC = () => {
           },
         });
 
-        // ── Paragraph 1: Origin & Detour (Scroll progress 0.00 -> 0.40) ──
+        // ── Paragraph 1: 5 lines (Scroll progress 0.00 -> 0.45) ──
         pinTl.to(".fill-p1-1", { backgroundPositionX: "0%", ease: "none", duration: 1.0 });
-        pinTl.to(".fill-p1-2", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.3");
-        pinTl.to(".fill-p1-3", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.3");
-        pinTl.to(".fill-p1-4", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.3");
+        pinTl.to(".fill-p1-2", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
+        pinTl.to(".fill-p1-3", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
+        pinTl.to(".fill-p1-4", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
+        pinTl.to(".fill-p1-5", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
 
-        // ── Paragraph 2: Evolution & Frontier (Scroll progress 0.40 -> 0.80) ──
+        // ── Paragraph 2: 5 lines (Scroll progress 0.45 -> 0.85) ──
         pinTl.to(".fill-p2-1", { backgroundPositionX: "0%", ease: "none", duration: 1.0 });
-        pinTl.to(".fill-p2-2", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.3");
-        pinTl.to(".fill-p2-3", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.3");
-        pinTl.to(".fill-p2-4", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.3");
+        pinTl.to(".fill-p2-2", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
+        pinTl.to(".fill-p2-3", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
+        pinTl.to(".fill-p2-4", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
+        pinTl.to(".fill-p2-5", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
 
-        // ── Paragraph 3: Punchline (Scroll progress 0.80 -> 1.00) ──
+        // ── Paragraph 3: Punchline (Scroll progress 0.85 -> 1.00) ──
         pinTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 1.1 });
 
         // Brief hold so user appreciates the complete composition
@@ -155,19 +157,19 @@ export const AboutMeSection: React.FC = () => {
         }
       `}</style>
 
-      {/* Main Content Stage: Balanced 2-Column Editorial Layout */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14 px-4 sm:px-6">
+      {/* Main Content Stage: Balanced 2-Column Cinema Layout matching Reference Image */}
+      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 px-4 sm:px-6">
         
-        {/* ──────── 1. LEFT COLUMN: 1:1 SQUARE LIVING POLAROID (SCRUBBED VIDEO VIEWPORT) ──────── */}
+        {/* ──────── 1. LEFT COLUMN: 1:1 SQUARE LIVING POLAROID ──────── */}
         <div className="w-full lg:w-auto flex justify-center items-center flex-shrink-0">
           <div
             ref={polaroidContainerRef}
             onMouseEnter={() => setHoveredPolaroid(true)}
             onMouseLeave={() => setHoveredPolaroid(false)}
-            className={`relative bg-white p-3.5 sm:p-4 pb-10 sm:pb-12 rounded-[4px] shadow-[0_24px_50px_rgba(0,0,0,0.14),0_4px_12px_rgba(0,0,0,0.06)] border border-black/[0.07] transition-all duration-500 ease-out cursor-pointer ${
+            className={`relative bg-white p-3.5 sm:p-4 pb-8 sm:pb-9 rounded-[4px] shadow-[0_20px_45px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.05)] border border-black/[0.07] transition-all duration-500 ease-out cursor-pointer ${
               hoveredPolaroid
-                ? "!rotate-0 scale-[1.02] shadow-[0_32px_64px_rgba(0,0,0,0.18)] -translate-y-1.5"
-                : "rotate-[-2.5deg] scale-100"
+                ? "!rotate-0 scale-[1.02] shadow-[0_28px_56px_rgba(0,0,0,0.16)] -translate-y-1.5"
+                : "rotate-[-2.8deg] scale-100"
             }`}
             style={{
               width: "360px",
@@ -202,22 +204,22 @@ export const AboutMeSection: React.FC = () => {
                 className="w-full h-full object-cover object-center filter contrast-[1.04] brightness-[1.02]"
               />
 
-              {/* Subtle CRT / Film Vignette Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15 pointer-events-none" />
+              {/* Subtle Film Vignette Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15 pointer-events-none" />
 
-              {/* Subtle Video HUD Timecode Badge (0:07 / 0:14) in Top-Right Corner */}
+              {/* Video HUD Timecode Badge (0:14 / 0:15) */}
               <div
                 ref={timecodeRef}
                 className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded text-[9px] font-mono tracking-widest uppercase bg-black/60 backdrop-blur-md border border-white/15 text-white/90 pointer-events-none z-10"
               >
-                0:07 / 0:14
+                0:14 / 0:15
               </div>
             </div>
 
-            {/* Polaroid Bottom Thick Chin: Handwritten "me :)" + Tag */}
-            <div className="w-full pt-3 sm:pt-4 px-1 flex items-center justify-between">
+            {/* Polaroid Bottom Chin: Handwritten "me :)" + Tag */}
+            <div className="w-full pt-3 px-1 flex items-center justify-between">
               <span
-                className="text-2xl sm:text-[1.75rem] text-[#1e1e1e] tracking-wide select-none"
+                className="text-2xl sm:text-[1.7rem] text-[#1e1e1e] tracking-wide select-none"
                 style={{
                   fontFamily: "var(--font-caveat), cursive",
                   fontWeight: 700,
@@ -232,61 +234,59 @@ export const AboutMeSection: React.FC = () => {
           </div>
         </div>
 
-        {/* ──────── 2. RIGHT COLUMN: IMAGE 2 EDITORIAL TEXT ALIGNMENT ──────── */}
+        {/* ──────── 2. RIGHT COLUMN: EXACT IMAGE 2 EDITORIAL TEXT ALIGNMENT ──────── */}
         <div
           ref={textContainerRef}
-          className="w-full max-w-[620px] lg:max-w-[660px] flex flex-col justify-center text-left will-change-transform select-text"
+          className="w-full max-w-[580px] flex flex-col justify-center text-left will-change-transform select-text"
           style={{
-            fontFamily: "var(--font-sora), var(--font-inter), sans-serif",
+            fontFamily: "var(--font-inter), var(--font-sora), sans-serif",
           }}
         >
-          {/* Subtle Top Kicker / Badge */}
-          <div className="inline-flex items-center gap-2 mb-6">
-            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-            <span className="text-xs font-mono tracking-[0.2em] uppercase text-zinc-400">
-              ORIGIN STORY // GANESH PS
-            </span>
-          </div>
-
-          {/* Paragraph 1: Origin & Detour (Natural wide 60-75 character lines) */}
-          <p className="text-[17px] sm:text-[18px] lg:text-[19.5px] font-normal leading-[1.58] lg:leading-[1.62] text-zinc-800 tracking-[-0.015em]">
+          {/* Paragraph 1 (Exact 5-line rhythm from reference image) */}
+          <p className="text-[17.5px] sm:text-[18px] lg:text-[19px] font-normal leading-[1.62] text-zinc-800 tracking-[-0.015em]">
             <span className="block fill-editorial-line fill-p1-1">
-              My journey wasn’t shaped by traditional design schools, but by vision,
+              My journey wasn’t shaped by traditional design schools, but by
             </span>
             <span className="block fill-editorial-line fill-p1-2">
-              intention, and obsession. Starting with an M.Com degree and commerce
+              vision, intention, and obsession. Starting with an M.Com degree
             </span>
             <span className="block fill-editorial-line fill-p1-3">
-              ledgers, I took an unexpected detour into visual craft — mastering design
+              and commerce ledgers, I took an unexpected detour into visual
             </span>
             <span className="block fill-editorial-line fill-p1-4">
-              independently through relentless practice and a refusal to settle.
+              craft—mastering design independently through relentless practice
+            </span>
+            <span className="block fill-editorial-line fill-p1-5">
+              and a refusal to settle.
             </span>
           </p>
 
-          {/* Paragraph 2: Evolution & Frontier (Natural wide 60-75 character lines) */}
-          <p className="mt-7 sm:mt-8 text-[17px] sm:text-[18px] lg:text-[19.5px] font-normal leading-[1.58] lg:leading-[1.62] text-zinc-800 tracking-[-0.015em]">
+          {/* Paragraph 2 (Exact 5-line rhythm from reference image) */}
+          <p className="mt-6 sm:mt-7 text-[17.5px] sm:text-[18px] lg:text-[19px] font-normal leading-[1.62] text-zinc-800 tracking-[-0.015em]">
             <span className="block fill-editorial-line fill-p2-1">
-              That difference is felt in every interface I touch. From crafting raw visual
+              That difference is felt in every interface I touch. From crafting raw
             </span>
             <span className="block fill-editorial-line fill-p2-2">
-              identities to architecting scalable UI/UX systems and leading product teams
+              visual identities to architecting scalable UI/UX systems and leading
             </span>
             <span className="block fill-editorial-line fill-p2-3">
-              as Team Lead at Webnox, each chapter sharpened my instincts. Today, I build
+              product teams as Team Lead at Webnox, each chapter sharpened
             </span>
             <span className="block fill-editorial-line fill-p2-4">
-              at the frontier of design and technology — fusing cinematic kinetics with AI and vibe coding.
+              my instincts. Today, I build at the frontier of design and technology
+            </span>
+            <span className="block fill-editorial-line fill-p2-5">
+              —fusing cinematic kinetics with AI and vibe coding.
             </span>
           </p>
 
-          {/* Punchline (Display Weight matching Image 2) */}
-          <div className="mt-8">
-            <h3 className="text-[22px] sm:text-[26px] lg:text-[28px] font-bold tracking-tight text-black leading-snug">
+          {/* Punchline (Exact display weight & rhythm from reference image) */}
+          <div className="mt-6 sm:mt-7">
+            <p className="text-[17.5px] sm:text-[18px] lg:text-[19px] font-normal leading-[1.62] text-zinc-900 tracking-[-0.015em]">
               <span className="block fill-editorial-line fill-punchline">
                 I build digital experiences that can’t be ignored.
               </span>
-            </h3>
+            </p>
           </div>
         </div>
 
