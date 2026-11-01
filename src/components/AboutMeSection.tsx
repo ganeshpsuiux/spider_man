@@ -13,6 +13,8 @@ export const AboutMeSection: React.FC = () => {
   const polaroidContainerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
+  const paragraphsContainerRef = useRef<HTMLDivElement>(null);
+  const punchlineRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -20,7 +22,7 @@ export const AboutMeSection: React.FC = () => {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // 1. Entrance timeline when section enters view
+      // 1. Initial entrance timeline when section scrolls near viewport
       const entranceTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -33,7 +35,7 @@ export const AboutMeSection: React.FC = () => {
         entranceTl.fromTo(
           polaroidContainerRef.current,
           { opacity: 0, x: -50, rotate: -8, scale: 0.94 },
-          { opacity: 1, x: 0, rotate: -2.8, scale: 1, duration: 0.9, ease: "back.out(1.2)" }
+          { opacity: 1, x: 0, rotate: -2.5, scale: 1, duration: 0.9, ease: "back.out(1.2)" }
         );
       }
 
@@ -47,15 +49,16 @@ export const AboutMeSection: React.FC = () => {
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 2. PINNED SCROLL CHOREOGRAPHY (+=250%)
-      // Video scrubs smoothly through its timeline while text
-      // lines sweep through the Spidey Red & Blue gradient into solid black!
+      // 2. PINNED SCROLL TIMELINE (+=280%)
+      // Phase 1 (0.00 -> 0.70): Dual-chromatic text reveal & synchronized video scrub (Image 1)
+      // Phase 2 (0.75 -> 1.00): Continuity Bridge — Polaroid & paragraphs dissolve,
+      // and "By Bringing Pixels to life." glides dead-center into the viewport (Image 2)
       // ─────────────────────────────────────────────────────────────
       if (textContainerRef.current) {
         const lineElements = textContainerRef.current.querySelectorAll(".fill-editorial-line");
 
-        // Mathematically calibrated 320% Spidey Suit Ramp:
-        // Visible window at 100% position is [68.75%, 100%] => 100% pure ghost gray (zero blue bleed!)
+        // Signature Spidey Suit Chromatic Ramp:
+        // Visible window at 100% position is [68.75%, 100%] => 100% pure ghost gray
         // Visible window at 0% position is [0%, 31.25%] => 100% pure obsidian black
         gsap.set(lineElements, {
           backgroundImage:
@@ -73,14 +76,15 @@ export const AboutMeSection: React.FC = () => {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=250%",
+            end: "+=280%",
             pin: true,
             pinSpacing: true,
             scrub: 0.8,
+            invalidateOnRefresh: true,
             onUpdate: (self) => {
-              // Video scrub synchronized to scroll progress
+              // Video scrub synchronized to scroll progress (completes full reel by ~75% of timeline)
               if (video && Number.isFinite(video.duration) && video.duration > 0) {
-                const targetTime = self.progress * video.duration;
+                const targetTime = Math.min(self.progress * 1.3, 1) * video.duration;
                 if (Math.abs(video.currentTime - targetTime) > 0.04) {
                   video.currentTime = targetTime;
                 }
@@ -89,25 +93,83 @@ export const AboutMeSection: React.FC = () => {
           },
         });
 
-        // ── Paragraph 1: 5 lines (Scroll progress 0.00 -> 0.45) ──
-        pinTl.to(".fill-p1-1", { backgroundPositionX: "0%", ease: "none", duration: 1.0 });
-        pinTl.to(".fill-p1-2", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
-        pinTl.to(".fill-p1-3", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
-        pinTl.to(".fill-p1-4", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
-        pinTl.to(".fill-p1-5", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
+        // ── Paragraph 1: Origin & Spark (Progress 0.00 -> 0.35) ──
+        pinTl.to(".fill-p1-1", { backgroundPositionX: "0%", ease: "none", duration: 0.8 });
+        pinTl.to(".fill-p1-2", { backgroundPositionX: "0%", ease: "none", duration: 0.8 }, "-=0.35");
+        pinTl.to(".fill-p1-3", { backgroundPositionX: "0%", ease: "none", duration: 0.8 }, "-=0.35");
+        pinTl.to(".fill-p1-4", { backgroundPositionX: "0%", ease: "none", duration: 0.8 }, "-=0.35");
+        pinTl.to(".fill-p1-5", { backgroundPositionX: "0%", ease: "none", duration: 0.8 }, "-=0.35");
 
-        // ── Paragraph 2: 5 lines (Scroll progress 0.45 -> 0.85) ──
-        pinTl.to(".fill-p2-1", { backgroundPositionX: "0%", ease: "none", duration: 1.0 });
-        pinTl.to(".fill-p2-2", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
-        pinTl.to(".fill-p2-3", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
-        pinTl.to(".fill-p2-4", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
-        pinTl.to(".fill-p2-5", { backgroundPositionX: "0%", ease: "none", duration: 1.0 }, "-=0.35");
+        // ── Paragraph 2: Detour & Beyond the Screen (Progress 0.35 -> 0.68) ──
+        pinTl.to(".fill-p2-1", { backgroundPositionX: "0%", ease: "none", duration: 0.85 });
+        pinTl.to(".fill-p2-2", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.35");
+        pinTl.to(".fill-p2-3", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.35");
+        pinTl.to(".fill-p2-4", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.35");
 
-        // ── Last 1 line: Punchline (Scroll progress 0.85 -> 1.00) ──
-        pinTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 1.1 });
+        // ── Closing Statement Reveal (Progress 0.65 -> 0.78) ──
+        pinTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 0.95 }, "-=0.2");
 
-        // Brief hold so user appreciates the complete composition
-        pinTl.to({}, { duration: 0.4 });
+        // ── CONTINUITY BRIDGE: Image 1 ➔ Image 2 Phase (Progress 0.78 -> 0.95) ──
+        pinTl.addLabel("bridge", ">0.1");
+
+        // 1. Polaroid dissolves and floats gently upward
+        if (polaroidContainerRef.current) {
+          pinTl.to(
+            polaroidContainerRef.current,
+            {
+              opacity: 0,
+              y: -40,
+              scale: 0.96,
+              ease: "power2.inOut",
+              duration: 1.0,
+            },
+            "bridge"
+          );
+        }
+
+        // 2. Paragraphs 1 & 2 dissolve and float gently upward
+        if (paragraphsContainerRef.current) {
+          pinTl.to(
+            paragraphsContainerRef.current,
+            {
+              opacity: 0,
+              y: -30,
+              ease: "power2.inOut",
+              duration: 1.0,
+            },
+            "bridge"
+          );
+        }
+
+        // 3. "By Bringing Pixels to life." glides from right column into dead center of the viewport
+        if (punchlineRef.current) {
+          pinTl.to(
+            punchlineRef.current,
+            {
+              x: () => {
+                const s = sectionRef.current?.getBoundingClientRect();
+                const p = punchlineRef.current?.getBoundingClientRect();
+                if (!s || !p) return 0;
+                const curX = (gsap.getProperty(punchlineRef.current, "x") as number) || 0;
+                return s.left + s.width / 2 - (p.left - curX + p.width / 2);
+              },
+              y: () => {
+                const s = sectionRef.current?.getBoundingClientRect();
+                const p = punchlineRef.current?.getBoundingClientRect();
+                if (!s || !p) return 0;
+                const curY = (gsap.getProperty(punchlineRef.current, "y") as number) || 0;
+                return s.top + s.height / 2 - (p.top - curY + p.height / 2);
+              },
+              scale: 1.25,
+              ease: "power2.inOut",
+              duration: 1.2,
+            },
+            "bridge"
+          );
+        }
+
+        // Brief hold beat in Image 2 state before unpinning into next section
+        pinTl.to({}, { duration: 0.6 });
       }
     }, sectionRef);
 
@@ -152,22 +214,22 @@ export const AboutMeSection: React.FC = () => {
         }
       `}</style>
 
-      {/* Main Content Stage: Balanced 2-Column Cinema Layout matching Reference Image */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 px-4 sm:px-6">
+      {/* Main Content Stage: 2-Column Grid (Image 1) */}
+      <div className="relative z-10 w-full max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
         
-        {/* ──────── 1. LEFT COLUMN: 1:1 SQUARE LIVING POLAROID ──────── */}
-        <div className="w-full lg:w-auto flex justify-center items-center flex-shrink-0">
+        {/* ──────── 1. LEFT COLUMN: 1:1 SQUARE LIVING POLAROID (Image 1) ──────── */}
+        <div className="lg:col-span-5 flex justify-center items-center">
           <div
             ref={polaroidContainerRef}
             onMouseEnter={() => setHoveredPolaroid(true)}
             onMouseLeave={() => setHoveredPolaroid(false)}
-            className={`relative bg-white p-3.5 sm:p-4 pb-8 sm:pb-9 rounded-[4px] shadow-[0_20px_45px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.05)] border border-black/[0.07] transition-all duration-500 ease-out cursor-pointer ${
+            className={`relative bg-white p-3.5 sm:p-4 pb-8 sm:pb-9 rounded-[4px] shadow-[0_20px_45px_rgba(0,0,0,0.12)] border border-black/[0.07] transition-all duration-500 ease-out cursor-pointer ${
               hoveredPolaroid
                 ? "!rotate-0 scale-[1.02] shadow-[0_28px_56px_rgba(0,0,0,0.16)] -translate-y-1.5"
-                : "rotate-[-2.8deg] scale-100"
+                : "rotate-[-2.5deg] scale-100"
             }`}
             style={{
-              width: "360px",
+              width: "350px",
               maxWidth: "100%",
               transformOrigin: "center center",
             }}
@@ -188,7 +250,7 @@ export const AboutMeSection: React.FC = () => {
               }}
             />
 
-            {/* Polaroid Moving Video Viewport (Strict 1:1 Square) */}
+            {/* Video Viewport: Strictly 1:1 Square */}
             <div className="w-full aspect-square rounded-[2px] overflow-hidden bg-black relative border border-black/10 shadow-inner group">
               <video
                 ref={videoRef}
@@ -221,59 +283,63 @@ export const AboutMeSection: React.FC = () => {
           </div>
         </div>
 
-        {/* ──────── 2. RIGHT COLUMN: 2 PARAGRAPHS + LAST 1 LINE ──────── */}
+        {/* ──────── 2. RIGHT COLUMN: EDITORIAL TYPOGRAPHY & SCROLL BRIDGE ──────── */}
         <div
           ref={textContainerRef}
-          className="w-full max-w-[620px] flex flex-col justify-center text-left will-change-transform select-text"
+          className="lg:col-span-7 flex flex-col justify-center text-left will-change-transform select-text"
           style={{
             fontFamily: "var(--font-inter), var(--font-sora), sans-serif",
           }}
         >
-          {/* Paragraph 1 (5 Lines) */}
-          <p className="text-[17.5px] sm:text-[18px] lg:text-[18.5px] font-normal leading-[1.62] text-zinc-800 tracking-[-0.015em]">
-            <span className="block fill-editorial-line fill-p1-1">
-              My journey wasn’t shaped by traditional design schools, but by
-            </span>
-            <span className="block fill-editorial-line fill-p1-2">
-              vision, intention, and obsession. Starting with an M.Com degree
-            </span>
-            <span className="block fill-editorial-line fill-p1-3">
-              and commerce ledgers, I took an unexpected detour into visual
-            </span>
-            <span className="block fill-editorial-line fill-p1-4">
-              craft—mastering design independently through relentless practice
-            </span>
-            <span className="block fill-editorial-line fill-p1-5">
-              and a refusal to settle.
-            </span>
-          </p>
-
-          {/* Paragraph 2 (5 Lines — "and leading product teams" continuous without breaking) */}
-          <p className="mt-6 sm:mt-7 text-[17.5px] sm:text-[18px] lg:text-[18.5px] font-normal leading-[1.62] text-zinc-800 tracking-[-0.015em]">
-            <span className="block fill-editorial-line fill-p2-1">
-              That difference is felt in every interface I touch. From crafting raw
-            </span>
-            <span className="block fill-editorial-line fill-p2-2">
-              visual identities to architecting scalable UI/UX systems
-            </span>
-            <span className="block fill-editorial-line fill-p2-3">
-              and leading product teams as Team Lead at Webnox, each chapter
-            </span>
-            <span className="block fill-editorial-line fill-p2-4">
-              sharpened my instincts. Today, I build at the frontier of design
-            </span>
-            <span className="block fill-editorial-line fill-p2-5">
-              and technology—fusing cinematic kinetics with AI and vibe coding.
-            </span>
-          </p>
-
-          {/* Last 1 Line (Punchline) */}
-          <div className="mt-6 sm:mt-7">
-            <p className="text-[17.5px] sm:text-[18px] lg:text-[18.5px] font-normal leading-[1.62] text-zinc-900 tracking-[-0.015em]">
-              <span className="block fill-editorial-line fill-punchline">
-                I build digital experiences that can’t be ignored.
+          {/* Paragraphs Container (Dissolves during Bridge Transition to Image 2) */}
+          <div ref={paragraphsContainerRef} className="space-y-6 sm:space-y-8 will-change-transform">
+            {/* Paragraph 1: Origin & Spark */}
+            <p className="text-[17px] sm:text-[18px] lg:text-[19px] font-normal leading-[1.65] text-zinc-800 tracking-[-0.01em]">
+              <span className="block fill-editorial-line fill-p1-1">
+                I didn’t start in a design school or follow a perfectly drawn
+              </span>
+              <span className="block fill-editorial-line fill-p1-2">
+                path. My story began with commerce, books, and an
+              </span>
+              <span className="block fill-editorial-line fill-p1-3">
+                M.Com degree—until curiosity pulled me into the web of
+              </span>
+              <span className="block fill-editorial-line fill-p1-4">
+                design. What started as a spark soon became an
+              </span>
+              <span className="block fill-editorial-line fill-p1-5">
+                obsession.
               </span>
             </p>
+
+            {/* Paragraph 2: Detour & Beyond the Screen */}
+            <p className="text-[17px] sm:text-[18px] lg:text-[19px] font-normal leading-[1.65] text-zinc-800 tracking-[-0.01em]">
+              <span className="block fill-editorial-line fill-p2-1">
+                That unexpected detour became my origin story. Today, I
+              </span>
+              <span className="block fill-editorial-line fill-p2-2">
+                swing between ideas, identities, interfaces, and
+              </span>
+              <span className="block fill-editorial-line fill-p2-3">
+                technology—using motion, AI, and imagination to build
+              </span>
+              <span className="block fill-editorial-line fill-p2-4">
+                experiences that go beyond the screen.
+              </span>
+            </p>
+          </div>
+
+          {/* Closing Statement: Glides to Dead Center of Viewport (Image 2) */}
+          <div className="mt-6 sm:mt-8 will-change-transform">
+            <h3
+              ref={punchlineRef}
+              className="inline-block text-xl sm:text-2xl lg:text-[1.75rem] font-semibold text-black tracking-tight leading-snug will-change-transform"
+              style={{ transformOrigin: "center center" }}
+            >
+              <span className="fill-editorial-line fill-punchline">
+                By Bringing Pixels to life.
+              </span>
+            </h3>
           </div>
         </div>
 
