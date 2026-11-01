@@ -12,7 +12,6 @@ export const AboutMeSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const polaroidContainerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const timecodeRef = useRef<HTMLDivElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -84,16 +83,6 @@ export const AboutMeSection: React.FC = () => {
                 const targetTime = self.progress * video.duration;
                 if (Math.abs(video.currentTime - targetTime) > 0.04) {
                   video.currentTime = targetTime;
-                }
-
-                // Dynamic HUD timecode badge update (e.g. 0:14 / 0:15)
-                if (timecodeRef.current) {
-                  const curSec = Math.floor(targetTime);
-                  const totalSec = Math.floor(video.duration) || 15;
-                  const formatted = `0:${curSec < 10 ? "0" : ""}${curSec} / 0:${totalSec < 10 ? "0" : ""}${totalSec}`;
-                  if (timecodeRef.current.textContent !== formatted) {
-                    timecodeRef.current.textContent = formatted;
-                  }
                 }
               }
             },
@@ -212,14 +201,6 @@ export const AboutMeSection: React.FC = () => {
 
               {/* Subtle Film Vignette Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15 pointer-events-none" />
-
-              {/* Video HUD Timecode Badge (0:14 / 0:15) */}
-              <div
-                ref={timecodeRef}
-                className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded text-[9px] font-mono tracking-widest uppercase bg-black/60 backdrop-blur-md border border-white/15 text-white/90 pointer-events-none z-10"
-              >
-                0:14 / 0:15
-              </div>
             </div>
 
             {/* Polaroid Bottom Chin: Handwritten "me :)" + Tag */}
@@ -233,8 +214,8 @@ export const AboutMeSection: React.FC = () => {
               >
                 me :)
               </span>
-              <span className="text-[10px] font-mono tracking-wider text-zinc-400 uppercase select-none">
-                SCROLL TO REEL
+              <span className="text-[10.5px] sm:text-[11px] font-mono tracking-wider text-zinc-400 select-none">
+                Here&apos;s the Story
               </span>
             </div>
           </div>
