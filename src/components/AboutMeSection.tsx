@@ -6,55 +6,30 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface ShowcaseCardProps {
+interface FloatingImageProps {
   image: string;
-  title: string;
-  category: string;
-  accent: string;
-  year?: string;
+  alt: string;
   className?: string;
 }
 
-const ShowcaseCard: React.FC<ShowcaseCardProps> = ({
+/**
+ * Pure Full-Bleed Floating Image Component (Zero outer padding, zero metadata labels)
+ * Conforms to: "remove the extra outer space on the images - just the image is enough"
+ */
+const FloatingImage: React.FC<FloatingImageProps> = ({
   image,
-  title,
-  category,
-  accent,
-  year = "2026",
+  alt,
   className = "",
 }) => (
   <div
-    className={`w-full bg-white/95 rounded-2xl p-2.5 sm:p-3 shadow-[0_20px_45px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.08] backdrop-blur-md select-none transition-transform duration-300 ${className}`}
+    className={`overflow-hidden rounded-2xl sm:rounded-3xl shadow-[0_20px_45px_rgba(0,0,0,0.14),0_4px_12px_rgba(0,0,0,0.06)] border border-black/[0.06] select-none transition-transform duration-300 hover:scale-[1.03] aspect-[4/5] ${className}`}
   >
-    {/* Card Image Viewport */}
-    <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-zinc-100 relative mb-2.5 shadow-inner">
-      <img
-        src={image}
-        alt={title}
-        className="w-full h-full object-cover object-center filter contrast-[1.03] brightness-[1.01]"
-        loading="lazy"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-      <span
-        className="absolute top-2 left-2 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full font-medium backdrop-blur-md shadow-sm border border-white/20"
-        style={{
-          backgroundColor: accent,
-          color: "#ffffff",
-        }}
-      >
-        {category}
-      </span>
-    </div>
-
-    {/* Metadata */}
-    <div className="px-1 flex items-center justify-between">
-      <h4 className="font-sora text-[12px] sm:text-[13px] font-semibold text-zinc-900 tracking-tight truncate pr-2">
-        {title}
-      </h4>
-      <span className="text-[10px] font-mono text-zinc-400 shrink-0">
-        {year}
-      </span>
-    </div>
+    <img
+      src={image}
+      alt={alt}
+      className="w-full h-full object-cover object-center filter contrast-[1.03] brightness-[1.01]"
+      loading="lazy"
+    />
   </div>
 );
 
@@ -71,14 +46,15 @@ export const AboutMeSection: React.FC = () => {
   const paragraphsRef = useRef<HTMLDivElement>(null);
   const punchlineRef = useRef<HTMLHeadingElement>(null);
 
-  // Multi-Plane Parallax Depth Layer Refs
-  const bgCardsRiverRef = useRef<HTMLDivElement>(null);
-  const bgCol1Ref = useRef<HTMLDivElement>(null);
-  const bgCol2Ref = useRef<HTMLDivElement>(null);
-
-  const fgCardsRiverRef = useRef<HTMLDivElement>(null);
-  const fgCardLeftRef = useRef<HTMLDivElement>(null);
-  const fgCardRightRef = useRef<HTMLDivElement>(null);
+  // 7 Showcase Image Refs positioned to match Image 3 benchmark
+  const cardsRiverRef = useRef<HTMLDivElement>(null);
+  const card1Ref = useRef<HTMLDivElement>(null); // Far Top-Left
+  const card2Ref = useRef<HTMLDivElement>(null); // Upper-Left
+  const card3Ref = useRef<HTMLDivElement>(null); // Upper Center-Right
+  const card4Ref = useRef<HTMLDivElement>(null); // Upper Far-Right (Foreground)
+  const card5Ref = useRef<HTMLDivElement>(null); // Far Bottom-Left
+  const card6Ref = useRef<HTMLDivElement>(null); // Bottom Center-Left (Foreground)
+  const card7Ref = useRef<HTMLDivElement>(null); // Bottom Center-Right
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -115,14 +91,14 @@ export const AboutMeSection: React.FC = () => {
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 2. CDG STUDIO MULTI-PLANE SCROLL CHOREOGRAPHY (+=380% PINNED TIMELINE)
+      // 2. CDG STUDIO SIGNATURE SCROLL CHOREOGRAPHY (+=380% PINNED TIMELINE)
       // Phase 1 (0.00 -> 0.35): Origin Story (Video scrub + Spidey text reveal)
-      // Phase 2 (0.35 -> 0.55): Downward Travel along Grid Track (Locked in column alignment, RAW typography)
-      // Phase 3 (0.55 -> 0.85): 3-Tier Multi-Plane Floating Cards Stream
-      //   - Layer 1 (z-10): Underneath background cards float behind text (0.85x speed)
-      //   - Layer 2 (z-20): Centered focal text statement locked in grid position
-      //   - Layer 3 (z-30): Foreground camera-close cards overlap text edges (1.25x speed, realistic drop shadows)
-      // Phase 4 (0.85 -> 1.00): Clean outro & fluid release into next section
+      // Phase 2 (0.35 -> 0.52): Dead-Center Glide (Perfect center, refined medium weight)
+      // Phase 3 (0.52 -> 0.85): 7-Image Multi-Plane Parallax Stream (Strict Image 3 layout)
+      //   - Background Cards (z-10): Cards 1, 2, 3, 5, 7 stream with 0.9x parallax depth
+      //   - Centered Focal Punchline (z-20): Locked dead-center in open negative space
+      //   - Foreground Cards (z-30): Cards 4 & 6 stream with 1.25x speed & deeper shadows
+      // Phase 4 (0.85 -> 1.00): Clean outro & fluid handoff into next section
       // ─────────────────────────────────────────────────────────────
       if (textContainerRef.current) {
         const lineElements = textContainerRef.current.querySelectorAll(".fill-editorial-line");
@@ -140,19 +116,26 @@ export const AboutMeSection: React.FC = () => {
           display: "inline-block",
         });
 
-        // Set initial positions for Underneath Layer (z-10)
-        if (bgCol1Ref.current) gsap.set(bgCol1Ref.current, { y: "115vh" });
-        if (bgCol2Ref.current) gsap.set(bgCol2Ref.current, { y: "125vh" });
+        // Background layer cards (z-10) & Foreground layer cards (z-30)
+        const bgCards = [
+          card1Ref.current,
+          card2Ref.current,
+          card3Ref.current,
+          card5Ref.current,
+          card7Ref.current,
+        ].filter(Boolean);
 
-        // Set initial positions for Foreground Overlap Layer (z-30)
-        if (fgCardLeftRef.current) gsap.set(fgCardLeftRef.current, { y: "130vh" });
-        if (fgCardRightRef.current) gsap.set(fgCardRightRef.current, { y: "140vh" });
+        const fgCards = [card4Ref.current, card6Ref.current].filter(Boolean);
+
+        // Set initial offscreen positions below viewport
+        if (bgCards.length > 0) gsap.set(bgCards, { y: "90vh" });
+        if (fgCards.length > 0) gsap.set(fgCards, { y: "105vh" });
 
         const masterTl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
             start: "top top",      // Strictly start only when section reaches top
-            end: "+=380%",         // 3.8x viewport travel for comfortable reading & card viewing
+            end: "+=380%",         // Generous scroll travel for full reading & showcase stream
             pin: pinWrapper,       // Physically pin inner wrapper (prevents DOM reparenting jank)
             pinSpacing: true,
             anticipatePin: 1,
@@ -199,9 +182,10 @@ export const AboutMeSection: React.FC = () => {
         masterTl.to(".fill-punchline", { backgroundPositionX: "0%", ease: "none", duration: 0.85 }, "-=0.20");
 
         // ═════════════════════════════════════════════════════════════
-        // PHASE 2: DOWNWARD TRAVEL ALONG GRID TRACK (Progress 0.35 -> 0.55)
-        // STRICT: Stays locked in editorial column placement (Image 4 Benchmark)
-        // STRICT: 100% RAW typography sitting directly on canvas (NO pills/capsules)
+        // PHASE 2: DEAD-CENTER GLIDE (Progress 0.35 -> 0.52)
+        // STRICT: Perfect center from all sides (horizontally & vertically)
+        // STRICT: 100% RAW typography directly on canvas (NO pills/capsules)
+        // STRICT: Refined medium font weight (not overly bold)
         // ═════════════════════════════════════════════════════════════
         masterTl.addLabel("glide", ">0.15");
 
@@ -235,7 +219,6 @@ export const AboutMeSection: React.FC = () => {
         }
 
         // 3. Closing statement glides to DEAD CENTER OF VIEWPORT FROM ALL SIDES
-        // Perfectly centered horizontally and vertically, scaling to bold display headline
         if (punchlineRef.current) {
           masterTl.to(
             punchlineRef.current,
@@ -247,7 +230,7 @@ export const AboutMeSection: React.FC = () => {
                 const s = pinWrapperEl.getBoundingClientRect();
                 const p = punchlineEl.getBoundingClientRect();
                 const curX = (gsap.getProperty(punchlineEl, "x") as number) || 0;
-                // Center horizontally from all sides
+                // Dead center horizontally
                 return s.left + s.width / 2 - (p.left - curX + p.width / 2);
               },
               y: () => {
@@ -257,10 +240,10 @@ export const AboutMeSection: React.FC = () => {
                 const s = pinWrapperEl.getBoundingClientRect();
                 const p = punchlineEl.getBoundingClientRect();
                 const curY = (gsap.getProperty(punchlineEl, "y") as number) || 0;
-                // Center vertically from all sides
+                // Dead center vertically
                 return s.top + s.height / 2 - (p.top - curY + p.height / 2);
               },
-              scale: () => (window.innerWidth >= 1024 ? 1.65 : 1.30),
+              scale: () => (window.innerWidth >= 1024 ? 1.45 : 1.2),
               transformOrigin: "center center",
               duration: 1.8,
               ease: "power2.inOut",
@@ -270,59 +253,35 @@ export const AboutMeSection: React.FC = () => {
         }
 
         // ═════════════════════════════════════════════════════════════
-        // PHASE 3: MULTI-PLANE "ABOVE & BELOW" STREAM (Progress 0.55 -> 0.85)
+        // PHASE 3: 7-IMAGE MULTI-PLANE STREAM (Progress 0.52 -> 0.85)
+        // Strict Image 3 Placements framing the dead-centered headline
         // ═════════════════════════════════════════════════════════════
         masterTl.addLabel("stream", ">0.05");
 
-        // Reveal both Underneath (z-10) and Foreground (z-30) card layers
-        if (bgCardsRiverRef.current) {
-          masterTl.to(bgCardsRiverRef.current, { opacity: 1, duration: 0.35, ease: "power1.in" }, "stream");
-        }
-        if (fgCardsRiverRef.current) {
-          masterTl.to(fgCardsRiverRef.current, { opacity: 1, duration: 0.35, ease: "power1.in" }, "stream");
+        // Fade in showcase cards river
+        if (cardsRiverRef.current) {
+          masterTl.to(cardsRiverRef.current, { opacity: 1, duration: 0.35, ease: "power1.in" }, "stream");
         }
 
-        // Underneath Layer (z-10): Parallax Speed 0.85x (floats behind raw text plane)
-        if (bgCol1Ref.current) {
+        // Background Cards (z-10): Parallax speed 0.9x (float from +90vh to -90vh)
+        if (bgCards.length > 0) {
           masterTl.to(
-            bgCol1Ref.current,
+            bgCards,
             {
-              y: "-120vh",
+              y: "-90vh",
               duration: 3.0,
               ease: "none",
             },
             "stream"
           );
         }
-        if (bgCol2Ref.current) {
+
+        // Foreground Cards (z-30): Parallax speed 1.25x (travel +105vh to -115vh for realistic 3D depth)
+        if (fgCards.length > 0) {
           masterTl.to(
-            bgCol2Ref.current,
+            fgCards,
             {
               y: "-115vh",
-              duration: 3.0,
-              ease: "none",
-            },
-            "stream"
-          );
-        }
-
-        // Foreground Overlap Layer (z-30): Parallax Speed 1.25x (camera-close, overlaps text with deep shadow)
-        if (fgCardLeftRef.current) {
-          masterTl.to(
-            fgCardLeftRef.current,
-            {
-              y: "-140vh",
-              duration: 3.0,
-              ease: "none",
-            },
-            "stream"
-          );
-        }
-        if (fgCardRightRef.current) {
-          masterTl.to(
-            fgCardRightRef.current,
-            {
-              y: "-135vh",
               duration: 3.0,
               ease: "none",
             },
@@ -340,7 +299,7 @@ export const AboutMeSection: React.FC = () => {
           masterTl.to(
             punchlineRef.current,
             {
-              y: "-=60px",
+              y: "-=50px",
               opacity: 0,
               duration: 1.0,
               ease: "power2.inOut",
@@ -349,15 +308,12 @@ export const AboutMeSection: React.FC = () => {
           );
         }
 
-        // Both card streams dissolve as they complete exit
-        if (bgCardsRiverRef.current) {
-          masterTl.to(bgCardsRiverRef.current, { opacity: 0, duration: 0.8, ease: "power2.inOut" }, "outro");
-        }
-        if (fgCardsRiverRef.current) {
-          masterTl.to(fgCardsRiverRef.current, { opacity: 0, duration: 0.8, ease: "power2.inOut" }, "outro");
+        // Showcase cards dissolve as they finish upward travel
+        if (cardsRiverRef.current) {
+          masterTl.to(cardsRiverRef.current, { opacity: 0, duration: 0.8, ease: "power2.inOut" }, "outro");
         }
 
-        // Fluid release hold buffer into next section
+        // Fluid release buffer into next section
         masterTl.to({}, { duration: 0.3 });
       }
     }, sectionRef);
@@ -407,76 +363,105 @@ export const AboutMeSection: React.FC = () => {
           }
         `}</style>
 
-        {/* ──────── 1. UNDERNEATH LAYER: BACKGROUND CARDS (Z-10) ──────── */}
+        {/* ──────── 1. SHOWCASE IMAGES RIVER: EXACT IMAGE 3 BENCHMARK PLACEMENTS ──────── */}
         <div
-          ref={bgCardsRiverRef}
-          className="absolute inset-0 pointer-events-none overflow-hidden z-10 flex items-center justify-center opacity-0"
+          ref={cardsRiverRef}
+          className="absolute inset-0 pointer-events-none overflow-hidden opacity-0"
           style={{ width: "100%", height: "100%" }}
         >
-          <div className="w-full max-w-[1200px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 h-full items-center">
-            
-            {/* Background Column 1 (Cols 1-5: Left Track, Speed 0.85x, Tilt -1.5deg) */}
-            <div
-              ref={bgCol1Ref}
-              className="lg:col-span-5 flex flex-col gap-8 sm:gap-12 will-change-transform items-center lg:items-start"
-              style={{ transform: "rotate(-1.5deg)" }}
-            >
-              <ShowcaseCard
-                image="/assets/concepts/about_me_spiderverse_ui_1793291690442.jpg"
-                title="Spiderverse Design System"
-                category="UI System"
-                accent="#dc2626"
-                className="max-w-[280px] sm:max-w-[310px]"
-              />
-              <ShowcaseCard
-                image="/assets/card_creative_3d.jpg"
-                title="Kinetic Spatial Dimensions"
-                category="3D Motion"
-                accent="#2563eb"
-                className="max-w-[280px] sm:max-w-[310px]"
-              />
-              <ShowcaseCard
-                image="/assets/concepts/about_me_portfolio_mockup_1793291329956.jpg"
-                title="Editorial Platform UX"
-                category="Web App"
-                accent="#09090b"
-                className="max-w-[280px] sm:max-w-[310px]"
-              />
-            </div>
+          {/* Card 1: Far Top-Left (Creative Block cutting mat, z-10) */}
+          <div
+            ref={card1Ref}
+            className="absolute z-10 will-change-transform hidden sm:block"
+            style={{ left: "2%", top: "-2%" }}
+          >
+            <FloatingImage
+              image="/assets/showcase/s_img_6.png"
+              alt="Creative Block cutting mat"
+              className="w-[180px] sm:w-[220px] lg:w-[260px] -rotate-3"
+            />
+          </div>
 
-            {/* Background Column 2 (Cols 6-12: Right Track Behind Text, Speed 0.85x, Tilt 1.5deg) */}
-            <div
-              ref={bgCol2Ref}
-              className="lg:col-span-7 flex flex-col gap-8 sm:gap-12 will-change-transform items-center lg:items-end pr-4 lg:pr-12"
-              style={{ transform: "rotate(1.5deg)" }}
-            >
-              <ShowcaseCard
-                image="/assets/concepts/ganesh_about_me_bento_mockup_1793291386448.jpg"
-                title="Modular Bento Architecture"
-                category="Product UX"
-                accent="#f59e0b"
-                className="max-w-[280px] sm:max-w-[310px]"
-              />
-              <ShowcaseCard
-                image="/assets/concepts/ganesh_ps_about_me_sketchbook_spread_1793291341733.jpg"
-                title="Visual Ledger & Identity"
-                category="Brand Craft"
-                accent="#10b981"
-                className="max-w-[280px] sm:max-w-[310px]"
-              />
-              <ShowcaseCard
-                image="/assets/card_creative_podcast.jpg"
-                title="Cinematic Soundscapes"
-                category="Audio Hub"
-                accent="#6366f1"
-                className="max-w-[280px] sm:max-w-[310px]"
-              />
-            </div>
+          {/* Card 2: Upper-Left (SkillBridge Laptop Screen, z-10) */}
+          <div
+            ref={card2Ref}
+            className="absolute z-10 will-change-transform"
+            style={{ left: "11%", top: "-6%" }}
+          >
+            <FloatingImage
+              image="/assets/showcase/s_img_7.png"
+              alt="SkillBridge Laptop Screen"
+              className="w-[200px] sm:w-[250px] lg:w-[290px] rotate-1"
+            />
+          </div>
 
+          {/* Card 3: Upper Center-Right (Project MOOV Yellow Folder, z-10) */}
+          <div
+            ref={card3Ref}
+            className="absolute z-10 will-change-transform"
+            style={{ left: "47%", top: "-5%" }}
+          >
+            <FloatingImage
+              image="/assets/showcase/s_img_5.png"
+              alt="Project MOOV Folder"
+              className="w-[200px] sm:w-[250px] lg:w-[290px] -rotate-2"
+            />
+          </div>
+
+          {/* Card 4: Upper Far-Right (Hand with Glass Card - Foreground z-30, Deeper Shadow) */}
+          <div
+            ref={card4Ref}
+            className="absolute z-30 will-change-transform"
+            style={{ left: "73%", top: "10%" }}
+          >
+            <FloatingImage
+              image="/assets/showcase/s_img_1.png"
+              alt="Iridescent Glass Interface"
+              className="w-[190px] sm:w-[240px] lg:w-[280px] rotate-3 shadow-[0_28px_56px_rgba(0,0,0,0.22),0_8px_20px_rgba(0,0,0,0.08)] border border-black/[0.08]"
+            />
+          </div>
+
+          {/* Card 5: Far Bottom-Left (Blue Peel Interface "061", z-10) */}
+          <div
+            ref={card5Ref}
+            className="absolute z-10 will-change-transform hidden sm:block"
+            style={{ left: "1%", top: "56%" }}
+          >
+            <FloatingImage
+              image="/assets/showcase/s_img_3.png"
+              alt="Kinetic UI Dimensions"
+              className="w-[180px] sm:w-[220px] lg:w-[260px] -rotate-4"
+            />
+          </div>
+
+          {/* Card 6: Bottom Center-Left (Person with Red Glowing Cube - Foreground z-30, Deeper Shadow) */}
+          <div
+            ref={card6Ref}
+            className="absolute z-30 will-change-transform"
+            style={{ left: "24%", top: "52%" }}
+          >
+            <FloatingImage
+              image="/assets/showcase/s_img_2.png"
+              alt="Featured Red Glowing Cube"
+              className="w-[190px] sm:w-[240px] lg:w-[290px] rotate-2 shadow-[0_28px_56px_rgba(0,0,0,0.22),0_8px_20px_rgba(0,0,0,0.08)] border border-black/[0.08]"
+            />
+          </div>
+
+          {/* Card 7: Bottom Center-Right (Orange Skull Ninja Cards, z-10) */}
+          <div
+            ref={card7Ref}
+            className="absolute z-10 will-change-transform hidden md:block"
+            style={{ left: "59%", top: "55%" }}
+          >
+            <FloatingImage
+              image="/assets/showcase/s_img_4.png"
+              alt="Brand Craft Architecture"
+              className="w-[190px] sm:w-[230px] lg:w-[280px] -rotate-3"
+            />
           </div>
         </div>
 
-        {/* ──────── 2. TEXT PLANE: UNIFIED 12-COLUMN GRID (Z-20, Image 4 Benchmark) ──────── */}
+        {/* ──────── 2. TEXT PLANE: 12-COLUMN STAGE & CENTERED HERO STATEMENT (Z-20) ──────── */}
         <div className="relative z-20 w-full max-w-[1200px] mx-auto px-6 lg:px-12 flex items-center justify-center">
           <div
             ref={stageGridRef}
@@ -565,7 +550,7 @@ export const AboutMeSection: React.FC = () => {
             >
               {/* Paragraphs 1 & 2 Container (Translates upward in Phase 2) */}
               <div ref={paragraphsRef} className="will-change-transform">
-                {/* Paragraph 1: Origin & Spark (5 lines strictly matching Image 4) */}
+                {/* Paragraph 1: Origin & Spark (5 lines) */}
                 <p className="mb-7 sm:mb-8 text-[19px] sm:text-[21px] lg:text-[22.5px] font-[450] leading-[1.58] text-[#111111] tracking-[-0.015em]">
                   <span className="block fill-editorial-line fill-p1-1">
                     I didn’t start in a design school or follow a perfectly drawn
@@ -584,7 +569,7 @@ export const AboutMeSection: React.FC = () => {
                   </span>
                 </p>
 
-                {/* Paragraph 2: Detour & Beyond the Screen (4 lines strictly matching Image 4) */}
+                {/* Paragraph 2: Detour & Beyond the Screen (4 lines) */}
                 <p className="mb-6 sm:mb-7 text-[19px] sm:text-[21px] lg:text-[22.5px] font-[450] leading-[1.58] text-[#111111] tracking-[-0.015em]">
                   <span className="block fill-editorial-line fill-p2-1">
                     That unexpected detour became my origin story. Today, I
@@ -601,16 +586,17 @@ export const AboutMeSection: React.FC = () => {
                 </p>
               </div>
 
-              {/* ──────── CLOSING STATEMENT & CENTER-LOCK ANCHOR (Z-20, RAW TYPOGRAPHY) ──────── */}
+              {/* ──────── CLOSING STATEMENT & CENTER-LOCK ANCHOR (Z-20, REFINED MEDIUM WEIGHT) ──────── */}
               <div className="mt-6 sm:mt-7">
                 <h3
                   ref={punchlineRef}
-                  className="inline-block font-bold text-[22px] sm:text-[24px] lg:text-[26px] text-black tracking-tight leading-snug whitespace-nowrap will-change-transform select-none"
+                  className="inline-block font-medium text-[22px] sm:text-[24px] lg:text-[26px] text-[#111111] tracking-[-0.02em] leading-snug whitespace-nowrap will-change-transform select-none"
                   style={{
+                    fontFamily: "var(--font-sora), sans-serif",
                     transformOrigin: "center center",
                   }}
                 >
-                  <span className="block fill-editorial-line fill-punchline">
+                  <span className="block fill-editorial-line fill-punchline font-medium">
                     By Bringing Pixels to life.
                   </span>
                 </h3>
@@ -618,74 +604,6 @@ export const AboutMeSection: React.FC = () => {
             </div>
 
           </div>
-        </div>
-
-        {/* ──────── 3. FOREGROUND OVERLAP LAYER: CAMERA-CLOSE CARDS (Z-30) ──────── */}
-        <div
-          ref={fgCardsRiverRef}
-          className="absolute inset-0 pointer-events-none overflow-hidden z-30 flex items-center justify-between px-4 sm:px-8 lg:px-14 opacity-0"
-          style={{ width: "100%", height: "100%" }}
-        >
-          {/* Foreground Card 1 (Cols 4-7 Overlap Drift with Real Drop Shadow) */}
-          <div
-            ref={fgCardLeftRef}
-            className="will-change-transform shrink-0 ml-2 sm:ml-8 lg:ml-28"
-            style={{ transform: "rotate(-3deg)" }}
-          >
-            <div className="w-[280px] sm:w-[320px] lg:w-[350px] bg-white rounded-2xl p-3 sm:p-3.5 shadow-[0_25px_50px_rgba(0,0,0,0.18),0_6px_16px_rgba(0,0,0,0.06)] border border-black/[0.10] backdrop-blur-lg">
-              <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-zinc-100 relative mb-3 shadow-inner">
-                <img
-                  src="/assets/iridescent_glass_footer.jpg"
-                  alt="Iridescent Glass Interfaces"
-                  className="w-full h-full object-cover object-center filter contrast-[1.05]"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
-                <span className="absolute top-2.5 left-2.5 text-[9.5px] sm:text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full font-medium bg-[#8b5cf6] text-white shadow-sm border border-white/20">
-                  Featured Innovation
-                </span>
-              </div>
-              <div className="px-1 flex items-center justify-between">
-                <h4 className="font-sora text-[13px] sm:text-[14px] font-semibold text-zinc-900 tracking-tight truncate pr-2">
-                  Iridescent Glass Interfaces
-                </h4>
-                <span className="text-[10.5px] font-mono text-zinc-400 shrink-0">
-                  2026
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Foreground Card 2 (Cols 9-12 Right Flank Overlap Drift with Real Drop Shadow) */}
-          <div
-            ref={fgCardRightRef}
-            className="will-change-transform shrink-0 hidden sm:block mr-2 sm:mr-8 lg:mr-20"
-            style={{ transform: "rotate(3.5deg)" }}
-          >
-            <div className="w-[270px] sm:w-[310px] lg:w-[340px] bg-white rounded-2xl p-3 sm:p-3.5 shadow-[0_25px_50px_rgba(0,0,0,0.18),0_6px_16px_rgba(0,0,0,0.06)] border border-black/[0.10] backdrop-blur-lg">
-              <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-zinc-100 relative mb-3 shadow-inner">
-                <img
-                  src="/assets/card_creative_jam.jpg"
-                  alt="Interactive Creative Jam"
-                  className="w-full h-full object-cover object-center filter contrast-[1.04]"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
-                <span className="absolute top-2.5 left-2.5 text-[9.5px] sm:text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full font-medium bg-[#ec4899] text-white shadow-sm border border-white/20">
-                  Experiential UX
-                </span>
-              </div>
-              <div className="px-1 flex items-center justify-between">
-                <h4 className="font-sora text-[13px] sm:text-[14px] font-semibold text-zinc-900 tracking-tight truncate pr-2">
-                  Interactive Creative Jam
-                </h4>
-                <span className="text-[10.5px] font-mono text-zinc-400 shrink-0">
-                  2026
-                </span>
-              </div>
-            </div>
-          </div>
-
         </div>
 
       </div>
