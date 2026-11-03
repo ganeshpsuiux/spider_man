@@ -4,9 +4,9 @@ import { Chapter2Section } from "@/components/Chapter2Section";
 import { CreativeThingsSection } from "@/components/CreativeThingsSection";
 import { AboutMeSection } from "@/components/AboutMeSection";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
-import { DesignShowcaseSection } from "@/components/DesignShowcaseSection";
-// import { SketchbookSection } from "@/components/SketchbookSection";
-// import { StickyHeader } from "@/components/StickyHeader";
+import { HorizontalProjectsSection } from "@/components/HorizontalProjectsSection";
+import { ClientCaseStudiesSection } from "@/components/ClientCaseStudiesSection";
+import { WebglPlaygroundSection } from "@/components/WebglPlaygroundSection";
 
 export default function Home() {
   return (
@@ -49,11 +49,14 @@ export default function Home() {
           <AboutMeSection />
         </div>
 
-        {/* Section 5: The Way Design Should've Been Done (Dark Glassmorphic Cards) */}
-        <DesignShowcaseSection />
+        {/* Section 5: Horizontal Project Carousel (Prepy AI, SuitUp, Spiderverse OS) */}
+        <HorizontalProjectsSection />
 
-        {/* Section 6: 3D Interactive Flipbook & Loupe Gallery Stage */}
-        {/* <SketchbookSection /> */}
+        {/* Section 6: Selected Client Case Studies (Full-Bleed Mockups & Metrics) */}
+        <ClientCaseStudiesSection />
+
+        {/* Section 7: Interactive WebGL / 3D Playground & Collab Bridge */}
+        <WebglPlaygroundSection />
       </main>
     </SmoothScrollProvider>
   );
