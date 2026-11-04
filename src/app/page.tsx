@@ -3,7 +3,6 @@ import { CustomSpiderCursor } from "@/components/CustomSpiderCursor";
 import { Chapter2Section } from "@/components/Chapter2Section";
 import { CreativeThingsSection } from "@/components/CreativeThingsSection";
 import { AboutMeSection } from "@/components/AboutMeSection";
-import { WorkspaceDesktopSection } from "@/components/WorkspaceDesktopSection";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { DesignShowcaseSection } from "@/components/DesignShowcaseSection";
 // import { SketchbookSection } from "@/components/SketchbookSection";
@@ -24,7 +23,7 @@ export default function Home() {
         {/* Unified White Canvas Area for Section 3 + Section 4 (Curtain Slide-Over Stacking Card) */}
         <div
           id="white-canvas-wrapper"
-          className="relative z-30 w-full bg-white select-none rounded-t-[24px] sm:rounded-t-[32px] md:rounded-t-[40px] rounded-b-[24px] sm:rounded-b-[32px] md:rounded-b-[40px] border-t border-black/10 shadow-[0_-25px_60px_rgba(0,0,0,0.55),0_25px_60px_rgba(0,0,0,0.45)] pb-12 sm:pb-20"
+          className="relative z-30 w-full bg-white overflow-hidden select-none rounded-t-[24px] sm:rounded-t-[32px] md:rounded-t-[40px] border-t border-black/10 shadow-[0_-25px_60px_rgba(0,0,0,0.55),0_-8px_24px_rgba(0,0,0,0.35)]"
         >
           {/* Continuous Dotted Grid Pattern across Section 3 & Section 4 */}
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -48,9 +47,6 @@ export default function Home() {
 
           {/* Section 4: About Me Interactive Scrapbook Stage (Pinned Center-Screen Sticky Scroll) */}
           <AboutMeSection />
-
-          {/* Section 4B: Workspace Desktop OS Stage */}
-          <WorkspaceDesktopSection />
         </div>
 
         {/* Section 5: The Way Design Should've Been Done (Dark Glassmorphic Cards) */}
