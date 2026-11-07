@@ -106,6 +106,49 @@ const DESKTOP_FOLDERS: DesktopFolder[] = [
 
 
 
+// ─────────────────────────────────────────────────────────────
+// 5 Core Daily Tools from Assets
+// ─────────────────────────────────────────────────────────────
+interface DockTool {
+  id: string;
+  name: string;
+  role: string;
+  src: string;
+}
+
+const DOCK_TOOLS: DockTool[] = [
+  {
+    id: "photoshop",
+    name: "Photoshop",
+    role: "Pixel Craft & Compositing",
+    src: "/assets/tools/photoshop.png",
+  },
+  {
+    id: "illustrator",
+    name: "Illustrator",
+    role: "Vector Architecture & Identity",
+    src: "/assets/tools/illustrator.png",
+  },
+  {
+    id: "after_effects",
+    name: "After Effects",
+    role: "Motion Graphics & UI Dynamics",
+    src: "/assets/tools/after_effects.png",
+  },
+  {
+    id: "figma",
+    name: "Figma",
+    role: "Design Systems & Token Libraries",
+    src: "/assets/tools/figma.png",
+  },
+  {
+    id: "blender",
+    name: "Blender",
+    role: "3D Spatial Modeling & Shaders",
+    src: "/assets/tools/blender.png",
+  },
+];
+
 export const WorkspaceDesktopSection: React.FC = () => {
   // Container constraint reference for dragging
   const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -630,99 +673,52 @@ export const WorkspaceDesktopSection: React.FC = () => {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          5. BOTTOM CENTER DOCK (Exact 6-Icon Capsule Dock from Reference Image)
+          5. BOTTOM CENTER DOCK (5 Core Tools from Assets)
+          Photoshop, Illustrator, After Effects, Figma, Blender
       ───────────────────────────────────────────────────────────── */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
-        <div className="bg-white/85 backdrop-blur-xl border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.06)] rounded-[22px] px-3.5 py-1.5 flex items-center gap-2.5">
-          {[
-            // 1. Monogram Icon (ε / G)
-            {
-              id: "monogram",
-              name: "GaneshOS",
-              icon: (
-                <div className="w-9 h-9 rounded-xl bg-white border border-black/10 flex items-center justify-center font-bold text-zinc-900 text-sm shadow-sm">
-                  G
-                </div>
-              ),
-            },
-            // 2. Blue Folder Icon
-            {
-              id: "finder",
-              name: "Projects",
-              icon: (
-                <div className="w-9 h-9 rounded-xl bg-[#007AFF] flex items-center justify-center shadow-sm">
-                  <MacFolderIcon className="w-6 h-5" />
-                </div>
-              ),
-            },
-            // 3. Purple Sparkles Icon
-            {
-              id: "sparkles",
-              name: "AI & Motion",
-              icon: (
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white shadow-sm">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </div>
-              ),
-            },
-            // 4. Red Heart Icon
-            {
-              id: "heart",
-              name: "Vibe & Passion",
-              icon: (
-                <div className="w-9 h-9 rounded-xl bg-[#FF3B30] flex items-center justify-center text-white shadow-sm">
-                  <Heart className="w-4 h-4 fill-white text-white" />
-                </div>
-              ),
-            },
-            // 5. White Calendar Icon (SAT 7)
-            {
-              id: "calendar-icon",
-              name: "Schedule",
-              icon: (
-                <div className="w-9 h-9 rounded-xl bg-white border border-black/10 flex flex-col items-center justify-center shadow-sm overflow-hidden">
-                  <span className="text-[7px] font-bold text-[#FF3B30] uppercase leading-none">
-                    {new Date().toLocaleDateString("en-US", { weekday: "short" }).toUpperCase()}
-                  </span>
-                  <span className="text-[12px] font-bold text-zinc-900 leading-none mt-0.5">
-                    {new Date().getDate()}
-                  </span>
-                </div>
-              ),
-            },
-            // 6. Green Contacts/Notebook Icon
-            {
-              id: "contacts",
-              name: "Contacts",
-              icon: (
-                <div className="w-9 h-9 rounded-xl bg-[#34C759] flex items-center justify-center text-white shadow-sm">
-                  <BookUser className="w-4 h-4 text-white" />
-                </div>
-              ),
-            },
-          ].map((dockItem, index) => {
+        <div className="bg-white/85 backdrop-blur-xl border border-black/[0.06] shadow-[0_12px_36px_rgba(0,0,0,0.08)] rounded-[24px] px-3.5 py-2 flex items-center gap-2.5 sm:gap-3">
+          {DOCK_TOOLS.map((tool, index) => {
             const isHovered = hoveredDockIndex === index;
             const isNeighbor =
               hoveredDockIndex !== null && Math.abs(hoveredDockIndex - index) === 1;
-            const scale = isHovered ? 1.3 : isNeighbor ? 1.15 : 1.0;
+            const scale = isHovered ? 1.35 : isNeighbor ? 1.15 : 1.0;
+            const translateY = isHovered ? -8 : isNeighbor ? -3 : 0;
 
             return (
-              <motion.div
-                key={dockItem.id}
-                onMouseEnter={() => setHoveredDockIndex(index)}
-                onMouseLeave={() => setHoveredDockIndex(null)}
-                onClick={() => {
-                  if (dockItem.id === "finder") {
-                    setQuickLookFolder(DESKTOP_FOLDERS[0]);
-                  }
-                }}
-                animate={{ scale }}
-                transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                className="cursor-pointer select-none"
-                title={dockItem.name}
-              >
-                {dockItem.icon}
-              </motion.div>
+              <div key={tool.id} className="relative flex flex-col items-center">
+                {/* Active Tooltip Popover */}
+                <AnimatePresence>
+                  {isHovered && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: -42 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      className="absolute -top-1 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-zinc-900/95 text-white text-[10px] font-mono shadow-xl border border-white/10 whitespace-nowrap pointer-events-none z-40"
+                    >
+                      <span className="font-bold text-white">{tool.name}</span>
+                      <span className="text-zinc-400 mx-1">•</span>
+                      <span className="text-zinc-300">{tool.role}</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Tool Icon Tile */}
+                <motion.div
+                  onMouseEnter={() => setHoveredDockIndex(index)}
+                  onMouseLeave={() => setHoveredDockIndex(null)}
+                  animate={{ scale, y: translateY }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  className="w-10 h-10 sm:w-11 sm:h-11 rounded-[14px] overflow-hidden shadow-sm cursor-pointer select-none active:scale-95 transition-shadow bg-transparent"
+                  title={tool.name}
+                >
+                  <img
+                    src={tool.src}
+                    alt={tool.name}
+                    className="w-full h-full object-contain pointer-events-none select-none rounded-[14px]"
+                  />
+                </motion.div>
+              </div>
             );
           })}
         </div>
