@@ -3,6 +3,7 @@ import { CustomSpiderCursor } from "@/components/CustomSpiderCursor";
 import { Chapter2Section } from "@/components/Chapter2Section";
 import { CreativeThingsSection } from "@/components/CreativeThingsSection";
 import { AboutMeSection } from "@/components/AboutMeSection";
+import { WorkspaceDesktopSection } from "@/components/WorkspaceDesktopSection";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { DesignShowcaseSection } from "@/components/DesignShowcaseSection";
 // import { SketchbookSection } from "@/components/SketchbookSection";
@@ -47,6 +48,9 @@ export default function Home() {
 
           {/* Section 4: About Me Interactive Scrapbook Stage (Pinned Center-Screen Sticky Scroll) */}
           <AboutMeSection />
+
+          {/* Section 4.5: Interactive macOS Desktop OS Workspace Section (Elena Gonci Inspired) */}
+          <WorkspaceDesktopSection />
         </div>
 
         {/* Section 5: The Way Design Should've Been Done (Dark Glassmorphic Cards) */}
