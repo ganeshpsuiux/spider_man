@@ -621,25 +621,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
 
       </div>
 
-      {/* ─────────────────────────────────────────────────────────────
-          3. CENTER HERO STAGE (Frosted Glass Card for Perfect Contrast & Legibility)
-      ───────────────────────────────────────────────────────────── */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[580px] w-[90%] text-center z-10 px-6 py-6 sm:px-8 sm:py-7 rounded-[32px] bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.16)] select-none">
-        {/* Main Display Headline */}
-        <h1 className="text-4xl sm:text-5xl lg:text-[52px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.08] text-center">
-          This is where I live.
-          <br />
-          I craft systems at{" "}
-          <span className="relative inline-block underline decoration-black/30 underline-offset-[10px] decoration-[2px] hover:decoration-black transition-colors pointer-events-auto">
-            Webnox.
-          </span>
-        </h1>
 
-        {/* Subtext Paragraph */}
-        <p className="mt-4 max-w-[460px] mx-auto text-center text-xs sm:text-sm text-zinc-600 font-normal leading-relaxed">
-          Where design precision meets vibe coding. Orchestrating design systems, AI agents, and interactive motion to build living digital products.
-        </p>
-      </div>
 
       {/* ─────────────────────────────────────────────────────────────
           4. RIGHT MACOS DESKTOP FOLDERS (Draggable onto Desktop)
