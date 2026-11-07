@@ -8,46 +8,44 @@ import {
   SkipBack,
   SkipForward,
   Sun,
+  Cloud,
   CloudSun,
+  CloudRain,
   Trash2,
   Sparkles,
+  Heart,
+  Calendar as CalendarIcon,
+  BookUser,
   RefreshCw,
   X,
   Volume2,
   VolumeX,
-  Code2,
   CheckCircle2,
-  Wifi,
-  Battery,
-  Sliders,
-  Search,
-  Laptop,
-  Maximize2,
 } from "lucide-react";
 import PaperCrumple from "./PaperCrumple";
 
 // ─────────────────────────────────────────────────────────────
-// Authentic macOS Blue Folder SVG
+// Authentic macOS Blue Desktop Folder SVG
 // ─────────────────────────────────────────────────────────────
-const MacFolderIcon: React.FC<{ className?: string }> = ({ className = "w-12 h-10" }) => (
+const MacFolderIcon: React.FC<{ className?: string }> = ({ className = "w-14 h-11" }) => (
   <svg viewBox="0 0 100 80" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M4 14C4 9.58172 7.58172 6 12 6H34.5858C36.7076 6 38.7427 6.84285 40.2426 8.34285L45.657 13.7571C47.1569 15.2571 49.192 16.1 51.3138 16.1H88C92.4183 16.1 96 19.6817 96 24.1V66C96 70.4183 92.4183 74 88 74H12C7.58172 74 4 70.4183 4 66V14Z"
-      fill="url(#folder-back)"
+      fill="url(#folder-back-elena)"
     />
     <rect x="8" y="22" width="84" height="48" rx="6" fill="#FBFDFF" fillOpacity="0.9" />
     <path
       d="M4 25.5C4 20.8056 7.80558 17 12.5 17H87.5C92.1944 17 96 20.8056 96 25.5V66.5C96 71.1944 92.1944 75 87.5 75H12.5C7.80558 75 4 71.1944 4 66.5V25.5Z"
-      fill="url(#folder-front)"
+      fill="url(#folder-front-elena)"
     />
     <defs>
-      <linearGradient id="folder-back" x1="50" y1="6" x2="50" y2="74" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#5AC8FA" />
+      <linearGradient id="folder-back-elena" x1="50" y1="6" x2="50" y2="74" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#67D5FD" />
         <stop offset="1" stopColor="#007AFF" />
       </linearGradient>
-      <linearGradient id="folder-front" x1="50" y1="17" x2="50" y2="75" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#64D2FF" />
-        <stop offset="1" stopColor="#0A84FF" />
+      <linearGradient id="folder-front-elena" x1="50" y1="17" x2="50" y2="75" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#75DCFE" />
+        <stop offset="1" stopColor="#1B87FD" />
       </linearGradient>
     </defs>
   </svg>
@@ -56,12 +54,12 @@ const MacFolderIcon: React.FC<{ className?: string }> = ({ className = "w-12 h-1
 // ─────────────────────────────────────────────────────────────
 // Authentic macOS Trash Can SVG
 // ─────────────────────────────────────────────────────────────
-const MacTrashIcon: React.FC<{ className?: string }> = ({ className = "w-11 h-11" }) => (
+const MacTrashIcon: React.FC<{ className?: string }> = ({ className = "w-12 h-11" }) => (
   <svg viewBox="0 0 80 80" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="22" y="16" width="36" height="6" rx="2" fill="#8E8E93" />
     <path
       d="M26 24H54L51 68C50.9 70.2 49 72 46.8 72H33.2C31 72 29.1 70.2 29 68L26 24Z"
-      fill="url(#trash-body)"
+      fill="url(#trash-body-elena)"
       stroke="#7C7C80"
       strokeWidth="1.5"
     />
@@ -69,7 +67,7 @@ const MacTrashIcon: React.FC<{ className?: string }> = ({ className = "w-11 h-11
     <line x1="40" y1="32" x2="40" y2="62" stroke="#636366" strokeWidth="2" strokeLinecap="round" />
     <line x1="46" y1="32" x2="45" y2="62" stroke="#636366" strokeWidth="2" strokeLinecap="round" />
     <defs>
-      <linearGradient id="trash-body" x1="40" y1="24" x2="40" y2="72" gradientUnits="userSpaceOnUse">
+      <linearGradient id="trash-body-elena" x1="40" y1="24" x2="40" y2="72" gradientUnits="userSpaceOnUse">
         <stop stopColor="#D1D1D6" />
         <stop offset="1" stopColor="#AEAEB2" />
       </linearGradient>
@@ -78,16 +76,7 @@ const MacTrashIcon: React.FC<{ className?: string }> = ({ className = "w-11 h-11
 );
 
 // ─────────────────────────────────────────────────────────────
-// Apple Logo SVG
-// ─────────────────────────────────────────────────────────────
-const AppleLogo: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (
-  <svg viewBox="0 0 170 170" className={className} fill="currentColor">
-    <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.04-7.56-7.71-11.61-14.01-6.19-9.59-10.96-20.76-14.3-33.51-3.34-12.76-5.01-24.37-5.01-34.84 0-14.43 3.65-26.44 10.96-36.03 7.31-9.59 16.48-14.48 27.5-14.67 4.93 0 10.3 1.25 16.12 3.75 5.82 2.5 9.77 3.86 11.84 4.09 2.52-.33 6.64-1.78 12.35-4.35 5.72-2.57 10.79-3.75 15.22-3.53 11.44.55 20.65 4.68 27.63 12.39-10.01 6.09-14.89 14.79-14.63 26.11.26 9.36 4.03 17.18 11.31 23.47 7.28 6.29 15.93 9.9 25.96 10.84-2.18 6.75-4.8 13.59-7.87 20.52zM119.22 33.72c0-7.72 2.76-14.97 8.28-21.75 5.53-6.77 12.32-11.16 20.39-13.17.22 1.3.33 2.5.33 3.6 0 7.73-2.94 15.19-8.82 22.38-5.88 7.18-12.87 11.53-20.97 13.05-.11-1.3-.21-2.4-.21-3.31z" />
-  </svg>
-);
-
-// ─────────────────────────────────────────────────────────────
-// Desktop Folders Data
+// Desktop Folders Data (Matching Elena's 5 Vertical Icons on Right)
 // ─────────────────────────────────────────────────────────────
 interface DesktopFolder {
   id: string;
@@ -100,41 +89,41 @@ interface DesktopFolder {
 
 const DESKTOP_FOLDERS: DesktopFolder[] = [
   {
-    id: "design-systems",
-    name: "01_Design_Systems",
+    id: "qa-agent",
+    name: "QA Agent Loop",
     count: "14 Kits",
-    tag: "Figma Tokens",
-    description: "Production UI component libraries, scalable design tokens, and light/dark mode themes built for Webnox clients.",
-    items: ["Spiderverse Design Kit", "Modular Bento Architecture", "Iridescent Glass Components", "Design Token Compiler"],
+    tag: "Autonomous QA",
+    description: "Self-healing test agents, visual regression loops, and automated design-to-code compliance checking across breakpoints.",
+    items: ["Spiderverse QA Runner", "Visual Diff Validator", "Design Token Auditor", "Lighthouse Pipeline"],
   },
   {
-    id: "webnox-os",
-    name: "02_Webnox_Vault",
+    id: "eleyyva",
+    name: "Eleyyva",
     count: "28 Sprints",
-    tag: "Design Leadership",
-    description: "End-to-end design leadership: user journeys, responsive architectures, design-to-code pipelines, and QA reviews.",
-    items: ["Enterprise Analytics Platform", "Fintech Mobile Onboarding", "Brand Identity Guidelines", "Creative Direction Playbook"],
+    tag: "Design Systems",
+    description: "Unified token architecture, Figma component kits, and living styleguides crafted for enterprise design scale.",
+    items: ["Spider-Sense Component Kit", "Fluid Bento System", "Iridescent Glass Tokens", "Semantic Color Compiler"],
   },
   {
-    id: "vibe-lab",
-    name: "03_Vibe_Lab",
+    id: "engineering",
+    name: "Engineering",
     count: "42 Experiments",
-    tag: "AI & 3D WebGL",
-    description: "Frontier experiments in creative technology: Three.js physics solvers, GSAP kinetic scroll, and agentic AI prompt loops.",
-    items: ["3D Paper Crumple Mesh", "Fluid Spider-Sense Canvas", "Kinetic Typography Shader", "Autonomous AI Agents"],
+    tag: "Creative Tech",
+    description: "Spatial 3D shaders, Three.js physics solvers, GSAP kinetic interactions, and agentic AI prompt loops.",
+    items: ["3D Paper Crumple Solver", "WebGL Fluid Cursor Canvas", "Kinetic Typography Engine", "AI Pair Agent Bridge"],
   },
   {
-    id: "client-proof",
-    name: "04_Client_Proof",
+    id: "product-mgmt",
+    name: "Product Mgmt",
     count: "19 Shipped",
     tag: "Production Live",
-    description: "Real-world web apps and high-conversion client products currently operating live in production.",
-    items: ["Skull Ninja Brand Showcase", "Modular SaaS Landing", "Audio Hub Studio Engine", "Global Payment Portal"],
+    description: "End-to-end product design leadership: roadmap execution, client delivery milestones, and high-impact web apps.",
+    items: ["Skull Ninja Brand Launch", "Modular SaaS Landing", "Audio Hub Studio Engine", "Global Payment Portal"],
   },
   {
-    id: "recycle-bin",
-    name: "Recycle_Bin",
-    count: "Trash",
+    id: "customer-success",
+    name: "Customer Success",
+    count: "Recycle Bin",
     tag: "Drop Paper Here",
     description: "Drop your crumpled sticky notes here to recycle. Clean workspace, clear mind.",
     items: ["Old wireframes.fig", "Discarded palette v1.ase", "Scrap sticky notes", "Legacy CSS resets"],
@@ -142,28 +131,143 @@ const DESKTOP_FOLDERS: DesktopFolder[] = [
 ];
 
 // ─────────────────────────────────────────────────────────────
-// Dock App Definitions (10 Core Daily Drivers + Trash)
+// 2x5 Tool Arsenal Definitions (Elena's Exact Bottom-Right Box)
 // ─────────────────────────────────────────────────────────────
-interface DockApp {
+interface ToolItem {
   id: string;
   name: string;
   role: string;
   icon: React.ReactNode;
-  isOpen?: boolean;
 }
+
+const TOOL_ARSENAL: ToolItem[] = [
+  // Row 1: Notion, Cursor, Figma/Brand, Terminal, Claude
+  {
+    id: "notion",
+    name: "Notion",
+    role: "Product Specs & Sprint Backlog",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex items-center justify-center shadow-sm">
+        <span className="font-serif font-black text-black text-sm">N</span>
+      </div>
+    ),
+  },
+  {
+    id: "cursor",
+    name: "Cursor",
+    role: "AI-Native Code Editor",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex items-center justify-center shadow-sm text-sky-500 font-bold text-sm">
+        &gt;
+      </div>
+    ),
+  },
+  {
+    id: "green-spiral",
+    name: "Antigravity",
+    role: "Autonomous Agent Engine",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-[#95D600] flex items-center justify-center shadow-sm text-black">
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-black">
+          <circle cx="12" cy="12" r="9" stroke="black" strokeWidth="2.5" fill="none" />
+          <circle cx="12" cy="12" r="4" fill="black" />
+        </svg>
+      </div>
+    ),
+  },
+  {
+    id: "terminal",
+    name: "Terminal",
+    role: "CLI & Deployment Pipelines",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-black border border-white/20 flex items-center justify-center shadow-sm text-white font-mono text-xs font-bold">
+        &gt;_
+      </div>
+    ),
+  },
+  {
+    id: "claude",
+    name: "Claude",
+    role: "Anthropic Reasoning Engine",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-[#D97757] flex items-center justify-center shadow-sm text-white">
+        <Sparkles className="w-3.5 h-3.5 text-white" />
+      </div>
+    ),
+  },
+  // Row 2: ChatGPT, LinkedIn, Gmail, Apple Calendar, X
+  {
+    id: "chatgpt",
+    name: "ChatGPT",
+    role: "OpenAI GPT-4o Model",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex items-center justify-center shadow-sm text-zinc-900">
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-zinc-900">
+          <path d="M20.5 10.5a4.5 4.5 0 0 0-3.8-4.4 4.5 4.5 0 0 0-8.2-1.6 4.5 4.5 0 0 0-4.4 3.8 4.5 4.5 0 0 0 1.6 8.2 4.5 4.5 0 0 0 3.8 4.4 4.5 4.5 0 0 0 8.2 1.6 4.5 4.5 0 0 0 4.4-3.8 4.5 4.5 0 0 0-1.6-8.2zm-8.5 7.5a6 6 0 1 1 6-6 6 6 0 0 1-6 6z" />
+        </svg>
+      </div>
+    ),
+  },
+  {
+    id: "linkedin",
+    name: "LinkedIn",
+    role: "Professional Network & Reach",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-[#0077B5] flex items-center justify-center shadow-sm text-white font-bold text-xs">
+        in
+      </div>
+    ),
+  },
+  {
+    id: "gmail",
+    name: "Gmail",
+    role: "Direct Client Inquiries",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex items-center justify-center shadow-sm">
+        <svg viewBox="0 0 24 24" className="w-4 h-4">
+          <path fill="#4285F4" d="M2 5v14h4V9l6 4.5L18 9v10h4V5l-10 7.5z" />
+          <path fill="#EA4335" d="M2 5l10 7.5L22 5h-20z" />
+        </svg>
+      </div>
+    ),
+  },
+  {
+    id: "cal",
+    name: "Calendar",
+    role: "Discovery Calls & Office Hours",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex flex-col items-center justify-center shadow-sm overflow-hidden">
+        <div className="w-full bg-[#FF3B30] h-2 flex items-center justify-center text-[5px] text-white font-bold uppercase">
+          NOV
+        </div>
+        <span className="text-[10px] font-bold text-zinc-900 leading-none mt-0.5">7</span>
+      </div>
+    ),
+  },
+  {
+    id: "x",
+    name: "X",
+    role: "Design Engineering Thoughts",
+    icon: (
+      <div className="w-7 h-7 rounded-lg bg-black flex items-center justify-center shadow-sm text-white font-bold text-xs">
+        𝕏
+      </div>
+    ),
+  },
+];
 
 export const WorkspaceDesktopSection: React.FC = () => {
   // Live Date & Time
   const [liveDateString, setLiveDateString] = useState<string>("Sat, Nov 7");
-  const [liveTimeString, setLiveTimeString] = useState<string>("12:04 PM");
+  const [liveTimeString, setLiveTimeString] = useState<string>("12:07 PM");
   const [analogTime, setAnalogTime] = useState<{ hours: number; minutes: number; seconds: number }>({
     hours: 12,
-    minutes: 4,
+    minutes: 7,
     seconds: 0,
   });
 
-  // Active selected folder (macOS blue selection pill)
-  const [selectedFolderId, setSelectedFolderId] = useState<string>("design-systems");
+  // Active selected folder
+  const [selectedFolderId, setSelectedFolderId] = useState<string>("qa-agent");
   const [quickLookFolder, setQuickLookFolder] = useState<DesktopFolder | null>(null);
 
   // Music Player State & Real Audio Element
@@ -171,16 +275,18 @@ export const WorkspaceDesktopSection: React.FC = () => {
   const [musicProgress, setMusicProgress] = useState<number>(30); // 30s default
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Dock Hover Index for Smooth macOS Magnification
+  // Bottom Center Dock Hover
   const [hoveredDockIndex, setHoveredDockIndex] = useState<number | null>(null);
+
+  // Bottom Right Tool Hover
+  const [hoveredTool, setHoveredTool] = useState<ToolItem | null>(null);
 
   // Paper Crumple Sticky Note State
   const [paperResetKey, setPaperResetKey] = useState<number>(0);
   const [paperState, setPaperState] = useState<string>("flat");
   const [recycledToast, setRecycledToast] = useState<boolean>(false);
-  const [actionToast, setActionToast] = useState<string | null>(null);
 
-  // Real-time Clock Update
+  // Clock Update Interval
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -255,248 +361,71 @@ export const WorkspaceDesktopSection: React.FC = () => {
     setTimeout(() => setRecycledToast(false), 3000);
   };
 
-  const showToast = (message: string) => {
-    setActionToast(message);
-    setTimeout(() => setActionToast(null), 2500);
-  };
-
-  // 10 Core Dock Applications with Authentic High-Res Styling
-  const DOCK_APPS: DockApp[] = [
-    {
-      id: "finder",
-      name: "Finder",
-      role: "GaneshOS File System",
-      isOpen: true,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-gradient-to-b from-[#64D2FF] via-[#0A84FF] to-[#0051D5] p-1.5 flex flex-col items-center justify-center text-white shadow-inner">
-          <span className="font-black text-sm tracking-tighter">G</span>
-        </div>
-      ),
-    },
-    {
-      id: "figma",
-      name: "Figma",
-      role: "Design Systems & Token Libraries",
-      isOpen: true,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-white border border-black/10 flex items-center justify-center shadow-inner p-1.5">
-          <svg viewBox="0 0 38 57" className="w-5 h-5">
-            <path fill="#1ABCFE" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" />
-            <path fill="#0ACF83" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" />
-            <path fill="#FF7262" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" />
-            <path fill="#F24E1E" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" />
-            <path fill="#A259FF" d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" />
-          </svg>
-        </div>
-      ),
-    },
-    {
-      id: "photoshop",
-      name: "Photoshop",
-      role: "Compositing & Pixel Perfection",
-      isOpen: false,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-[#001E36] border border-[#31A8FF]/60 flex items-center justify-center font-black text-[#31A8FF] text-xs tracking-tight shadow-inner">
-          Ps
-        </div>
-      ),
-    },
-    {
-      id: "illustrator",
-      name: "Illustrator",
-      role: "Vector Icons & Brand Identity",
-      isOpen: false,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-[#330000] border border-[#FF9A00]/60 flex items-center justify-center font-black text-[#FF9A00] text-xs tracking-tight shadow-inner">
-          Ai
-        </div>
-      ),
-    },
-    {
-      id: "aftereffects",
-      name: "After Effects",
-      role: "Motion Design & UI Dynamics",
-      isOpen: false,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-[#00005B] border border-[#9999FF]/60 flex items-center justify-center font-black text-[#9999FF] text-xs tracking-tight shadow-inner">
-          Ae
-        </div>
-      ),
-    },
-    {
-      id: "antigravity",
-      name: "Antigravity AI",
-      role: "Agentic AI Pair Programmer",
-      isOpen: true,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-gradient-to-tr from-purple-700 via-indigo-600 to-blue-500 border border-purple-300/40 flex items-center justify-center text-white shadow-inner">
-          <Sparkles className="w-4 h-4 text-purple-200 animate-pulse" />
-        </div>
-      ),
-    },
-    {
-      id: "vscode",
-      name: "VS Code / Cursor",
-      role: "Codebase & Terminal Workspace",
-      isOpen: true,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-[#1E1E1E] border border-sky-500/40 flex items-center justify-center text-sky-400 font-mono text-xs font-bold shadow-inner">
-          {`>_`}
-        </div>
-      ),
-    },
-    {
-      id: "nextjs",
-      name: "Next.js",
-      role: "Full-Stack Web Architecture",
-      isOpen: false,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-black border border-white/20 flex items-center justify-center font-black text-white text-xs shadow-inner">
-          N
-        </div>
-      ),
-    },
-    {
-      id: "threejs",
-      name: "Three.js",
-      role: "3D Spatial Physics & Shaders",
-      isOpen: false,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-zinc-900 border border-white/20 flex items-center justify-center text-white text-[11px] font-bold shadow-inner">
-          3D
-        </div>
-      ),
-    },
-    {
-      id: "spotify",
-      name: "Spotify",
-      role: "Sunflower (Spider-Verse OST)",
-      isOpen: isPlayingMusic,
-      icon: (
-        <div className="w-full h-full rounded-xl bg-[#1DB954] flex items-center justify-center text-black shadow-inner">
-          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-black">
-            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.435-5.308-1.76-8.794-.963-.335.077-.67-.133-.746-.468-.077-.334.132-.67.467-.746 3.808-.87 7.076-.496 9.723 1.115.294.18.386.562.207.855zm1.225-2.723c-.226.367-.708.482-1.075.257-2.69-1.653-6.79-2.131-9.97-1.165-.413.125-.849-.107-.975-.521-.125-.414.108-.849.522-.975 3.633-1.103 8.147-.568 11.24 1.33.368.225.483.707.258 1.074zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.494.15-1.018-.129-1.167-.622-.15-.494.129-1.019.622-1.168 3.532-1.072 9.404-.866 13.115 1.338.445.264.59.838.327 1.282-.264.444-.838.59-1.282.326z" />
-          </svg>
-        </div>
-      ),
-    },
-  ];
-
   return (
     <section
       id="workspace-desktop-section"
-      className="relative w-full min-h-screen lg:h-screen lg:max-h-[960px] lg:min-h-[700px] bg-[#F7F7FA] flex flex-col justify-between select-none overflow-hidden"
+      className="relative w-full min-h-screen lg:h-screen lg:max-h-[960px] lg:min-h-[700px] bg-[#F9F9FB] flex flex-col justify-between select-none overflow-hidden"
       style={{
         fontFamily: "var(--font-sora), -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       {/* ─────────────────────────────────────────────────────────────
-          1. AUTHENTIC APPLE MACOS MENU BAR (TOP STRIP)
-          Full-width translucent frosted glass strip with authentic Mac items
+          1. EXACT TOP STATUS BAR (Elena Gonci Benchmark)
+          Left: EG  Elena Gonci  Head of Product
+          Right: Sat, Nov 7 12:07 PM
       ───────────────────────────────────────────────────────────── */}
-      <header className="relative z-30 w-full h-7 bg-white/75 backdrop-blur-xl border-b border-black/[0.06] px-3 sm:px-4 flex items-center justify-between text-[11px] font-medium text-zinc-700 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-        {/* Left macOS Menus */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          {/* Apple Monogram */}
-          <div className="flex items-center gap-1.5 font-bold text-zinc-900 cursor-pointer hover:opacity-75 transition-opacity">
-            <AppleLogo className="w-3 h-3 text-zinc-900" />
-            <span className="font-semibold text-xs tracking-tight">GaneshOS</span>
-          </div>
-
-          {/* Menubar Items */}
-          <nav className="hidden md:flex items-center gap-3 text-zinc-600 font-normal">
-            <span className="hover:text-black cursor-pointer transition-colors">File</span>
-            <span className="hover:text-black cursor-pointer transition-colors">Edit</span>
-            <span className="hover:text-black cursor-pointer transition-colors">View</span>
-            <span className="hover:text-black cursor-pointer transition-colors">Window</span>
-            <span className="hover:text-black cursor-pointer transition-colors">Help</span>
-          </nav>
-
-          <span className="text-zinc-300 hidden lg:inline">|</span>
-
-          {/* Creator Role Subtitle */}
-          <span className="hidden lg:inline text-zinc-500 font-normal text-[11px] truncate max-w-[280px]">
-            Lead Product Designer &amp; Technologist @ Webnox
+      <header className="relative z-30 w-full pt-3 pb-2 px-6 sm:px-10 flex items-center justify-between text-xs text-zinc-600">
+        {/* Left Monogram & Identity */}
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-zinc-900 tracking-tight text-xs sm:text-sm">EG</span>
+          <span className="font-semibold text-zinc-900 text-xs sm:text-sm">Ganesh PS</span>
+          <span className="text-zinc-400 font-normal text-xs hidden sm:inline-block">
+            Lead Product Designer &amp; Creative Technologist @ Webnox
           </span>
         </div>
 
-        {/* Right Status Control Center */}
-        <div className="flex items-center gap-2.5 sm:gap-3.5 text-zinc-600 font-medium">
-          {/* Flow State Pill */}
-          <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 font-medium text-[10px]">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Flow State Active</span>
-          </div>
-
-          {/* Music Playing Waves in Menubar */}
-          {isPlayingMusic && (
-            <div
-              onClick={togglePlayMusic}
-              className="flex items-center gap-1 px-1.5 py-0.5 rounded-md hover:bg-black/5 cursor-pointer text-zinc-800"
-              title="Sunflower is playing — click to pause"
-            >
-              <div className="flex items-end gap-0.5 h-2.5">
-                <span className="w-0.5 h-2 bg-emerald-600 animate-pulse" />
-                <span className="w-0.5 h-3 bg-emerald-600 animate-bounce" />
-                <span className="w-0.5 h-1.5 bg-emerald-600 animate-pulse" />
-              </div>
-              <span className="text-[10px] hidden md:inline font-mono">Sunflower</span>
-            </div>
-          )}
-
-          {/* Wi-Fi & Battery */}
-          <Wifi className="w-3.5 h-3.5 text-zinc-600" />
-          <div className="flex items-center gap-1">
-            <span className="text-[10px] font-mono">100%</span>
-            <Battery className="w-3.5 h-3.5 text-zinc-700" />
-          </div>
-
-          {/* Control Center Icon */}
-          <Sliders className="w-3 h-3 text-zinc-600 hidden sm:block" />
-
-          {/* Date & Time */}
-          <span className="font-semibold text-zinc-800 text-[11px] ml-1">
-            {liveDateString} &nbsp;{liveTimeString}
-          </span>
+        {/* Right Live Time & Date */}
+        <div className="font-normal text-zinc-500 text-xs sm:text-sm">
+          <span>{liveDateString}&nbsp; {liveTimeString}</span>
         </div>
       </header>
 
       {/* ─────────────────────────────────────────────────────────────
-          2. MAIN DESKTOP STAGE (Precise 3-Column macOS Spatial Architecture)
-          - Left: Authentic Apple Desktop Widgets (Clock, Calendar, Weather, Sunflower)
-          - Center: Refined Editorial Headline & Interactive 3D Sticky Note
-          - Right: Authentic macOS Desktop Folder Files
+          2. MAIN DESKTOP STAGE (Exact Spatial Architecture of Reference Image)
+          - Left: 4 Tactile White Widget Cards
+          - Center: Large Hero Typography & 3D Interactive Sticky Note
+          - Right: 5 Vertical macOS Desktop Folders
       ───────────────────────────────────────────────────────────── */}
-      <div className="relative z-10 w-full flex-1 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-5 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 overflow-y-auto lg:overflow-visible">
+      <div className="relative z-10 w-full flex-1 max-w-[1440px] mx-auto px-6 sm:px-10 py-2 sm:py-4 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 overflow-y-auto lg:overflow-visible my-auto">
         
-        {/* ──────── COLUMN 1: LEFT MACOS DESKTOP WIDGETS (Sonoma Style) ──────── */}
-        <div className="w-full lg:w-[280px] shrink-0 flex flex-col gap-3 max-w-[340px] mx-auto lg:mx-0">
+        {/* ──────── COLUMN 1: LEFT WIDGET CLUSTER (Exact 310px Stack) ──────── */}
+        <div className="w-full lg:w-[310px] shrink-0 flex flex-col gap-3.5 max-w-[340px] mx-auto lg:mx-0">
           
-          {/* Row 1: Dual 2x2 Square Apple Widgets (Clock + Calendar) */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Row 1: Analog Clock (Left) + Calendar Card (Right) */}
+          <div className="grid grid-cols-2 gap-3.5">
             
-            {/* Widget 1: Minimalist Apple World Clock */}
-            <div className="bg-white/90 backdrop-blur-md rounded-[20px] p-3 border border-black/[0.06] shadow-[0_8px_20px_rgba(0,0,0,0.04)] flex flex-col items-center justify-between aspect-square">
-              <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-zinc-400 font-semibold">
+            {/* Widget 1: Minimalist Analog Clock ("MIAMI" / "COIMBATORE") */}
+            <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)] flex flex-col items-center justify-between aspect-square relative">
+              <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-400 font-medium">
                 COIMBATORE
               </span>
 
               {/* Minimalist Clock Face */}
-              <div className="relative w-16 h-16 rounded-full flex items-center justify-center">
+              <div className="relative w-18 h-18 rounded-full flex items-center justify-center">
                 {/* 12 Hour Ticks */}
                 {[...Array(12)].map((_, i) => (
                   <div
                     key={i}
-                    className="absolute w-0.5 h-1 bg-zinc-300 rounded-full origin-bottom"
+                    className="absolute w-0.5 h-1.5 bg-zinc-300 rounded-full origin-bottom"
                     style={{
-                      transform: `rotate(${i * 30}deg) translateY(-28px)`,
+                      transform: `rotate(${i * 30}deg) translateY(-32px)`,
                     }}
                   />
                 ))}
 
                 {/* Hour Hand */}
                 <div
-                  className="absolute w-1 h-4 bg-zinc-800 rounded-full origin-bottom transition-transform duration-300 ease-out"
+                  className="absolute w-1 h-5 bg-zinc-800 rounded-full origin-bottom transition-transform duration-300 ease-out"
                   style={{
                     transform: `rotate(${analogTime.hours * 30 + analogTime.minutes * 0.5}deg) translateY(-50%)`,
                   }}
@@ -504,43 +433,43 @@ export const WorkspaceDesktopSection: React.FC = () => {
 
                 {/* Minute Hand */}
                 <div
-                  className="absolute w-0.5 h-6 bg-zinc-700 rounded-full origin-bottom transition-transform duration-300 ease-out"
+                  className="absolute w-0.5 h-7 bg-zinc-700 rounded-full origin-bottom transition-transform duration-300 ease-out"
                   style={{
                     transform: `rotate(${analogTime.minutes * 6}deg) translateY(-50%)`,
                   }}
                 />
 
-                {/* Second Hand (Orange-Red Apple Sweep) */}
+                {/* Second Hand (Vibrant Red) */}
                 <div
-                  className="absolute w-[1px] h-7 bg-[#FF3B30] rounded-full origin-bottom"
+                  className="absolute w-[1.5px] h-8 bg-[#FF3B30] rounded-full origin-bottom"
                   style={{
                     transform: `rotate(${analogTime.seconds * 6}deg) translateY(-50%)`,
                   }}
                 />
 
-                {/* Center Pin */}
-                <div className="w-1.5 h-1.5 rounded-full bg-[#FF3B30] border border-white z-10" />
+                {/* Center Axis Pin */}
+                <div className="w-1.5 h-1.5 rounded-full bg-[#FF3B30] border border-white z-10 shadow-sm" />
               </div>
 
-              {/* Digital Subtext */}
+              {/* Sub-label */}
               <span className="text-[9px] font-mono text-zinc-400">
-                IST · UTC+5:30
+                IST • UTC+5:30
               </span>
             </div>
 
-            {/* Widget 2: Apple Calendar Card */}
-            <div className="bg-white/90 backdrop-blur-md rounded-[20px] p-3 border border-black/[0.06] shadow-[0_8px_20px_rgba(0,0,0,0.04)] flex flex-col justify-between aspect-square">
+            {/* Widget 2: Apple Calendar Card ("SATURDAY 7", 7-Col Matrix) */}
+            <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between aspect-square">
               <div>
-                <span className="text-[9px] font-mono uppercase text-[#FF3B30] font-bold tracking-wider block">
-                  {new Date().toLocaleDateString("en-US", { weekday: "short" }).toUpperCase()}
+                <span className="text-[10px] font-mono uppercase text-[#FF3B30] font-bold tracking-wider block">
+                  {new Date().toLocaleDateString("en-US", { weekday: "long" }).toUpperCase()}
                 </span>
-                <span className="text-2xl font-bold text-zinc-900 leading-none mt-0.5 block">
+                <span className="text-3xl font-bold text-zinc-900 leading-tight block">
                   {new Date().getDate()}
                 </span>
               </div>
 
-              {/* 7-Col Mini Month Matrix */}
-              <div className="grid grid-cols-7 gap-0.5 text-[7px] font-mono text-center text-zinc-400 pt-1 border-t border-zinc-100">
+              {/* 7-Column Mini Month Matrix */}
+              <div className="grid grid-cols-7 gap-0.5 text-[8px] font-mono text-center text-zinc-400 pt-1 border-t border-zinc-100">
                 <span>S</span>
                 <span>M</span>
                 <span>T</span>
@@ -554,8 +483,8 @@ export const WorkspaceDesktopSection: React.FC = () => {
                   return (
                     <span
                       key={day}
-                      className={`h-2.5 flex items-center justify-center rounded-full text-[7px] ${
-                        isToday ? "bg-[#FF3B30] text-white font-bold" : "text-zinc-600"
+                      className={`h-3 flex items-center justify-center rounded-full text-[8px] ${
+                        isToday ? "bg-black text-white font-bold" : "text-zinc-600"
                       }`}
                     >
                       {day}
@@ -567,52 +496,87 @@ export const WorkspaceDesktopSection: React.FC = () => {
 
           </div>
 
-          {/* Row 2: Apple Music "Sunflower" Player Widget */}
-          <div className="bg-white/90 backdrop-blur-md rounded-[20px] p-3 border border-black/[0.06] shadow-[0_8px_20px_rgba(0,0,0,0.04)]">
-            <div className="flex items-center gap-2.5">
-              {/* Vibrant Spider-Verse Album Cover */}
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#E11D48] via-[#FF3B30] to-[#F59E0B] overflow-hidden shadow-sm shrink-0 flex items-center justify-center relative">
-                <div className="w-5 h-5 rounded-full bg-black/40 border border-white/20 flex items-center justify-center">
+          {/* Row 2: Weather Forecast Card ("Madrid 31°", 7-Day Forecast Row) */}
+          <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)]">
+            <div className="text-xs font-semibold text-zinc-800 mb-2">
+              Coimbatore
+            </div>
+
+            {/* 7-Day Weather Row */}
+            <div className="grid grid-cols-7 gap-1 text-center">
+              {[
+                { day: "We", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "31°" },
+                { day: "Th", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "33°" },
+                { day: "Fr", icon: <CloudSun className="w-3.5 h-3.5 text-zinc-400 mx-auto" />, temp: "29°" },
+                { day: "Sa", icon: <Cloud className="w-3.5 h-3.5 text-zinc-400 mx-auto" />, temp: "28°" },
+                { day: "Su", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "30°" },
+                { day: "Mo", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "32°" },
+                { day: "Tu", icon: <CloudRain className="w-3.5 h-3.5 text-sky-400 mx-auto" />, temp: "27°" },
+              ].map((item, idx) => (
+                <div key={idx} className="flex flex-col items-center gap-1">
+                  <span className="text-[10px] text-zinc-400 font-medium">{item.day}</span>
+                  {item.icon}
+                  <span className="text-[11px] text-zinc-700 font-medium">{item.temp}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 3: Personal Photo Card (Ganesh with Sunglasses / Workstation) */}
+          <div className="w-24 h-24 rounded-[24px] overflow-hidden bg-zinc-100 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)] relative group">
+            <img
+              src="/assets/concepts/about_me_spiderverse_ui_1793291690442.jpg"
+              alt="Ganesh Setup"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+
+          {/* Row 4: Spider-Verse Music Player Widget (Sunflower) */}
+          <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)]">
+            <div className="flex items-center gap-3">
+              {/* Vibrant Orange-Red Square Album Art */}
+              <div className="w-11 h-11 rounded-xl bg-[#FF4500] bg-gradient-to-tr from-[#FF3B30] to-[#FF8C00] overflow-hidden shadow-sm shrink-0 flex items-center justify-center relative">
+                <div className="w-5 h-5 rounded-full bg-black/30 border border-white/20 flex items-center justify-center">
                   {isPlayingMusic ? (
                     <Volume2 className="w-3 h-3 text-white animate-pulse" />
                   ) : (
-                    <VolumeX className="w-3 h-3 text-white/70" />
+                    <VolumeX className="w-3 h-3 text-white/80" />
                   )}
                 </div>
               </div>
 
-              {/* Track Info */}
+              {/* Track Details */}
               <div className="flex-1 min-w-0">
-                <h4 className="text-[11px] font-semibold text-zinc-900 truncate leading-tight">
+                <h4 className="text-xs font-semibold text-zinc-900 truncate">
                   Sunflower
                 </h4>
-                <p className="text-[9px] text-zinc-400 truncate">
-                  Post Malone, Swae Lee
+                <p className="text-[10px] text-zinc-400 truncate">
+                  Post Malone, Swae Lee — Spider-Verse
                 </p>
 
-                {/* Mini Controls */}
-                <div className="flex items-center gap-2.5 mt-1">
+                {/* Audio Controls (Prev, Play, Next) */}
+                <div className="flex items-center gap-3 mt-1.5">
                   <button
                     type="button"
                     onClick={() => {
                       if (audioRef.current) audioRef.current.currentTime = 0;
                     }}
-                    className="text-zinc-400 hover:text-black transition-colors cursor-pointer"
-                    title="Restart"
+                    className="text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
+                    title="Restart Track"
                   >
-                    <SkipBack className="w-3 h-3" />
+                    <SkipBack className="w-3.5 h-3.5" />
                   </button>
 
                   <button
                     type="button"
                     onClick={togglePlayMusic}
-                    className="w-5 h-5 rounded-full bg-black hover:bg-[#FF3B30] text-white flex items-center justify-center shadow transition-colors cursor-pointer active:scale-95"
-                    title={isPlayingMusic ? "Pause" : "Play"}
+                    className="text-zinc-800 hover:text-black transition-colors cursor-pointer active:scale-95"
+                    title={isPlayingMusic ? "Pause" : "Play Sunflower"}
                   >
                     {isPlayingMusic ? (
-                      <Pause className="w-2.5 h-2.5" />
+                      <Pause className="w-3.5 h-3.5" />
                     ) : (
-                      <Play className="w-2.5 h-2.5 ml-0.5" />
+                      <Play className="w-3.5 h-3.5 fill-zinc-800" />
                     )}
                   </button>
 
@@ -621,19 +585,19 @@ export const WorkspaceDesktopSection: React.FC = () => {
                     onClick={() => {
                       if (audioRef.current) audioRef.current.currentTime += 15;
                     }}
-                    className="text-zinc-400 hover:text-black transition-colors cursor-pointer"
-                    title="Forward 15s"
+                    className="text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
+                    title="Fast Forward 15s"
                   >
-                    <SkipForward className="w-3 h-3" />
+                    <SkipForward className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Scrubber Progress Bar */}
-            <div className="mt-2 pt-1.5 border-t border-zinc-100 flex items-center gap-1.5 text-[8px] font-mono text-zinc-400">
+            {/* Scrubber Bar */}
+            <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center gap-2 text-[9px] font-mono text-zinc-400">
               <span>0:{musicProgress < 10 ? `0${musicProgress}` : musicProgress}</span>
-              <div className="flex-1 h-1 bg-zinc-100 rounded-full overflow-hidden relative">
+              <div className="flex-1 h-0.5 bg-zinc-200 rounded-full overflow-hidden relative">
                 <div
                   className="h-full bg-zinc-800 rounded-full transition-all duration-300"
                   style={{ width: `${Math.min(100, (musicProgress / 158) * 100)}%` }}
@@ -643,55 +607,29 @@ export const WorkspaceDesktopSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Row 3: Dual Compact Bento Cards (Weather + Setup Status) */}
-          <div className="grid grid-cols-2 gap-2.5">
-            {/* Weather Widget */}
-            <div className="bg-white/90 backdrop-blur-md rounded-[18px] p-2.5 border border-black/[0.06] shadow-[0_8px_20px_rgba(0,0,0,0.04)] flex items-center gap-2">
-              <Sun className="w-6 h-6 text-amber-500 shrink-0" />
-              <div className="min-w-0">
-                <div className="text-[11px] font-bold text-zinc-800 leading-tight">32°C</div>
-                <div className="text-[9px] text-zinc-400 font-medium truncate">Coimbatore</div>
-              </div>
-            </div>
-
-            {/* Workspace Setup Status */}
-            <div className="bg-white/90 backdrop-blur-md rounded-[18px] p-2.5 border border-black/[0.06] shadow-[0_8px_20px_rgba(0,0,0,0.04)] flex items-center gap-2">
-              <Laptop className="w-5 h-5 text-indigo-500 shrink-0" />
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-zinc-800 leading-tight truncate">Dual Displays</div>
-                <div className="text-[8px] text-emerald-600 font-medium truncate">M3 Max Setup</div>
-              </div>
-            </div>
-          </div>
-
         </div>
 
-        {/* ──────── COLUMN 2: CENTER STAGE (Headline & 3D Interactive Sticky Note) ──────── */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-2 py-1 max-w-[560px] mx-auto">
+        {/* ──────── COLUMN 2: CENTER HERO TYPOGRAPHY & 3D STICKY NOTE ──────── */}
+        <div className="flex-1 flex flex-col items-center justify-center text-center px-2 py-2 max-w-[540px] mx-auto">
           
-          {/* Eyebrow Pill */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-red-500/[0.08] text-[#FF3B30] text-[10px] font-mono font-semibold tracking-wider uppercase mb-2 border border-red-500/10">
-            <span>WORKSPACE HEADQUARTERS</span>
-          </div>
-
-          {/* Balanced Editorial Headline */}
-          <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#111111] tracking-[-0.03em] leading-[1.12]">
+          {/* Main Display Headline (Elena Gonci Exact Styling) */}
+          <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.08] text-center">
             This is where I live.
             <br />
             I craft systems at{" "}
-            <span className="relative inline-block underline decoration-black/20 underline-offset-[8px] decoration-[2px] hover:decoration-black transition-colors">
+            <span className="relative inline-block underline decoration-black/25 underline-offset-[10px] decoration-[2px] hover:decoration-black transition-colors">
               Webnox.
             </span>
           </h1>
 
           {/* Subtext Paragraph */}
-          <p className="mt-2.5 text-xs sm:text-sm text-zinc-500 font-normal leading-relaxed max-w-[440px]">
+          <p className="mt-4 max-w-[460px] mx-auto text-center text-xs sm:text-sm text-zinc-500 font-normal leading-relaxed">
             Where design precision meets vibe coding. Orchestrating design systems, AI agents, and interactive motion to build living digital products.
           </p>
 
           {/* ─────────────────────────────────────────────────────────
               REACT BITS <PaperCrumple /> 3D INTERACTIVE STICKY NOTE
-              Proportionately scaled to fit comfortably within viewport!
+              Proportionately scaled to fit cleanly within vertical space
           ───────────────────────────────────────────────────────── */}
           <div className="relative mt-4 sm:mt-5 flex flex-col items-center">
             
@@ -700,9 +638,9 @@ export const WorkspaceDesktopSection: React.FC = () => {
               <PaperCrumple
                 src="/assets/sticky_note.png"
                 alt="Ganesh's Daily Sticky Note Memo"
-                width={205}
-                height={255}
-                sceneHeight={265}
+                width={195}
+                height={245}
+                sceneHeight={255}
                 releaseBehavior="creased"
                 crumpleAmount={0.85}
                 crumpleDuration={0.55}
@@ -741,7 +679,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
                 type="button"
                 onClick={() => setPaperResetKey((prev) => prev + 1)}
                 className="flex items-center gap-1 text-[9px] font-mono text-zinc-600 hover:text-black bg-zinc-100 hover:bg-zinc-200 px-2 py-0.5 rounded-full transition-colors cursor-pointer"
-                title="Reset note"
+                title="Reset note to flat"
               >
                 <RefreshCw className="w-2.5 h-2.5" />
                 <span>Reset</span>
@@ -751,12 +689,12 @@ export const WorkspaceDesktopSection: React.FC = () => {
 
         </div>
 
-        {/* ──────── COLUMN 3: RIGHT MACOS DESKTOP FOLDERS ──────── */}
-        <div className="w-full lg:w-[120px] shrink-0 flex lg:flex-col flex-wrap gap-4 sm:gap-5 justify-center lg:items-end">
+        {/* ──────── COLUMN 3: RIGHT MACOS DESKTOP FOLDERS (Elena Exact Right Edge) ──────── */}
+        <div className="w-full lg:w-[110px] shrink-0 flex lg:flex-col flex-wrap gap-5 sm:gap-6 justify-center lg:items-end">
           
           {DESKTOP_FOLDERS.map((folder) => {
             const isSelected = selectedFolderId === folder.id;
-            const isRecycleBin = folder.id === "recycle-bin";
+            const isRecycleBin = folder.id === "customer-success";
 
             return (
               <div
@@ -775,23 +713,18 @@ export const WorkspaceDesktopSection: React.FC = () => {
                 {/* Folder Icon */}
                 <div className="relative mb-1 transition-transform group-hover:scale-105 duration-200">
                   {isRecycleBin ? (
-                    <MacTrashIcon className="w-11 h-11" />
+                    <MacTrashIcon className="w-12 h-11" />
                   ) : (
-                    <MacFolderIcon className="w-12 h-10" />
+                    <MacFolderIcon className="w-14 h-11" />
                   )}
-
-                  {/* Micro badge indicator */}
-                  <span className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full bg-white/95 border border-black/10 text-[8px] font-mono text-zinc-500 shadow-sm">
-                    {folder.count}
-                  </span>
                 </div>
 
-                {/* Folder Label (Turns into Apple Blue Pill on Select / Hover) */}
+                {/* Folder Label Centered Under Icon */}
                 <span
-                  className={`text-[11px] font-medium text-center leading-tight transition-all duration-150 ${
+                  className={`text-[11px] font-normal text-center leading-tight transition-all duration-150 max-w-[88px] ${
                     isSelected
-                      ? "bg-[#007AFF] text-white px-2 py-0.5 rounded-[4px] shadow-sm font-semibold"
-                      : "text-zinc-800 group-hover:bg-[#007AFF]/15 group-hover:text-[#007AFF] px-2 py-0.5 rounded-[4px]"
+                      ? "text-black font-semibold"
+                      : "text-zinc-700 group-hover:text-black"
                   }`}
                 >
                   {folder.name}
@@ -805,99 +738,142 @@ export const WorkspaceDesktopSection: React.FC = () => {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          3. AUTHENTIC SINGLE APPLE MACOS FLOATING DOCK (CENTER BOTTOM)
-          Single frosted glass capsule with smooth spring magnification
+          3. BOTTOM FLOATING BAR (Exact Elena Gonci Layout)
+          - Center: Translucent Capsule Dock (6 App Icons: G, Folder, Sparkles, Heart, Sat 7, Contacts)
+          - Right: 2x5 Tool Arsenal Launcher Box
       ───────────────────────────────────────────────────────────── */}
-      <footer className="relative z-30 w-full pb-3 flex justify-center items-center pointer-events-none">
+      <footer className="relative z-20 w-full pb-5 px-6 sm:px-10 flex items-center justify-between">
         
-        {/* The Single Frosted Glass Dock Container */}
-        <div className="pointer-events-auto bg-white/75 backdrop-blur-2xl border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.06)] rounded-2xl px-2.5 sm:px-3 py-1.5 flex items-center gap-1.5 sm:gap-2 relative">
-          
-          {DOCK_APPS.map((app, index) => {
+        {/* Left balance placeholder */}
+        <div className="hidden lg:block w-[310px]" />
+
+        {/* ──────── BOTTOM-CENTER: CAPSULE DOCK (6 Icons from Elena's Dock) ──────── */}
+        <div className="bg-white/85 backdrop-blur-xl border border-black/[0.06] shadow-[0_12px_36px_rgba(0,0,0,0.08)] rounded-[22px] px-3 py-1.5 flex items-center gap-2.5 mx-auto">
+          {[
+            // 1. Monogram Icon (ε / G)
+            {
+              id: "monogram",
+              name: "GaneshOS",
+              icon: (
+                <div className="w-9 h-9 rounded-xl bg-white border border-black/10 flex items-center justify-center font-bold text-zinc-900 text-sm shadow-sm">
+                  G
+                </div>
+              ),
+            },
+            // 2. Blue Folder Icon
+            {
+              id: "finder",
+              name: "Projects",
+              icon: (
+                <div className="w-9 h-9 rounded-xl bg-[#007AFF] flex items-center justify-center shadow-sm">
+                  <MacFolderIcon className="w-6 h-5" />
+                </div>
+              ),
+            },
+            // 3. Purple Sparkles Icon
+            {
+              id: "sparkles",
+              name: "AI & Motion",
+              icon: (
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white shadow-sm">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+              ),
+            },
+            // 4. Red Heart Icon
+            {
+              id: "heart",
+              name: "Vibe & Passion",
+              icon: (
+                <div className="w-9 h-9 rounded-xl bg-[#FF3B30] flex items-center justify-center text-white shadow-sm">
+                  <Heart className="w-4 h-4 fill-white text-white" />
+                </div>
+              ),
+            },
+            // 5. White Calendar Icon (SAT 7)
+            {
+              id: "calendar-icon",
+              name: "Schedule",
+              icon: (
+                <div className="w-9 h-9 rounded-xl bg-white border border-black/10 flex flex-col items-center justify-center shadow-sm overflow-hidden">
+                  <span className="text-[7px] font-bold text-[#FF3B30] uppercase leading-none">
+                    {new Date().toLocaleDateString("en-US", { weekday: "short" }).toUpperCase()}
+                  </span>
+                  <span className="text-[12px] font-bold text-zinc-900 leading-none mt-0.5">
+                    {new Date().getDate()}
+                  </span>
+                </div>
+              ),
+            },
+            // 6. Green Contacts/Notebook Icon
+            {
+              id: "contacts",
+              name: "Contacts",
+              icon: (
+                <div className="w-9 h-9 rounded-xl bg-[#34C759] flex items-center justify-center text-white shadow-sm">
+                  <BookUser className="w-4 h-4 text-white" />
+                </div>
+              ),
+            },
+          ].map((dockItem, index) => {
             const isHovered = hoveredDockIndex === index;
             const isNeighbor =
               hoveredDockIndex !== null && Math.abs(hoveredDockIndex - index) === 1;
-            const scale = isHovered ? 1.38 : isNeighbor ? 1.18 : 1.0;
-            const translateY = isHovered ? -8 : isNeighbor ? -3 : 0;
+            const scale = isHovered ? 1.3 : isNeighbor ? 1.15 : 1.0;
 
             return (
-              <div key={app.id} className="relative flex flex-col items-center">
-                
-                {/* Active Tooltip Popover */}
-                <AnimatePresence>
-                  {isHovered && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: -42 }}
-                      exit={{ opacity: 0, y: 6 }}
-                      className="absolute -top-1 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-zinc-900/95 text-white text-[10px] font-mono shadow-xl border border-white/10 whitespace-nowrap pointer-events-none z-40"
-                    >
-                      <span className="font-bold text-white">{app.name}</span>
-                      <span className="text-zinc-400 mx-1">•</span>
-                      <span className="text-zinc-300">{app.role}</span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* App Icon Tile */}
-                <motion.div
-                  onMouseEnter={() => setHoveredDockIndex(index)}
-                  onMouseLeave={() => setHoveredDockIndex(null)}
-                  onClick={() => {
-                    if (app.id === "spotify") {
-                      togglePlayMusic();
-                    } else if (app.id === "finder") {
-                      setQuickLookFolder(DESKTOP_FOLDERS[0]);
-                    } else {
-                      showToast(`Launched ${app.name} — ${app.role}`);
-                    }
-                  }}
-                  animate={{ scale, y: translateY }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl cursor-pointer select-none active:scale-90 transition-transform"
-                >
-                  {app.icon}
-                </motion.div>
-
-                {/* macOS Open App Active Dot Indicator */}
-                <div className="h-1 flex items-center justify-center mt-0.5">
-                  {app.isOpen && (
-                    <span className="w-1 h-1 rounded-full bg-zinc-800" />
-                  )}
-                </div>
-              </div>
+              <motion.div
+                key={dockItem.id}
+                onMouseEnter={() => setHoveredDockIndex(index)}
+                onMouseLeave={() => setHoveredDockIndex(null)}
+                onClick={() => {
+                  if (dockItem.id === "finder") {
+                    setQuickLookFolder(DESKTOP_FOLDERS[0]);
+                  }
+                }}
+                animate={{ scale }}
+                transition={{ type: "spring", stiffness: 350, damping: 22 }}
+                className="cursor-pointer select-none"
+                title={dockItem.name}
+              >
+                {dockItem.icon}
+              </motion.div>
             );
           })}
+        </div>
 
-          {/* Vertical Divider */}
-          <div className="w-[1px] h-7 bg-zinc-300/80 mx-0.5 sm:mx-1" />
-
-          {/* Dock Trash Can Item */}
-          <div className="relative flex flex-col items-center">
-            {hoveredDockIndex === 99 && (
-              <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-zinc-900/95 text-white text-[10px] font-mono shadow-xl border border-white/10 whitespace-nowrap pointer-events-none z-40">
-                <span className="font-bold">Trash</span>
+        {/* ──────── BOTTOM-RIGHT: 2x5 TOOL ARSENAL LAUNCHER CARD ──────── */}
+        <div className="relative bg-white/95 backdrop-blur-md border border-black/[0.06] shadow-[0_12px_36px_rgba(0,0,0,0.08)] rounded-[22px] p-2.5 shrink-0 hidden sm:block">
+          
+          {/* Active Tooltip Popover */}
+          <AnimatePresence>
+            {hoveredTool && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: -38 }}
+                exit={{ opacity: 0, y: 6 }}
+                className="absolute -top-1 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-zinc-900 text-white text-[10px] font-mono shadow-xl border border-white/10 whitespace-nowrap pointer-events-none z-30"
+              >
+                <span className="font-bold text-white">{hoveredTool.name}</span>
                 <span className="text-zinc-400 mx-1">•</span>
-                <span className="text-zinc-300">Clean scrap paper</span>
-              </div>
+                <span className="text-zinc-300">{hoveredTool.role}</span>
+              </motion.div>
             )}
-            <motion.div
-              onMouseEnter={() => setHoveredDockIndex(99)}
-              onMouseLeave={() => setHoveredDockIndex(null)}
-              onClick={handleRecycleDrop}
-              animate={{
-                scale: hoveredDockIndex === 99 ? 1.35 : 1.0,
-                y: hoveredDockIndex === 99 ? -8 : 0,
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center cursor-pointer select-none active:scale-90"
-              title="Recycle scrap paper"
-            >
-              <MacTrashIcon className="w-8 h-8" />
-            </motion.div>
-            <div className="h-1" />
-          </div>
+          </AnimatePresence>
 
+          {/* 2x5 Tool Grid */}
+          <div className="grid grid-cols-5 gap-1.5">
+            {TOOL_ARSENAL.map((tool) => (
+              <div
+                key={tool.id}
+                onMouseEnter={() => setHoveredTool(tool)}
+                onMouseLeave={() => setHoveredTool(null)}
+                className="cursor-pointer transition-transform hover:scale-110 active:scale-95"
+              >
+                {tool.icon}
+              </div>
+            ))}
+          </div>
         </div>
 
       </footer>
@@ -989,7 +965,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
       </AnimatePresence>
 
       {/* ─────────────────────────────────────────────────────────────
-          5. TOAST ALERTS (Recycle & Launch Feedback)
+          5. TRASH RECYCLED TOAST ALERT
       ───────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {recycledToast && (
@@ -997,24 +973,10 @@ export const WorkspaceDesktopSection: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 bg-zinc-900/90 text-white backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl border border-white/10 flex items-center gap-2 text-xs font-mono"
+            className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-zinc-900/90 text-white backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl border border-white/10 flex items-center gap-2 text-xs font-mono"
           >
             <Trash2 className="w-4 h-4 text-emerald-400" />
             <span>Sticky note recycled into trash! Workspace cleaned.</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {actionToast && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 bg-zinc-900/90 text-white backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl border border-white/10 flex items-center gap-2 text-xs font-mono"
-          >
-            <Sparkles className="w-4 h-4 text-blue-400" />
-            <span>{actionToast}</span>
           </motion.div>
         )}
       </AnimatePresence>
