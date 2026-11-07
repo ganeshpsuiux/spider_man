@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   Play,
   Pause,
@@ -19,6 +19,8 @@ import {
   Volume2,
   VolumeX,
   CheckCircle2,
+  RotateCcw,
+  Move,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
@@ -230,6 +232,9 @@ const TOOL_ARSENAL: ToolItem[] = [
 ];
 
 export const WorkspaceDesktopSection: React.FC = () => {
+  // Desktop section container ref for drag boundaries & cursor tracking
+  const desktopContainerRef = useRef<HTMLElement>(null);
+
   // Live Date & Time
   const [liveDateString, setLiveDateString] = useState<string>("Sat, Nov 7");
   const [liveTimeString, setLiveTimeString] = useState<string>("12:07 PM");
@@ -253,6 +258,51 @@ export const WorkspaceDesktopSection: React.FC = () => {
 
   // Bottom Right Tool Hover
   const [hoveredTool, setHoveredTool] = useState<ToolItem | null>(null);
+
+  // Key to smoothly reset widget drag positions
+  const [dragResetKey, setDragResetKey] = useState<number>(0);
+
+  // ─────────────────────────────────────────────────────────────
+  // Dynamic Cursor Motion Values & Springs for Magnetic Parallax
+  // ─────────────────────────────────────────────────────────────
+  const rawMouseX = useMotionValue(0);
+  const rawMouseY = useMotionValue(0);
+
+  // Spring physics for buttery-smooth cursor tracking
+  const springMouseX = useSpring(rawMouseX, { stiffness: 90, damping: 20 });
+  const springMouseY = useSpring(rawMouseY, { stiffness: 90, damping: 20 });
+
+  // Individual widget parallax offsets (different depth layers)
+  const clockParallaxX = useTransform(springMouseX, (v) => v * 12);
+  const clockParallaxY = useTransform(springMouseY, (v) => v * 10);
+
+  const calParallaxX = useTransform(springMouseX, (v) => v * -10);
+  const calParallaxY = useTransform(springMouseY, (v) => v * 14);
+
+  const weatherParallaxX = useTransform(springMouseX, (v) => v * 16);
+  const weatherParallaxY = useTransform(springMouseY, (v) => v * -12);
+
+  const photoParallaxX = useTransform(springMouseX, (v) => v * -16);
+  const photoParallaxY = useTransform(springMouseY, (v) => v * -14);
+
+  const musicParallaxX = useTransform(springMouseX, (v) => v * 14);
+  const musicParallaxY = useTransform(springMouseY, (v) => v * 16);
+
+  // Track cursor movement across desktop section
+  const handleDesktopMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!desktopContainerRef.current) return;
+    const rect = desktopContainerRef.current.getBoundingClientRect();
+    // Normalized coordinates between -1 and 1
+    const normX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const normY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    rawMouseX.set(normX);
+    rawMouseY.set(normY);
+  };
+
+  const handleDesktopMouseLeave = () => {
+    rawMouseX.set(0);
+    rawMouseY.set(0);
+  };
 
   // Clock Update Interval
   useEffect(() => {
@@ -325,7 +375,10 @@ export const WorkspaceDesktopSection: React.FC = () => {
 
   return (
     <section
+      ref={desktopContainerRef}
       id="workspace-desktop-section"
+      onMouseMove={handleDesktopMouseMove}
+      onMouseLeave={handleDesktopMouseLeave}
       className="relative w-full h-screen min-h-[720px] max-h-[960px] bg-[#F9F9FB] select-none overflow-hidden"
       style={{
         fontFamily: "var(--font-sora), -apple-system, BlinkMacSystemFont, sans-serif",
@@ -336,7 +389,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
           Left: EG  Elena Gonci  Head of Product
           Right: Sat, Nov 7 12:07 PM
       ───────────────────────────────────────────────────────────── */}
-      <header className="absolute top-0 left-0 right-0 h-10 px-8 lg:px-12 flex items-center justify-between text-xs text-zinc-600 z-30">
+      <header className="absolute top-0 left-0 right-0 h-10 px-8 lg:px-12 flex items-center justify-between text-xs text-zinc-600 z-30 pointer-events-auto">
         {/* Left Monogram & Identity */}
         <div className="flex items-center gap-3">
           <span className="font-bold text-zinc-900 tracking-tight text-xs sm:text-sm">EG</span>
@@ -346,32 +399,59 @@ export const WorkspaceDesktopSection: React.FC = () => {
           </span>
         </div>
 
-        {/* Right Live Time & Date */}
-        <div className="font-normal text-zinc-500 text-xs sm:text-sm">
+        {/* Right Live Time & Reset Widgets Pill */}
+        <div className="flex items-center gap-4 text-xs font-normal text-zinc-500">
+          {/* Subtle Reset Widgets Button */}
+          <button
+            type="button"
+            onClick={() => setDragResetKey((prev) => prev + 1)}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/[0.04] hover:bg-black/[0.08] text-zinc-600 hover:text-black transition-colors cursor-pointer text-[10px] font-mono"
+            title="Snap widgets back to grid"
+          >
+            <RotateCcw className="w-2.5 h-2.5" />
+            <span>Reset Grid</span>
+          </button>
+
           <span>{liveDateString}&nbsp; {liveTimeString}</span>
         </div>
       </header>
 
       {/* ─────────────────────────────────────────────────────────────
-          2. LEFT WIDGET CLUSTER (Exact Elena Gonci Left Column)
-          - Row 1: Analog Clock (MIAMI) + Apple Calendar (SATURDAY 7)
-          - Row 2: Weather Forecast Card (Madrid / Coimbatore, 7 Days)
-          - Row 3: Square Photo Card (Left Aligned)
-          - Row 4: Music Player Card (Sunflower / Psycho Killer)
+          2. LEFT WIDGET CLUSTER WITH CURSOR MOTION & DRAG
+          - Subtle Magnetic Parallax Follow with Cursor
+          - Full Click & Drag Freedom with Cursor Anywhere on Canvas
       ───────────────────────────────────────────────────────────── */}
-      <div className="absolute top-12 left-8 lg:left-12 w-[305px] flex flex-col gap-3 z-20">
+      <div
+        key={dragResetKey}
+        className="absolute top-12 left-8 lg:left-12 w-[305px] flex flex-col gap-3 z-20 pointer-events-auto"
+      >
         
         {/* Row 1: Dual Square Widgets (Clock + Calendar) */}
         <div className="grid grid-cols-2 gap-3">
           
           {/* Widget 1: Minimalist Analog Clock ("MIAMI" / "COIMBATORE") */}
-          <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col items-center justify-between aspect-square relative">
+          <motion.div
+            style={{ x: clockParallaxX, y: clockParallaxY }}
+            drag
+            dragConstraints={desktopContainerRef}
+            dragElastic={0.15}
+            dragMomentum={true}
+            whileHover={{ scale: 1.02, cursor: "grab" }}
+            whileDrag={{
+              scale: 1.06,
+              zIndex: 60,
+              cursor: "grabbing",
+              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.18)",
+            }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
+            className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col items-center justify-between aspect-square relative cursor-grab active:cursor-grabbing select-none"
+          >
             <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-400 font-medium">
               COIMBATORE
             </span>
 
             {/* Minimalist Clock Face */}
-            <div className="relative w-16 h-16 rounded-full flex items-center justify-center">
+            <div className="relative w-16 h-16 rounded-full flex items-center justify-center pointer-events-none">
               {/* 12 Hour Ticks */}
               {[...Array(12)].map((_, i) => (
                 <div
@@ -415,10 +495,25 @@ export const WorkspaceDesktopSection: React.FC = () => {
             <span className="text-[9px] font-mono text-zinc-400">
               IST • UTC+5:30
             </span>
-          </div>
+          </motion.div>
 
           {/* Widget 2: Apple Calendar Card ("SATURDAY 7", 7-Col Matrix) */}
-          <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between aspect-square">
+          <motion.div
+            style={{ x: calParallaxX, y: calParallaxY }}
+            drag
+            dragConstraints={desktopContainerRef}
+            dragElastic={0.15}
+            dragMomentum={true}
+            whileHover={{ scale: 1.02, cursor: "grab" }}
+            whileDrag={{
+              scale: 1.06,
+              zIndex: 60,
+              cursor: "grabbing",
+              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.18)",
+            }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
+            className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between aspect-square cursor-grab active:cursor-grabbing select-none"
+          >
             <div>
               <span className="text-[10px] font-mono uppercase text-[#FF3B30] font-bold tracking-wider block">
                 {new Date().toLocaleDateString("en-US", { weekday: "long" }).toUpperCase()}
@@ -429,7 +524,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
             </div>
 
             {/* 7-Column Mini Month Matrix */}
-            <div className="grid grid-cols-7 gap-0.5 text-[8px] font-mono text-center text-zinc-400 pt-1 border-t border-zinc-100">
+            <div className="grid grid-cols-7 gap-0.5 text-[8px] font-mono text-center text-zinc-400 pt-1 border-t border-zinc-100 pointer-events-none">
               <span>S</span>
               <span>M</span>
               <span>T</span>
@@ -452,18 +547,33 @@ export const WorkspaceDesktopSection: React.FC = () => {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
 
         </div>
 
         {/* Row 2: Weather Forecast Card ("Madrid 31°", 7-Day Forecast Row) */}
-        <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+        <motion.div
+          style={{ x: weatherParallaxX, y: weatherParallaxY }}
+          drag
+          dragConstraints={desktopContainerRef}
+          dragElastic={0.15}
+          dragMomentum={true}
+          whileHover={{ scale: 1.02, cursor: "grab" }}
+          whileDrag={{
+            scale: 1.05,
+            zIndex: 60,
+            cursor: "grabbing",
+            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.18)",
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 28 }}
+          className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] cursor-grab active:cursor-grabbing select-none"
+        >
           <div className="text-xs font-semibold text-zinc-800 mb-2">
             Coimbatore
           </div>
 
           {/* 7-Day Weather Row */}
-          <div className="grid grid-cols-7 gap-1 text-center">
+          <div className="grid grid-cols-7 gap-1 text-center pointer-events-none">
             {[
               { day: "We", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "31°" },
               { day: "Th", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "33°" },
@@ -480,22 +590,52 @@ export const WorkspaceDesktopSection: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Row 3: Square Photo Card (Left Aligned like Elena's Selfie) */}
-        <div className="w-24 h-24 rounded-[24px] overflow-hidden bg-zinc-100 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative group">
+        <motion.div
+          style={{ x: photoParallaxX, y: photoParallaxY }}
+          drag
+          dragConstraints={desktopContainerRef}
+          dragElastic={0.15}
+          dragMomentum={true}
+          whileHover={{ scale: 1.04, cursor: "grab" }}
+          whileDrag={{
+            scale: 1.08,
+            zIndex: 60,
+            cursor: "grabbing",
+            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.2)",
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 28 }}
+          className="w-24 h-24 rounded-[24px] overflow-hidden bg-zinc-100 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative group cursor-grab active:cursor-grabbing select-none"
+        >
           <img
             src="/assets/concepts/about_me_spiderverse_ui_1793291690442.jpg"
             alt="Ganesh Setup"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 pointer-events-none"
           />
-        </div>
+        </motion.div>
 
         {/* Row 4: Music Player Card (Sunflower / Psycho Killer) */}
-        <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+        <motion.div
+          style={{ x: musicParallaxX, y: musicParallaxY }}
+          drag
+          dragConstraints={desktopContainerRef}
+          dragElastic={0.15}
+          dragMomentum={true}
+          whileHover={{ scale: 1.02, cursor: "grab" }}
+          whileDrag={{
+            scale: 1.05,
+            zIndex: 60,
+            cursor: "grabbing",
+            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.18)",
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 28 }}
+          className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] cursor-grab active:cursor-grabbing select-none"
+        >
           <div className="flex items-center gap-3">
             {/* Red-Orange Square Album Art */}
-            <div className="w-11 h-11 rounded-xl bg-[#E85D45] overflow-hidden shadow-sm shrink-0 flex items-center justify-center relative">
+            <div className="w-11 h-11 rounded-xl bg-[#E85D45] overflow-hidden shadow-sm shrink-0 flex items-center justify-center relative pointer-events-none">
               <div className="w-5 h-5 rounded-full bg-black/30 border border-white/20 flex items-center justify-center">
                 {isPlayingMusic ? (
                   <Volume2 className="w-3 h-3 text-white animate-pulse" />
@@ -514,11 +654,15 @@ export const WorkspaceDesktopSection: React.FC = () => {
                 Post Malone, Swae Lee — Spider-Verse
               </p>
 
-              {/* Audio Controls (Prev, Play, Next) */}
-              <div className="flex items-center gap-3 mt-1.5">
+              {/* Audio Controls (Prev, Play, Next) - Stop propagation so clicking buttons doesn't trigger card drag */}
+              <div
+                className="flex items-center gap-3 mt-1.5"
+                onPointerDown={(e) => e.stopPropagation()}
+              >
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if (audioRef.current) audioRef.current.currentTime = 0;
                   }}
                   className="text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
@@ -529,7 +673,10 @@ export const WorkspaceDesktopSection: React.FC = () => {
 
                 <button
                   type="button"
-                  onClick={togglePlayMusic}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    togglePlayMusic();
+                  }}
                   className="text-zinc-800 hover:text-black transition-colors cursor-pointer active:scale-95"
                   title={isPlayingMusic ? "Pause" : "Play Sunflower"}
                 >
@@ -542,7 +689,8 @@ export const WorkspaceDesktopSection: React.FC = () => {
 
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if (audioRef.current) audioRef.current.currentTime += 15;
                   }}
                   className="text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
@@ -555,7 +703,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
           </div>
 
           {/* Scrubber Bar */}
-          <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center gap-2 text-[9px] font-mono text-zinc-400">
+          <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center gap-2 text-[9px] font-mono text-zinc-400 pointer-events-none">
             <span>0:{musicProgress < 10 ? `0${musicProgress}` : musicProgress}</span>
             <div className="flex-1 h-0.5 bg-zinc-200 rounded-full overflow-hidden relative">
               <div
@@ -565,20 +713,20 @@ export const WorkspaceDesktopSection: React.FC = () => {
             </div>
             <span>-2:08</span>
           </div>
-        </div>
+        </motion.div>
 
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
           3. CENTER HERO STAGE (Elena Exact Typography & Perfectly Centered)
       ───────────────────────────────────────────────────────────── */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[560px] text-center z-10 px-4">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[560px] text-center z-10 px-4 pointer-events-none">
         {/* Main Display Headline */}
         <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.08] text-center">
           This is where I live.
           <br />
           I craft systems at{" "}
-          <span className="relative inline-block underline decoration-black/25 underline-offset-[10px] decoration-[2px] hover:decoration-black transition-colors">
+          <span className="relative inline-block underline decoration-black/25 underline-offset-[10px] decoration-[2px] hover:decoration-black transition-colors pointer-events-auto cursor-default">
             Webnox.
           </span>
         </h1>
@@ -592,18 +740,23 @@ export const WorkspaceDesktopSection: React.FC = () => {
       {/* ─────────────────────────────────────────────────────────────
           4. RIGHT MACOS DESKTOP FOLDERS (Exact 5 Vertical Icons on Right Edge)
       ───────────────────────────────────────────────────────────── */}
-      <div className="absolute top-14 right-8 lg:right-12 flex flex-col gap-6 items-center z-20">
+      <div className="absolute top-14 right-8 lg:right-12 flex flex-col gap-6 items-center z-20 pointer-events-auto">
         {DESKTOP_FOLDERS.map((folder) => {
           const isSelected = selectedFolderId === folder.id;
 
           return (
-            <div
+            <motion.div
               key={folder.id}
+              drag
+              dragConstraints={desktopContainerRef}
+              dragElastic={0.15}
+              whileHover={{ scale: 1.05 }}
+              whileDrag={{ scale: 1.1, zIndex: 60, cursor: "grabbing" }}
               onClick={() => {
                 setSelectedFolderId(folder.id);
                 setQuickLookFolder(folder);
               }}
-              className="flex flex-col items-center cursor-pointer group select-none transition-transform active:scale-95"
+              className="flex flex-col items-center cursor-pointer group select-none active:scale-95"
               style={{ width: "90px" }}
             >
               {/* Folder Icon */}
@@ -621,7 +774,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
               >
                 {folder.name}
               </span>
-            </div>
+            </motion.div>
           );
         })}
       </div>
@@ -629,7 +782,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
       {/* ─────────────────────────────────────────────────────────────
           5. BOTTOM CENTER DOCK (Exact 6-Icon Capsule Dock from Reference Image)
       ───────────────────────────────────────────────────────────── */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
         <div className="bg-white/85 backdrop-blur-xl border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.06)] rounded-[22px] px-3.5 py-1.5 flex items-center gap-2.5">
           {[
             // 1. Monogram Icon (ε / G)
@@ -728,7 +881,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
       {/* ─────────────────────────────────────────────────────────────
           6. BOTTOM RIGHT 2x5 TOOL ARSENAL LAUNCHER CARD
       ───────────────────────────────────────────────────────────── */}
-      <div className="absolute bottom-6 right-8 lg:right-12 z-30">
+      <div className="absolute bottom-6 right-8 lg:right-12 z-30 pointer-events-auto">
         <div className="relative bg-white/95 backdrop-blur-md border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.06)] rounded-[22px] p-2.5">
           
           {/* Active Tooltip Popover */}
@@ -772,7 +925,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 pointer-events-auto"
             onClick={() => setQuickLookFolder(null)}
           >
             <motion.div
