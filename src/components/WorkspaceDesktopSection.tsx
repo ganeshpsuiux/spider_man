@@ -269,22 +269,35 @@ export const WorkspaceDesktopSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="workspace-desktop-section"
-      className="relative w-full h-screen min-h-[720px] max-h-[960px] bg-[#F9F9FB] select-none overflow-hidden"
+      className="relative w-full h-screen min-h-[720px] max-h-[960px] bg-[#111116] select-none overflow-hidden"
       style={{
         fontFamily: "var(--font-sora), -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       {/* ─────────────────────────────────────────────────────────────
+          DESKTOP BACKGROUND WALLPAPER (Spider-Man Split Eye Art)
+      ───────────────────────────────────────────────────────────── */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
+        <img
+          src="/assets/desktop_wallpaper.jpg"
+          alt="Spider-Man Desktop Wallpaper"
+          className="w-full h-full object-cover select-none"
+        />
+        {/* Subtle cinematic gradient overlay for desktop depth & contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/35 pointer-events-none" />
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
           1. EXACT TOP STATUS BAR (Elena Gonci Benchmark)
           Left: EG  Elena Gonci  Head of Product
           Right: Reset Layout Button + Live Time & Date
       ───────────────────────────────────────────────────────────── */}
-      <header className="absolute top-0 left-0 right-0 h-10 px-8 lg:px-12 flex items-center justify-between text-xs text-zinc-600 z-30">
+      <header className="absolute top-0 left-0 right-0 h-10 px-8 lg:px-12 flex items-center justify-between text-xs text-white/90 z-30 bg-black/20 backdrop-blur-xl border-b border-white/10 shadow-[0_2px_8px_rgba(0,0,0,0.15)]">
         {/* Left Monogram & Identity */}
         <div className="flex items-center gap-3">
-          <span className="font-bold text-zinc-900 tracking-tight text-xs sm:text-sm">EG</span>
-          <span className="font-semibold text-zinc-900 text-xs sm:text-sm">Ganesh PS</span>
-          <span className="text-zinc-400 font-normal text-xs hidden sm:inline-block">
+          <span className="font-bold text-white tracking-tight text-xs sm:text-sm">EG</span>
+          <span className="font-semibold text-white text-xs sm:text-sm">Ganesh PS</span>
+          <span className="text-white/60 font-normal text-xs hidden sm:inline-block">
             Lead Product Designer &amp; Creative Technologist @ Webnox
           </span>
         </div>
@@ -295,14 +308,14 @@ export const WorkspaceDesktopSection: React.FC = () => {
           <button
             type="button"
             onClick={() => setResetLayoutKey((k) => k + 1)}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-zinc-500 hover:text-zinc-900 hover:bg-black/[0.04] transition-all text-[11px] font-medium cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all text-[11px] font-medium cursor-pointer"
             title="Reset widgets to original positions"
           >
-            <RotateCcw className="w-3 h-3 text-zinc-400" />
+            <RotateCcw className="w-3 h-3 text-white/60" />
             <span className="hidden sm:inline">Reset Layout</span>
           </button>
 
-          <span className="font-normal text-zinc-500">
+          <span className="font-normal text-white/80">
             {liveDateString}&nbsp; {liveTimeString}
           </span>
         </div>
@@ -609,21 +622,21 @@ export const WorkspaceDesktopSection: React.FC = () => {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          3. CENTER HERO STAGE (Elena Exact Typography & Perfectly Centered)
+          3. CENTER HERO STAGE (Frosted Glass Card for Perfect Contrast & Legibility)
       ───────────────────────────────────────────────────────────── */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[560px] text-center z-10 px-4 pointer-events-none select-none">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[580px] w-[90%] text-center z-10 px-6 py-6 sm:px-8 sm:py-7 rounded-[32px] bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.16)] select-none">
         {/* Main Display Headline */}
-        <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.08] text-center">
+        <h1 className="text-4xl sm:text-5xl lg:text-[52px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.08] text-center">
           This is where I live.
           <br />
           I craft systems at{" "}
-          <span className="relative inline-block underline decoration-black/25 underline-offset-[10px] decoration-[2px] hover:decoration-black transition-colors pointer-events-auto">
+          <span className="relative inline-block underline decoration-black/30 underline-offset-[10px] decoration-[2px] hover:decoration-black transition-colors pointer-events-auto">
             Webnox.
           </span>
         </h1>
 
         {/* Subtext Paragraph */}
-        <p className="mt-5 max-w-[480px] mx-auto text-center text-xs sm:text-sm text-zinc-500 font-normal leading-relaxed">
+        <p className="mt-4 max-w-[460px] mx-auto text-center text-xs sm:text-sm text-zinc-600 font-normal leading-relaxed">
           Where design precision meets vibe coding. Orchestrating design systems, AI agents, and interactive motion to build living digital products.
         </p>
       </div>
@@ -653,16 +666,16 @@ export const WorkspaceDesktopSection: React.FC = () => {
               title="Drag to place folder anywhere on desktop"
             >
               {/* Folder Icon */}
-              <div className="relative mb-1 pointer-events-none">
+              <div className="relative mb-1 pointer-events-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
                 <MacFolderIcon className="w-14 h-11" />
               </div>
 
               {/* Folder Label Centered Under Icon */}
               <span
-                className={`text-[11px] font-normal text-center leading-tight whitespace-pre-line transition-all duration-150 max-w-[85px] pointer-events-none ${
+                className={`text-[11px] font-medium text-center leading-tight whitespace-pre-line transition-all duration-150 max-w-[85px] pointer-events-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] px-1.5 py-0.5 rounded-[5px] ${
                   isSelected
-                    ? "text-black font-semibold"
-                    : "text-zinc-700 group-hover:text-black"
+                    ? "bg-[#007AFF] text-white font-semibold"
+                    : "text-white group-hover:bg-black/40"
                 }`}
               >
                 {folder.name}
