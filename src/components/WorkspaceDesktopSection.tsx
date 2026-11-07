@@ -104,131 +104,7 @@ const DESKTOP_FOLDERS: DesktopFolder[] = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────
-// 2x5 Tool Arsenal Definitions (Exact Bottom-Right Launcher Box)
-// ─────────────────────────────────────────────────────────────
-interface ToolItem {
-  id: string;
-  name: string;
-  role: string;
-  icon: React.ReactNode;
-}
 
-const TOOL_ARSENAL: ToolItem[] = [
-  // Row 1: Notion, Cursor, Antigravity, Terminal, Claude
-  {
-    id: "notion",
-    name: "Notion",
-    role: "Product Specs & Sprint Backlog",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex items-center justify-center shadow-sm">
-        <span className="font-serif font-black text-black text-sm">N</span>
-      </div>
-    ),
-  },
-  {
-    id: "cursor",
-    name: "Cursor",
-    role: "AI-Native Code Editor",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex items-center justify-center shadow-sm text-sky-500 font-bold text-sm">
-        &gt;
-      </div>
-    ),
-  },
-  {
-    id: "green-spiral",
-    name: "Antigravity",
-    role: "Autonomous Agent Engine",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-[#95D600] flex items-center justify-center shadow-sm text-black">
-        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-black">
-          <circle cx="12" cy="12" r="9" stroke="black" strokeWidth="2.5" fill="none" />
-          <circle cx="12" cy="12" r="4" fill="black" />
-        </svg>
-      </div>
-    ),
-  },
-  {
-    id: "terminal",
-    name: "Terminal",
-    role: "CLI & Deployment Pipelines",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-black border border-white/20 flex items-center justify-center shadow-sm text-white font-mono text-xs font-bold">
-        &gt;_
-      </div>
-    ),
-  },
-  {
-    id: "claude",
-    name: "Claude",
-    role: "Anthropic Reasoning Engine",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-[#D97757] flex items-center justify-center shadow-sm text-white">
-        <Sparkles className="w-3.5 h-3.5 text-white" />
-      </div>
-    ),
-  },
-  // Row 2: ChatGPT, LinkedIn, Gmail, Apple Calendar, X
-  {
-    id: "chatgpt",
-    name: "ChatGPT",
-    role: "OpenAI GPT-4o Model",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex items-center justify-center shadow-sm text-zinc-900">
-        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-zinc-900">
-          <path d="M20.5 10.5a4.5 4.5 0 0 0-3.8-4.4 4.5 4.5 0 0 0-8.2-1.6 4.5 4.5 0 0 0-4.4 3.8 4.5 4.5 0 0 0 1.6 8.2 4.5 4.5 0 0 0 3.8 4.4 4.5 4.5 0 0 0 8.2 1.6 4.5 4.5 0 0 0 4.4-3.8 4.5 4.5 0 0 0-1.6-8.2zm-8.5 7.5a6 6 0 1 1 6-6 6 6 0 0 1-6 6z" />
-        </svg>
-      </div>
-    ),
-  },
-  {
-    id: "linkedin",
-    name: "LinkedIn",
-    role: "Professional Network & Reach",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-[#0077B5] flex items-center justify-center shadow-sm text-white font-bold text-xs">
-        in
-      </div>
-    ),
-  },
-  {
-    id: "gmail",
-    name: "Gmail",
-    role: "Direct Client Inquiries",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex items-center justify-center shadow-sm">
-        <svg viewBox="0 0 24 24" className="w-4 h-4">
-          <path fill="#4285F4" d="M2 5v14h4V9l6 4.5L18 9v10h4V5l-10 7.5z" />
-          <path fill="#EA4335" d="M2 5l10 7.5L22 5h-20z" />
-        </svg>
-      </div>
-    ),
-  },
-  {
-    id: "cal",
-    name: "Calendar",
-    role: "Discovery Calls & Office Hours",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-white border border-black/10 flex flex-col items-center justify-center shadow-sm overflow-hidden">
-        <div className="w-full bg-[#FF3B30] h-2 flex items-center justify-center text-[5px] text-white font-bold uppercase">
-          NOV
-        </div>
-        <span className="text-[10px] font-bold text-zinc-900 leading-none mt-0.5">7</span>
-      </div>
-    ),
-  },
-  {
-    id: "x",
-    name: "X",
-    role: "Design Engineering Thoughts",
-    icon: (
-      <div className="w-7 h-7 rounded-lg bg-black flex items-center justify-center shadow-sm text-white font-bold text-xs">
-        𝕏
-      </div>
-    ),
-  },
-];
 
 export const WorkspaceDesktopSection: React.FC = () => {
   // Container constraint reference for dragging
@@ -255,8 +131,6 @@ export const WorkspaceDesktopSection: React.FC = () => {
   // Bottom Center Dock Hover
   const [hoveredDockIndex, setHoveredDockIndex] = useState<number | null>(null);
 
-  // Bottom Right Tool Hover
-  const [hoveredTool, setHoveredTool] = useState<ToolItem | null>(null);
 
   // Dynamic Z-Index elevation on drag so recently moved widget is on top
   const [highestZ, setHighestZ] = useState<number>(30);
@@ -854,43 +728,6 @@ export const WorkspaceDesktopSection: React.FC = () => {
         </div>
       </div>
 
-      {/* ─────────────────────────────────────────────────────────────
-          6. BOTTOM RIGHT 2x5 TOOL ARSENAL LAUNCHER CARD
-      ───────────────────────────────────────────────────────────── */}
-      <div className="absolute bottom-6 right-8 lg:right-12 z-30">
-        <div className="relative bg-white/95 backdrop-blur-md border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.06)] rounded-[22px] p-2.5">
-          
-          {/* Active Tooltip Popover */}
-          <AnimatePresence>
-            {hoveredTool && (
-              <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: -38 }}
-                exit={{ opacity: 0, y: 6 }}
-                className="absolute -top-1 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-zinc-900 text-white text-[10px] font-mono shadow-xl border border-white/10 whitespace-nowrap pointer-events-none z-30"
-              >
-                <span className="font-bold text-white">{hoveredTool.name}</span>
-                <span className="text-zinc-400 mx-1">•</span>
-                <span className="text-zinc-300">{hoveredTool.role}</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* 2x5 Tool Grid */}
-          <div className="grid grid-cols-5 gap-1.5">
-            {TOOL_ARSENAL.map((tool) => (
-              <div
-                key={tool.id}
-                onMouseEnter={() => setHoveredTool(tool)}
-                onMouseLeave={() => setHoveredTool(null)}
-                className="cursor-pointer transition-transform hover:scale-110 active:scale-95"
-              >
-                {tool.icon}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* ─────────────────────────────────────────────────────────────
           7. FOLDER "QUICK LOOK" MODAL (macOS Spacebar Preview)
