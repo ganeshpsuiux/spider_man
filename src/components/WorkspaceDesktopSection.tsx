@@ -14,18 +14,15 @@ import {
   Trash2,
   Sparkles,
   Heart,
-  Calendar as CalendarIcon,
   BookUser,
-  RefreshCw,
   X,
   Volume2,
   VolumeX,
   CheckCircle2,
 } from "lucide-react";
-import PaperCrumple from "./PaperCrumple";
 
 // ─────────────────────────────────────────────────────────────
-// Authentic macOS Blue Desktop Folder SVG
+// Authentic macOS Blue Desktop Folder SVG (Elena Exact Style)
 // ─────────────────────────────────────────────────────────────
 const MacFolderIcon: React.FC<{ className?: string }> = ({ className = "w-14 h-11" }) => (
   <svg viewBox="0 0 100 80" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,31 +49,7 @@ const MacFolderIcon: React.FC<{ className?: string }> = ({ className = "w-14 h-1
 );
 
 // ─────────────────────────────────────────────────────────────
-// Authentic macOS Trash Can SVG
-// ─────────────────────────────────────────────────────────────
-const MacTrashIcon: React.FC<{ className?: string }> = ({ className = "w-12 h-11" }) => (
-  <svg viewBox="0 0 80 80" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="22" y="16" width="36" height="6" rx="2" fill="#8E8E93" />
-    <path
-      d="M26 24H54L51 68C50.9 70.2 49 72 46.8 72H33.2C31 72 29.1 70.2 29 68L26 24Z"
-      fill="url(#trash-body-elena)"
-      stroke="#7C7C80"
-      strokeWidth="1.5"
-    />
-    <line x1="34" y1="32" x2="35" y2="62" stroke="#636366" strokeWidth="2" strokeLinecap="round" />
-    <line x1="40" y1="32" x2="40" y2="62" stroke="#636366" strokeWidth="2" strokeLinecap="round" />
-    <line x1="46" y1="32" x2="45" y2="62" stroke="#636366" strokeWidth="2" strokeLinecap="round" />
-    <defs>
-      <linearGradient id="trash-body-elena" x1="40" y1="24" x2="40" y2="72" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#D1D1D6" />
-        <stop offset="1" stopColor="#AEAEB2" />
-      </linearGradient>
-    </defs>
-  </svg>
-);
-
-// ─────────────────────────────────────────────────────────────
-// Desktop Folders Data (Matching Elena's 5 Vertical Icons on Right)
+// Desktop Folders Data (Exact 5 Vertical Folders from Reference Image)
 // ─────────────────────────────────────────────────────────────
 interface DesktopFolder {
   id: string;
@@ -90,7 +63,7 @@ interface DesktopFolder {
 const DESKTOP_FOLDERS: DesktopFolder[] = [
   {
     id: "qa-agent",
-    name: "QA Agent Loop",
+    name: "QA Agent\nLoop",
     count: "14 Kits",
     tag: "Autonomous QA",
     description: "Self-healing test agents, visual regression loops, and automated design-to-code compliance checking across breakpoints.",
@@ -114,7 +87,7 @@ const DESKTOP_FOLDERS: DesktopFolder[] = [
   },
   {
     id: "product-mgmt",
-    name: "Product Mgmt",
+    name: "Product\nMgmt",
     count: "19 Shipped",
     tag: "Production Live",
     description: "End-to-end product design leadership: roadmap execution, client delivery milestones, and high-impact web apps.",
@@ -122,16 +95,16 @@ const DESKTOP_FOLDERS: DesktopFolder[] = [
   },
   {
     id: "customer-success",
-    name: "Customer Success",
-    count: "Recycle Bin",
-    tag: "Drop Paper Here",
-    description: "Drop your crumpled sticky notes here to recycle. Clean workspace, clear mind.",
-    items: ["Old wireframes.fig", "Discarded palette v1.ase", "Scrap sticky notes", "Legacy CSS resets"],
+    name: "Customer\nSuccess",
+    count: "Client Portal",
+    tag: "Client Proof",
+    description: "Client feedback loops, production telemetry, and interactive case study demonstrations.",
+    items: ["Live Product Metrics", "Client Proof Showcase", "Sprint Retrospectives", "Release Notes"],
   },
 ];
 
 // ─────────────────────────────────────────────────────────────
-// 2x5 Tool Arsenal Definitions (Elena's Exact Bottom-Right Box)
+// 2x5 Tool Arsenal Definitions (Exact Bottom-Right Launcher Box)
 // ─────────────────────────────────────────────────────────────
 interface ToolItem {
   id: string;
@@ -141,7 +114,7 @@ interface ToolItem {
 }
 
 const TOOL_ARSENAL: ToolItem[] = [
-  // Row 1: Notion, Cursor, Figma/Brand, Terminal, Claude
+  // Row 1: Notion, Cursor, Antigravity, Terminal, Claude
   {
     id: "notion",
     name: "Notion",
@@ -281,11 +254,6 @@ export const WorkspaceDesktopSection: React.FC = () => {
   // Bottom Right Tool Hover
   const [hoveredTool, setHoveredTool] = useState<ToolItem | null>(null);
 
-  // Paper Crumple Sticky Note State
-  const [paperResetKey, setPaperResetKey] = useState<number>(0);
-  const [paperState, setPaperState] = useState<string>("flat");
-  const [recycledToast, setRecycledToast] = useState<boolean>(false);
-
   // Clock Update Interval
   useEffect(() => {
     const updateTime = () => {
@@ -355,16 +323,10 @@ export const WorkspaceDesktopSection: React.FC = () => {
     }
   };
 
-  const handleRecycleDrop = () => {
-    setPaperResetKey((prev) => prev + 1);
-    setRecycledToast(true);
-    setTimeout(() => setRecycledToast(false), 3000);
-  };
-
   return (
     <section
       id="workspace-desktop-section"
-      className="relative w-full min-h-screen lg:h-screen lg:max-h-[960px] lg:min-h-[700px] bg-[#F9F9FB] flex flex-col justify-between select-none overflow-hidden"
+      className="relative w-full h-screen min-h-[720px] max-h-[960px] bg-[#F9F9FB] select-none overflow-hidden"
       style={{
         fontFamily: "var(--font-sora), -apple-system, BlinkMacSystemFont, sans-serif",
       }}
@@ -374,7 +336,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
           Left: EG  Elena Gonci  Head of Product
           Right: Sat, Nov 7 12:07 PM
       ───────────────────────────────────────────────────────────── */}
-      <header className="relative z-30 w-full pt-3 pb-2 px-6 sm:px-10 flex items-center justify-between text-xs text-zinc-600">
+      <header className="absolute top-0 left-0 right-0 h-10 px-8 lg:px-12 flex items-center justify-between text-xs text-zinc-600 z-30">
         {/* Left Monogram & Identity */}
         <div className="flex items-center gap-3">
           <span className="font-bold text-zinc-900 tracking-tight text-xs sm:text-sm">EG</span>
@@ -391,364 +353,284 @@ export const WorkspaceDesktopSection: React.FC = () => {
       </header>
 
       {/* ─────────────────────────────────────────────────────────────
-          2. MAIN DESKTOP STAGE (Exact Spatial Architecture of Reference Image)
-          - Left: 4 Tactile White Widget Cards
-          - Center: Large Hero Typography & 3D Interactive Sticky Note
-          - Right: 5 Vertical macOS Desktop Folders
+          2. LEFT WIDGET CLUSTER (Exact Elena Gonci Left Column)
+          - Row 1: Analog Clock (MIAMI) + Apple Calendar (SATURDAY 7)
+          - Row 2: Weather Forecast Card (Madrid / Coimbatore, 7 Days)
+          - Row 3: Square Photo Card (Left Aligned)
+          - Row 4: Music Player Card (Sunflower / Psycho Killer)
       ───────────────────────────────────────────────────────────── */}
-      <div className="relative z-10 w-full flex-1 max-w-[1440px] mx-auto px-6 sm:px-10 py-2 sm:py-4 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 overflow-y-auto lg:overflow-visible my-auto">
+      <div className="absolute top-12 left-8 lg:left-12 w-[305px] flex flex-col gap-3 z-20">
         
-        {/* ──────── COLUMN 1: LEFT WIDGET CLUSTER (Exact 310px Stack) ──────── */}
-        <div className="w-full lg:w-[310px] shrink-0 flex flex-col gap-3.5 max-w-[340px] mx-auto lg:mx-0">
+        {/* Row 1: Dual Square Widgets (Clock + Calendar) */}
+        <div className="grid grid-cols-2 gap-3">
           
-          {/* Row 1: Analog Clock (Left) + Calendar Card (Right) */}
-          <div className="grid grid-cols-2 gap-3.5">
-            
-            {/* Widget 1: Minimalist Analog Clock ("MIAMI" / "COIMBATORE") */}
-            <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)] flex flex-col items-center justify-between aspect-square relative">
-              <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-400 font-medium">
-                COIMBATORE
-              </span>
+          {/* Widget 1: Minimalist Analog Clock ("MIAMI" / "COIMBATORE") */}
+          <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col items-center justify-between aspect-square relative">
+            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-400 font-medium">
+              COIMBATORE
+            </span>
 
-              {/* Minimalist Clock Face */}
-              <div className="relative w-18 h-18 rounded-full flex items-center justify-center">
-                {/* 12 Hour Ticks */}
-                {[...Array(12)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-0.5 h-1.5 bg-zinc-300 rounded-full origin-bottom"
-                    style={{
-                      transform: `rotate(${i * 30}deg) translateY(-32px)`,
-                    }}
-                  />
-                ))}
-
-                {/* Hour Hand */}
+            {/* Minimalist Clock Face */}
+            <div className="relative w-16 h-16 rounded-full flex items-center justify-center">
+              {/* 12 Hour Ticks */}
+              {[...Array(12)].map((_, i) => (
                 <div
-                  className="absolute w-1 h-5 bg-zinc-800 rounded-full origin-bottom transition-transform duration-300 ease-out"
+                  key={i}
+                  className="absolute w-0.5 h-1.5 bg-zinc-300 rounded-full origin-bottom"
                   style={{
-                    transform: `rotate(${analogTime.hours * 30 + analogTime.minutes * 0.5}deg) translateY(-50%)`,
+                    transform: `rotate(${i * 30}deg) translateY(-28px)`,
                   }}
                 />
-
-                {/* Minute Hand */}
-                <div
-                  className="absolute w-0.5 h-7 bg-zinc-700 rounded-full origin-bottom transition-transform duration-300 ease-out"
-                  style={{
-                    transform: `rotate(${analogTime.minutes * 6}deg) translateY(-50%)`,
-                  }}
-                />
-
-                {/* Second Hand (Vibrant Red) */}
-                <div
-                  className="absolute w-[1.5px] h-8 bg-[#FF3B30] rounded-full origin-bottom"
-                  style={{
-                    transform: `rotate(${analogTime.seconds * 6}deg) translateY(-50%)`,
-                  }}
-                />
-
-                {/* Center Axis Pin */}
-                <div className="w-1.5 h-1.5 rounded-full bg-[#FF3B30] border border-white z-10 shadow-sm" />
-              </div>
-
-              {/* Sub-label */}
-              <span className="text-[9px] font-mono text-zinc-400">
-                IST • UTC+5:30
-              </span>
-            </div>
-
-            {/* Widget 2: Apple Calendar Card ("SATURDAY 7", 7-Col Matrix) */}
-            <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between aspect-square">
-              <div>
-                <span className="text-[10px] font-mono uppercase text-[#FF3B30] font-bold tracking-wider block">
-                  {new Date().toLocaleDateString("en-US", { weekday: "long" }).toUpperCase()}
-                </span>
-                <span className="text-3xl font-bold text-zinc-900 leading-tight block">
-                  {new Date().getDate()}
-                </span>
-              </div>
-
-              {/* 7-Column Mini Month Matrix */}
-              <div className="grid grid-cols-7 gap-0.5 text-[8px] font-mono text-center text-zinc-400 pt-1 border-t border-zinc-100">
-                <span>S</span>
-                <span>M</span>
-                <span>T</span>
-                <span>W</span>
-                <span>T</span>
-                <span>F</span>
-                <span>S</span>
-                {[...Array(31)].map((_, i) => {
-                  const day = i + 1;
-                  const isToday = day === new Date().getDate();
-                  return (
-                    <span
-                      key={day}
-                      className={`h-3 flex items-center justify-center rounded-full text-[8px] ${
-                        isToday ? "bg-black text-white font-bold" : "text-zinc-600"
-                      }`}
-                    >
-                      {day}
-                    </span>
-                  );
-                })}
-              </div>
-            </div>
-
-          </div>
-
-          {/* Row 2: Weather Forecast Card ("Madrid 31°", 7-Day Forecast Row) */}
-          <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)]">
-            <div className="text-xs font-semibold text-zinc-800 mb-2">
-              Coimbatore
-            </div>
-
-            {/* 7-Day Weather Row */}
-            <div className="grid grid-cols-7 gap-1 text-center">
-              {[
-                { day: "We", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "31°" },
-                { day: "Th", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "33°" },
-                { day: "Fr", icon: <CloudSun className="w-3.5 h-3.5 text-zinc-400 mx-auto" />, temp: "29°" },
-                { day: "Sa", icon: <Cloud className="w-3.5 h-3.5 text-zinc-400 mx-auto" />, temp: "28°" },
-                { day: "Su", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "30°" },
-                { day: "Mo", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "32°" },
-                { day: "Tu", icon: <CloudRain className="w-3.5 h-3.5 text-sky-400 mx-auto" />, temp: "27°" },
-              ].map((item, idx) => (
-                <div key={idx} className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] text-zinc-400 font-medium">{item.day}</span>
-                  {item.icon}
-                  <span className="text-[11px] text-zinc-700 font-medium">{item.temp}</span>
-                </div>
               ))}
-            </div>
-          </div>
 
-          {/* Row 3: Personal Photo Card (Ganesh with Sunglasses / Workstation) */}
-          <div className="w-24 h-24 rounded-[24px] overflow-hidden bg-zinc-100 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)] relative group">
-            <img
-              src="/assets/concepts/about_me_spiderverse_ui_1793291690442.jpg"
-              alt="Ganesh Setup"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
+              {/* Hour Hand */}
+              <div
+                className="absolute w-1 h-4 bg-zinc-800 rounded-full origin-bottom transition-transform duration-300 ease-out"
+                style={{
+                  transform: `rotate(${analogTime.hours * 30 + analogTime.minutes * 0.5}deg) translateY(-50%)`,
+                }}
+              />
 
-          {/* Row 4: Spider-Verse Music Player Widget (Sunflower) */}
-          <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_6px_24px_rgba(0,0,0,0.03)]">
-            <div className="flex items-center gap-3">
-              {/* Vibrant Orange-Red Square Album Art */}
-              <div className="w-11 h-11 rounded-xl bg-[#FF4500] bg-gradient-to-tr from-[#FF3B30] to-[#FF8C00] overflow-hidden shadow-sm shrink-0 flex items-center justify-center relative">
-                <div className="w-5 h-5 rounded-full bg-black/30 border border-white/20 flex items-center justify-center">
-                  {isPlayingMusic ? (
-                    <Volume2 className="w-3 h-3 text-white animate-pulse" />
-                  ) : (
-                    <VolumeX className="w-3 h-3 text-white/80" />
-                  )}
-                </div>
-              </div>
+              {/* Minute Hand */}
+              <div
+                className="absolute w-0.5 h-6 bg-zinc-700 rounded-full origin-bottom transition-transform duration-300 ease-out"
+                style={{
+                  transform: `rotate(${analogTime.minutes * 6}deg) translateY(-50%)`,
+                }}
+              />
 
-              {/* Track Details */}
-              <div className="flex-1 min-w-0">
-                <h4 className="text-xs font-semibold text-zinc-900 truncate">
-                  Sunflower
-                </h4>
-                <p className="text-[10px] text-zinc-400 truncate">
-                  Post Malone, Swae Lee — Spider-Verse
-                </p>
+              {/* Second Hand (Vibrant Red) */}
+              <div
+                className="absolute w-[1.5px] h-7 bg-[#FF3B30] rounded-full origin-bottom"
+                style={{
+                  transform: `rotate(${analogTime.seconds * 6}deg) translateY(-50%)`,
+                }}
+              />
 
-                {/* Audio Controls (Prev, Play, Next) */}
-                <div className="flex items-center gap-3 mt-1.5">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (audioRef.current) audioRef.current.currentTime = 0;
-                    }}
-                    className="text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
-                    title="Restart Track"
-                  >
-                    <SkipBack className="w-3.5 h-3.5" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={togglePlayMusic}
-                    className="text-zinc-800 hover:text-black transition-colors cursor-pointer active:scale-95"
-                    title={isPlayingMusic ? "Pause" : "Play Sunflower"}
-                  >
-                    {isPlayingMusic ? (
-                      <Pause className="w-3.5 h-3.5" />
-                    ) : (
-                      <Play className="w-3.5 h-3.5 fill-zinc-800" />
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (audioRef.current) audioRef.current.currentTime += 15;
-                    }}
-                    className="text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
-                    title="Fast Forward 15s"
-                  >
-                    <SkipForward className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
+              {/* Center Axis Pin */}
+              <div className="w-1.5 h-1.5 rounded-full bg-[#FF3B30] border border-white z-10 shadow-sm" />
             </div>
 
-            {/* Scrubber Bar */}
-            <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center gap-2 text-[9px] font-mono text-zinc-400">
-              <span>0:{musicProgress < 10 ? `0${musicProgress}` : musicProgress}</span>
-              <div className="flex-1 h-0.5 bg-zinc-200 rounded-full overflow-hidden relative">
-                <div
-                  className="h-full bg-zinc-800 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.min(100, (musicProgress / 158) * 100)}%` }}
-                />
-              </div>
-              <span>-2:08</span>
+            {/* Sub-label */}
+            <span className="text-[9px] font-mono text-zinc-400">
+              IST • UTC+5:30
+            </span>
+          </div>
+
+          {/* Widget 2: Apple Calendar Card ("SATURDAY 7", 7-Col Matrix) */}
+          <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between aspect-square">
+            <div>
+              <span className="text-[10px] font-mono uppercase text-[#FF3B30] font-bold tracking-wider block">
+                {new Date().toLocaleDateString("en-US", { weekday: "long" }).toUpperCase()}
+              </span>
+              <span className="text-3xl font-bold text-zinc-900 leading-tight block">
+                {new Date().getDate()}
+              </span>
+            </div>
+
+            {/* 7-Column Mini Month Matrix */}
+            <div className="grid grid-cols-7 gap-0.5 text-[8px] font-mono text-center text-zinc-400 pt-1 border-t border-zinc-100">
+              <span>S</span>
+              <span>M</span>
+              <span>T</span>
+              <span>W</span>
+              <span>T</span>
+              <span>F</span>
+              <span>S</span>
+              {[...Array(31)].map((_, i) => {
+                const day = i + 1;
+                const isToday = day === new Date().getDate();
+                return (
+                  <span
+                    key={day}
+                    className={`h-3 flex items-center justify-center rounded-full text-[8px] ${
+                      isToday ? "bg-black text-white font-bold" : "text-zinc-600"
+                    }`}
+                  >
+                    {day}
+                  </span>
+                );
+              })}
             </div>
           </div>
 
         </div>
 
-        {/* ──────── COLUMN 2: CENTER HERO TYPOGRAPHY & 3D STICKY NOTE ──────── */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-2 py-2 max-w-[540px] mx-auto">
-          
-          {/* Main Display Headline (Elena Gonci Exact Styling) */}
-          <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.08] text-center">
-            This is where I live.
-            <br />
-            I craft systems at{" "}
-            <span className="relative inline-block underline decoration-black/25 underline-offset-[10px] decoration-[2px] hover:decoration-black transition-colors">
-              Webnox.
-            </span>
-          </h1>
+        {/* Row 2: Weather Forecast Card ("Madrid 31°", 7-Day Forecast Row) */}
+        <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+          <div className="text-xs font-semibold text-zinc-800 mb-2">
+            Coimbatore
+          </div>
 
-          {/* Subtext Paragraph */}
-          <p className="mt-4 max-w-[460px] mx-auto text-center text-xs sm:text-sm text-zinc-500 font-normal leading-relaxed">
-            Where design precision meets vibe coding. Orchestrating design systems, AI agents, and interactive motion to build living digital products.
-          </p>
+          {/* 7-Day Weather Row */}
+          <div className="grid grid-cols-7 gap-1 text-center">
+            {[
+              { day: "We", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "31°" },
+              { day: "Th", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "33°" },
+              { day: "Fr", icon: <CloudSun className="w-3.5 h-3.5 text-zinc-400 mx-auto" />, temp: "29°" },
+              { day: "Sa", icon: <Cloud className="w-3.5 h-3.5 text-zinc-400 mx-auto" />, temp: "28°" },
+              { day: "Su", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "30°" },
+              { day: "Mo", icon: <Sun className="w-3.5 h-3.5 text-amber-500 mx-auto" />, temp: "32°" },
+              { day: "Tu", icon: <CloudRain className="w-3.5 h-3.5 text-sky-400 mx-auto" />, temp: "27°" },
+            ].map((item, idx) => (
+              <div key={idx} className="flex flex-col items-center gap-1">
+                <span className="text-[10px] text-zinc-400 font-medium">{item.day}</span>
+                {item.icon}
+                <span className="text-[11px] text-zinc-700 font-medium">{item.temp}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-          {/* ─────────────────────────────────────────────────────────
-              REACT BITS <PaperCrumple /> 3D INTERACTIVE STICKY NOTE
-              Proportionately scaled to fit cleanly within vertical space
-          ───────────────────────────────────────────────────────── */}
-          <div className="relative mt-4 sm:mt-5 flex flex-col items-center">
-            
-            {/* 3D Paper Component */}
-            <div className="relative rounded-2xl overflow-visible filter drop-shadow-md">
-              <PaperCrumple
-                src="/assets/sticky_note.png"
-                alt="Ganesh's Daily Sticky Note Memo"
-                width={195}
-                height={245}
-                sceneHeight={255}
-                releaseBehavior="creased"
-                crumpleAmount={0.85}
-                crumpleDuration={0.55}
-                releaseDuration={0.4}
-                foldCount={5}
-                foldSharpness={0.65}
-                wrinkleDepth={0.7}
-                creaseStrength={0.22}
-                paperColor="#fef08a"
-                paperTexture={0.12}
-                lightIntensity={1.9}
-                lightAngle={-35}
-                shadow={true}
-                shadowOpacity={0.12}
-                draggable={true}
-                dragRotation={12}
-                dragRadius={180}
-                returnToOrigin={true}
-                resetKey={paperResetKey}
-                onStateChange={(state) => setPaperState(state)}
+        {/* Row 3: Square Photo Card (Left Aligned like Elena's Selfie) */}
+        <div className="w-24 h-24 rounded-[24px] overflow-hidden bg-zinc-100 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative group">
+          <img
+            src="/assets/concepts/about_me_spiderverse_ui_1793291690442.jpg"
+            alt="Ganesh Setup"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+
+        {/* Row 4: Music Player Card (Sunflower / Psycho Killer) */}
+        <div className="bg-white rounded-[24px] p-3.5 border border-black/[0.04] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+          <div className="flex items-center gap-3">
+            {/* Red-Orange Square Album Art */}
+            <div className="w-11 h-11 rounded-xl bg-[#E85D45] overflow-hidden shadow-sm shrink-0 flex items-center justify-center relative">
+              <div className="w-5 h-5 rounded-full bg-black/30 border border-white/20 flex items-center justify-center">
+                {isPlayingMusic ? (
+                  <Volume2 className="w-3 h-3 text-white animate-pulse" />
+                ) : (
+                  <VolumeX className="w-3 h-3 text-white/80" />
+                )}
+              </div>
+            </div>
+
+            {/* Track Details */}
+            <div className="flex-1 min-w-0">
+              <h4 className="text-xs font-semibold text-zinc-900 truncate">
+                Sunflower
+              </h4>
+              <p className="text-[10px] text-zinc-400 truncate">
+                Post Malone, Swae Lee — Spider-Verse
+              </p>
+
+              {/* Audio Controls (Prev, Play, Next) */}
+              <div className="flex items-center gap-3 mt-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (audioRef.current) audioRef.current.currentTime = 0;
+                  }}
+                  className="text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
+                  title="Restart Track"
+                >
+                  <SkipBack className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={togglePlayMusic}
+                  className="text-zinc-800 hover:text-black transition-colors cursor-pointer active:scale-95"
+                  title={isPlayingMusic ? "Pause" : "Play Sunflower"}
+                >
+                  {isPlayingMusic ? (
+                    <Pause className="w-3.5 h-3.5" />
+                  ) : (
+                    <Play className="w-3.5 h-3.5 fill-zinc-800" />
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (audioRef.current) audioRef.current.currentTime += 15;
+                  }}
+                  className="text-zinc-400 hover:text-zinc-800 transition-colors cursor-pointer"
+                  title="Fast Forward 15s"
+                >
+                  <SkipForward className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Scrubber Bar */}
+          <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center gap-2 text-[9px] font-mono text-zinc-400">
+            <span>0:{musicProgress < 10 ? `0${musicProgress}` : musicProgress}</span>
+            <div className="flex-1 h-0.5 bg-zinc-200 rounded-full overflow-hidden relative">
+              <div
+                className="h-full bg-zinc-800 rounded-full transition-all duration-300"
+                style={{ width: `${Math.min(100, (musicProgress / 158) * 100)}%` }}
               />
             </div>
-
-            {/* Instruction Micro-HUD */}
-            <div className="flex items-center gap-2 mt-1.5">
-              <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-wider">
-                {paperState === "holding"
-                  ? "Crumpling 3D paper..."
-                  : paperState === "creased"
-                  ? "Creased & Unfolded"
-                  : "Touch & drag to crumple"}
-              </span>
-
-              {/* Reset Note Button */}
-              <button
-                type="button"
-                onClick={() => setPaperResetKey((prev) => prev + 1)}
-                className="flex items-center gap-1 text-[9px] font-mono text-zinc-600 hover:text-black bg-zinc-100 hover:bg-zinc-200 px-2 py-0.5 rounded-full transition-colors cursor-pointer"
-                title="Reset note to flat"
-              >
-                <RefreshCw className="w-2.5 h-2.5" />
-                <span>Reset</span>
-              </button>
-            </div>
+            <span>-2:08</span>
           </div>
-
-        </div>
-
-        {/* ──────── COLUMN 3: RIGHT MACOS DESKTOP FOLDERS (Elena Exact Right Edge) ──────── */}
-        <div className="w-full lg:w-[110px] shrink-0 flex lg:flex-col flex-wrap gap-5 sm:gap-6 justify-center lg:items-end">
-          
-          {DESKTOP_FOLDERS.map((folder) => {
-            const isSelected = selectedFolderId === folder.id;
-            const isRecycleBin = folder.id === "customer-success";
-
-            return (
-              <div
-                key={folder.id}
-                onClick={() => {
-                  setSelectedFolderId(folder.id);
-                  if (isRecycleBin) {
-                    handleRecycleDrop();
-                  } else {
-                    setQuickLookFolder(folder);
-                  }
-                }}
-                className="flex flex-col items-center cursor-pointer group select-none transition-transform active:scale-95"
-                style={{ width: "96px" }}
-              >
-                {/* Folder Icon */}
-                <div className="relative mb-1 transition-transform group-hover:scale-105 duration-200">
-                  {isRecycleBin ? (
-                    <MacTrashIcon className="w-12 h-11" />
-                  ) : (
-                    <MacFolderIcon className="w-14 h-11" />
-                  )}
-                </div>
-
-                {/* Folder Label Centered Under Icon */}
-                <span
-                  className={`text-[11px] font-normal text-center leading-tight transition-all duration-150 max-w-[88px] ${
-                    isSelected
-                      ? "text-black font-semibold"
-                      : "text-zinc-700 group-hover:text-black"
-                  }`}
-                >
-                  {folder.name}
-                </span>
-              </div>
-            );
-          })}
-
         </div>
 
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          3. BOTTOM FLOATING BAR (Exact Elena Gonci Layout)
-          - Center: Translucent Capsule Dock (6 App Icons: G, Folder, Sparkles, Heart, Sat 7, Contacts)
-          - Right: 2x5 Tool Arsenal Launcher Box
+          3. CENTER HERO STAGE (Elena Exact Typography & Perfectly Centered)
       ───────────────────────────────────────────────────────────── */}
-      <footer className="relative z-20 w-full pb-5 px-6 sm:px-10 flex items-center justify-between">
-        
-        {/* Left balance placeholder */}
-        <div className="hidden lg:block w-[310px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[560px] text-center z-10 px-4">
+        {/* Main Display Headline */}
+        <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.08] text-center">
+          This is where I live.
+          <br />
+          I craft systems at{" "}
+          <span className="relative inline-block underline decoration-black/25 underline-offset-[10px] decoration-[2px] hover:decoration-black transition-colors">
+            Webnox.
+          </span>
+        </h1>
 
-        {/* ──────── BOTTOM-CENTER: CAPSULE DOCK (6 Icons from Elena's Dock) ──────── */}
-        <div className="bg-white/85 backdrop-blur-xl border border-black/[0.06] shadow-[0_12px_36px_rgba(0,0,0,0.08)] rounded-[22px] px-3 py-1.5 flex items-center gap-2.5 mx-auto">
+        {/* Subtext Paragraph */}
+        <p className="mt-5 max-w-[480px] mx-auto text-center text-xs sm:text-sm text-zinc-500 font-normal leading-relaxed">
+          Where design precision meets vibe coding. Orchestrating design systems, AI agents, and interactive motion to build living digital products.
+        </p>
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          4. RIGHT MACOS DESKTOP FOLDERS (Exact 5 Vertical Icons on Right Edge)
+      ───────────────────────────────────────────────────────────── */}
+      <div className="absolute top-14 right-8 lg:right-12 flex flex-col gap-6 items-center z-20">
+        {DESKTOP_FOLDERS.map((folder) => {
+          const isSelected = selectedFolderId === folder.id;
+
+          return (
+            <div
+              key={folder.id}
+              onClick={() => {
+                setSelectedFolderId(folder.id);
+                setQuickLookFolder(folder);
+              }}
+              className="flex flex-col items-center cursor-pointer group select-none transition-transform active:scale-95"
+              style={{ width: "90px" }}
+            >
+              {/* Folder Icon */}
+              <div className="relative mb-1 transition-transform group-hover:scale-105 duration-200">
+                <MacFolderIcon className="w-14 h-11" />
+              </div>
+
+              {/* Folder Label Centered Under Icon */}
+              <span
+                className={`text-[11px] font-normal text-center leading-tight whitespace-pre-line transition-all duration-150 max-w-[85px] ${
+                  isSelected
+                    ? "text-black font-semibold"
+                    : "text-zinc-700 group-hover:text-black"
+                }`}
+              >
+                {folder.name}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          5. BOTTOM CENTER DOCK (Exact 6-Icon Capsule Dock from Reference Image)
+      ───────────────────────────────────────────────────────────── */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
+        <div className="bg-white/85 backdrop-blur-xl border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.06)] rounded-[22px] px-3.5 py-1.5 flex items-center gap-2.5">
           {[
             // 1. Monogram Icon (ε / G)
             {
@@ -841,9 +723,13 @@ export const WorkspaceDesktopSection: React.FC = () => {
             );
           })}
         </div>
+      </div>
 
-        {/* ──────── BOTTOM-RIGHT: 2x5 TOOL ARSENAL LAUNCHER CARD ──────── */}
-        <div className="relative bg-white/95 backdrop-blur-md border border-black/[0.06] shadow-[0_12px_36px_rgba(0,0,0,0.08)] rounded-[22px] p-2.5 shrink-0 hidden sm:block">
+      {/* ─────────────────────────────────────────────────────────────
+          6. BOTTOM RIGHT 2x5 TOOL ARSENAL LAUNCHER CARD
+      ───────────────────────────────────────────────────────────── */}
+      <div className="absolute bottom-6 right-8 lg:right-12 z-30">
+        <div className="relative bg-white/95 backdrop-blur-md border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.06)] rounded-[22px] p-2.5">
           
           {/* Active Tooltip Popover */}
           <AnimatePresence>
@@ -875,11 +761,10 @@ export const WorkspaceDesktopSection: React.FC = () => {
             ))}
           </div>
         </div>
-
-      </footer>
+      </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          4. FOLDER "QUICK LOOK" MODAL (macOS Spacebar Preview)
+          7. FOLDER "QUICK LOOK" MODAL (macOS Spacebar Preview)
       ───────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {quickLookFolder && (
@@ -905,7 +790,7 @@ export const WorkspaceDesktopSection: React.FC = () => {
                     <MacFolderIcon className="w-6 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-base text-zinc-900">
+                    <h3 className="font-bold text-base text-zinc-900 whitespace-pre-line">
                       {quickLookFolder.name}
                     </h3>
                     <p className="text-xs text-zinc-400 font-mono">
@@ -960,23 +845,6 @@ export const WorkspaceDesktopSection: React.FC = () => {
                 </button>
               </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ─────────────────────────────────────────────────────────────
-          5. TRASH RECYCLED TOAST ALERT
-      ───────────────────────────────────────────────────────────── */}
-      <AnimatePresence>
-        {recycledToast && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-zinc-900/90 text-white backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl border border-white/10 flex items-center gap-2 text-xs font-mono"
-          >
-            <Trash2 className="w-4 h-4 text-emerald-400" />
-            <span>Sticky note recycled into trash! Workspace cleaned.</span>
           </motion.div>
         )}
       </AnimatePresence>
