@@ -149,7 +149,15 @@ const DOCK_TOOLS: DockTool[] = [
   },
 ];
 
-export const WorkspaceDesktopSection: React.FC = () => {
+export interface WorkspaceDesktopSectionProps {
+  isEmbedded?: boolean;
+  className?: string;
+}
+
+export const WorkspaceDesktopSection: React.FC<WorkspaceDesktopSectionProps> = ({
+  isEmbedded = false,
+  className = "",
+}) => {
   // Container constraint reference for dragging
   const sectionRef = useRef<HTMLDivElement | null>(null);
 
@@ -269,7 +277,11 @@ export const WorkspaceDesktopSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="workspace-desktop-section"
-      className="relative w-full h-screen min-h-[720px] max-h-[960px] bg-[#111116] select-none overflow-hidden"
+      className={`relative w-full select-none overflow-hidden ${
+        isEmbedded
+          ? "w-[1920px] h-[1080px]"
+          : "h-screen min-h-[720px] max-h-[960px]"
+      } bg-[#111116] ${className}`}
       style={{
         fontFamily: "var(--font-sora), -apple-system, BlinkMacSystemFont, sans-serif",
       }}
